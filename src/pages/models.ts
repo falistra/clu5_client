@@ -10,5 +10,5 @@ export interface Meta {
 export interface T_DomandaSceltaSingola {
   $: { id: number };
   Testo: string;
-  Risposte: Array<string>;
+  Risposte: { Risposta: Array<string> };
 }

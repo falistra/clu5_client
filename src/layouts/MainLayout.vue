@@ -13,7 +13,7 @@
 
         <q-toolbar-title> Test </q-toolbar-title>
 
-        <div>Unimore C.L.A {{ $q.version }}</div>
+        <div>Unimore C.L.A. {{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -33,7 +33,12 @@
       <router-view />
     </q-page-container>
 
-    <div><barra-navigazione /></div>
+    <q-footer elevated>
+      <q-toolbar class="glossy">
+        <q-toolbar-title>Footer</q-toolbar-title>
+        <barra-navigazione />
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 

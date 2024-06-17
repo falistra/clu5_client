@@ -3,12 +3,33 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
-          <div class="text-overline text-orange-9">Overline</div>
-          <div class="text-h5 q-mt-sm q-mb-xs">Title</div>
-          <div class="text-caption text-grey"></div>
+          <div class="text-h5 q-mt-sm q-mb-xs">{{ testoDomanda }}</div>
+          <div class="text-overline text-orange-9">
+            Click sulla risposta scelta
+          </div>
         </q-card-section>
+        <q-separator />
+        <q-card-section>
+          <!-- <div class="text-subtitle1 q-mt-sm q-mb-xs">Risposte</div> -->
 
-        <q-space />
+          <q-btn-group flat>
+            <q-btn
+              :outline="scelto[index]"
+              class="q-mr-sm"
+              v-for="(risposta, index) in script.Risposte.Risposta"
+              :key="risposta"
+              :label="risposta"
+              @click="
+                () => {
+                  scelto.fill(false);
+                  scelto[index] = true;
+                  testoDomanda = script.Testo.replace(/[_]+/gi, risposta);
+                }
+              "
+            >
+            </q-btn>
+          </q-btn-group>
+        </q-card-section>
       </q-card>
     </div>
   </q-page>
@@ -19,14 +40,14 @@ defineOptions({
   name: 'DomandaSceltaSingola',
 });
 import { useSessioneStore } from 'stores/sessione';
+import { T_DomandaSceltaSingola } from 'pages/models';
+import { ref } from 'vue';
 
-const sessioneStore = useSessioneStore();
-
-const script: object = sessioneStore.domande[
-  sessioneStore.counter
-][1] as object;
-console.log(script.$.id);
-console.log(script.Testo);
+const sessione = useSessioneStore();
+const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola;
+console.log(script.Risposte.Risposta);
+const testoDomanda = ref(script.Testo);
+const scelto = ref<boolean[]>([false]);
 </script>
 
 <style lang="sass" scoped>

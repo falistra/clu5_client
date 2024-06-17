@@ -41,7 +41,7 @@ export default route(function (/* { store, ssrContext } */) {
       <Domande>
       <DomandaSceltaSingola id="1">
         <Testo>
-          Questo e' il testo della domanda
+          Questo e' il testo della domanda ? ___________
         </Testo>
         <Risposte>
           <Risposta> Risposta 1 </Risposta>
