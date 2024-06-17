@@ -11,9 +11,9 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Test </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>Unimore C.L.A {{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -30,15 +30,16 @@
     </q-drawer>
 
     <q-page-container>
-      <Suspense>
-        <router-view />
-      </Suspense>
+      <router-view />
     </q-page-container>
+
+    <div><barra-navigazione /></div>
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import BarraNavigazione from 'components/BarraNavigazione.vue';
 import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
