@@ -9,6 +9,9 @@ import {
 import routes from './routes';
 import xml2js from 'xml2js';
 import { useSessioneStore } from 'stores/sessione';
+
+import dataXML from './data';
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -39,24 +42,19 @@ export default route(function (/* { store, ssrContext } */) {
     if (to.path == '/') {
       const xmlData = `
       <Domande>
-      <DomandaSceltaSingola id="1">
-        <Testo>
-          Questo e' il testo della domanda ? ___________
-        </Testo>
-        <Risposte>
-          <Risposta> Risposta 1 </Risposta>
-          <Risposta> Risposta 2 </Risposta>
-          <Risposta> Risposta 3 </Risposta>
-          <Risposta> Risposta 4 </Risposta>
-        </Risposte>
-      </DomandaSceltaSingola>
-      <DomandaRiordino id="2">
-      <Items>
-      <Item>Item 1</Item>
-      <Item>Item 2</Item>
-      <Item>Item 3</Item>
-      </Items>
-      </DomandaRiordino>
+      ${dataXML.DomandaSceltaSingola}
+      ${dataXML.DomandaRiordino}
+      ${dataXML.DomandaScritturaLibera}
+      ${dataXML.DomandaComprensioneTesto}
+      ${dataXML.DomandaSceltaMultipla}
+
+      ${dataXML.DomandaRiempimentoTesto}
+      ${dataXML.DomandaRiempimentoTestoLibero}
+      ${dataXML.DomandaRiempimentoLibero}
+      ${dataXML.DomandaOutputStudente}
+      ${dataXML.DomandaAbbinamentoMultiplo}
+      ${dataXML.DomandaAbbinamentoSingolo}
+      ${dataXML.DomandaWordPool}
       </Domande>
       `;
 

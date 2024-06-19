@@ -4,19 +4,20 @@
       <q-card class="my-card" flat bordered>
         <q-card-section>
           <div class="text-overline" v-html="script.prologo"></div>
-          <div class="text-h5 q-mt-sm q-mb-xs" v-html="testoDomanda"></div>
+          <div class="text-h5 q-mt-sm q-mb-xs" v-html="script.testo"></div>
+          <div class="text-overline q-mt-sm q-mb-xs">
+            Numero massimo risposte possibili:
+            <span>{{ script.$?.maxrisposte }}</span>
+          </div>
         </q-card-section>
         <q-separator />
         <q-card-section>
-          <q-btn-toggle
+          <q-option-group
             class="scelta"
             v-model="scelta"
-            spread
-            no-caps
-            padding="sm"
             dense
-            toggle-color="primary"
             :options="opzioni"
+            type="checkbox"
           />
         </q-card-section>
       </q-card>
@@ -26,15 +27,15 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'DomandaSceltaSingola',
+  name: 'DomandaSceltaMultipla',
 });
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaSceltaSingola } from 'pages/models';
+import { T_DomandaSceltaMultipla } from 'pages/models';
 import { ref } from 'vue';
 
 const sessione = useSessioneStore();
-const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola;
-const testoDomanda = ref(script.testo);
+const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla;
+
 const opzioni = ref(
   script.risposte.risposta.map((item) => {
     return {
@@ -43,7 +44,7 @@ const opzioni = ref(
     };
   })
 );
-const scelta = ref(null);
+const scelta = ref([]);
 </script>
 
 <style lang="sass" scoped>

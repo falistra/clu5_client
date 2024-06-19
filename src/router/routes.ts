@@ -6,12 +6,53 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: 'DomandaSceltaSingola',
+        path: 'domandasceltasingola',
         component: () => import('pages/DomandaSceltaSingola.vue'),
       },
       {
-        path: 'DomandaRiordino',
+        path: 'domandariordino',
         component: () => import('pages/DomandaRiordino.vue'),
+      },
+      {
+        path: 'domandascritturalibera',
+        component: () => import('pages/DomandaScritturaLibera.vue'),
+      },
+      {
+        path: 'domandacomprensionetesto',
+        component: () => import('pages/DomandaComprensioneTesto.vue'),
+      },
+      {
+        path: 'domandasceltamultipla',
+        component: () => import('pages/DomandaSceltaMultipla.vue'),
+      },
+
+      {
+        path: 'domandariempimentotesto',
+        component: () => import('pages/DomandaRiempimentoTesto.vue'),
+      },
+      {
+        path: 'domandariempimentotestolibero',
+        component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
+      },
+      {
+        path: 'domandaRiempimentoLibero',
+        component: () => import('pages/DomandaRiempimentoLibero.vue'),
+      },
+      {
+        path: 'domandaoutputstudente',
+        component: () => import('pages/DomandaOutputStudente.vue'),
+      },
+      {
+        path: 'domandaabbinamentomultiplo',
+        component: () => import('pages/DomandaAbbinamentoMultiplo.vue'),
+      },
+      {
+        path: 'domandaabbinamentosingolo',
+        component: () => import('pages/DomandaAbbinamentoSingolo.vue'),
+      },
+      {
+        path: 'domandawordpool',
+        component: () => import('pages/DomandaWordPool.vue'),
       },
     ],
   },
