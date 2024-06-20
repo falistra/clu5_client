@@ -40,26 +40,43 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach(async (to) => {
     if (to.path == '/') {
-      const xmlData = `
-      <Domande>
-      ${dataXML.DomandaSceltaSingola}
-      ${dataXML.DomandaRiordino}
-      ${dataXML.DomandaScritturaLibera}
-      ${dataXML.DomandaComprensioneTesto}
-      ${dataXML.DomandaSceltaMultipla}
+      const jsonScript = await xml2js
+        .parseStringPromise(dataXML.script, {
+          explicitArray: false,
+          trim: true,
+        })
+        .then(function (result) {
+          return result;
+        })
+        .catch(function (err) {
+          console.error(err);
+        });
 
-      ${dataXML.DomandaRiempimentoTesto}
-      ${dataXML.DomandaRiempimentoTestoLibero}
-      ${dataXML.DomandaRiempimentoLibero}
-      ${dataXML.DomandaOutputStudente}
-      ${dataXML.DomandaAbbinamentoMultiplo}
-      ${dataXML.DomandaAbbinamentoSingolo}
-      ${dataXML.DomandaWordPool}
-      </Domande>
-      `;
+      const d = (jsonScript.insiemi_domande.domande as Array<object>)
+        .map((value) => {
+          const domande = (value as { sql: string; domanda: object }).domanda;
+          return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
+        })
+        .reduce((accumulator, value) => accumulator.concat(value), []) // flat
+        .map((domanda) => {
+          const d = Object.entries(domanda);
+          const tipo = d[1][0];
+          const script_domanda = domanda[tipo];
+          return { tipo, script: script_domanda, proprieta: d[0][1] };
+        });
+
+      console.log(d);
+
+      // const domande = [];
+      // script.forEach((element: Array<object>) => {
+      //   element.domanda.array.forEach((element) => {
+      //     domande.push(element);
+      //   });
+      // });
+      // console.log(script);
 
       const jsonData = await xml2js
-        .parseStringPromise(xmlData, {
+        .parseStringPromise(dataXML.xmlData, {
           explicitArray: false,
           trim: true,
         })
@@ -72,6 +89,7 @@ export default route(function (/* { store, ssrContext } */) {
 
       const sessioneStore = useSessioneStore();
       sessioneStore.domande = Object.entries(jsonData.Domande);
+      console.log(sessioneStore.domande);
       return { path: sessioneStore.domande[0][0] };
     }
   });

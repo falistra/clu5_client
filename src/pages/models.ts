@@ -8,10 +8,13 @@
 // }
 
 export interface T_DomandaSceltaSingola {
-  $?: { id: number };
+  $?: { id: number; id_vdb: number; hash?: string };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ corretta: number; _: string }> };
+  risposte: {
+    tipoopzioni?: string;
+    risposta: Array<{ hash: string; tipo?: string; _: string }>;
+  };
   immagine?: { url: string };
 }
 
@@ -48,7 +51,7 @@ export interface T_DomandaRiempimentoTesto {
   $?: { id: number };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ ordine: number; _: string }> };
+  risposte: { risposta: Array<{ hash: string; _: string }> };
 }
 
 export interface T_DomandaRiempimentoTestoLibero {
@@ -83,7 +86,9 @@ export interface T_DomandaAbbinamentoSingolo {
   $?: { id: number };
   prologo: string;
   testo: string;
-  coppie: { coppia: Array<{ fissa?: string; mobile: string }> };
+  coppie: { tipoopzioni: string; tipoorientamento: string };
+  partiFisse: { item: Array<{ hash: string; _: string }> };
+  partiMobili: { item: Array<{ hash: string; _: string }> };
 }
 
 export interface T_DomandaWordPool {
