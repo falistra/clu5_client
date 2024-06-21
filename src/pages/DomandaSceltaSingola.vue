@@ -17,6 +17,7 @@
             dense
             toggle-color="primary"
             :options="opzioni"
+            @update:model-value="setRisposta"
           />
         </q-card-section>
       </q-card>
@@ -34,7 +35,7 @@ import { ref } from 'vue';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola;
-const testoDomanda = ref(script.testo);
+let testoDomanda = ref(script.testo);
 const opzioni = ref(
   script.risposte.risposta.map((item) => {
     return {
@@ -44,6 +45,9 @@ const opzioni = ref(
   })
 );
 const scelta = ref(null);
+const setRisposta = (risposta: string) => {
+  testoDomanda.value = ` ${script.testo.replace(/[_]+/gi, risposta)} `;
+};
 </script>
 
 <style lang="sass" scoped>

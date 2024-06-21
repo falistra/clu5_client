@@ -1,11 +1,11 @@
-// export interface Todo {
-//   id: number;
-//   content: string;
-// }
-
-// export interface Meta {
-//   totalCount: number;
-// }
+export interface IDomanda {
+  autore: string;
+  id: string;
+  livello: string;
+  peso: string;
+  tag: string;
+  tecnica: string;
+}
 
 export interface T_DomandaSceltaSingola {
   $?: { id: number; id_vdb: number; hash?: string };

@@ -37,7 +37,10 @@ function precedente() {
 
 function successivo() {
   sessioneStore.increment();
-  router.push(sessioneStore.domande[sessioneStore.counter][0]);
+  router.push({
+    name: sessioneStore.domande[sessioneStore.counter][0],
+    params: { id: sessioneStore.counter },
+  });
 }
 
 defineOptions({

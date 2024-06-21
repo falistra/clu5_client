@@ -9,6 +9,7 @@ import {
 import routes from './routes';
 import xml2js from 'xml2js';
 import { useSessioneStore } from 'stores/sessione';
+// import { IDomanda } from 'pages/models';
 
 import dataXML from './data';
 
@@ -38,8 +39,13 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach(async (to) => {
+  Router.beforeEach(async (to, from) => {
+    console.log(to);
+    console.log(from);
+
     if (to.path == '/') {
+      const sessioneStore = useSessioneStore();
+
       const jsonScript = await xml2js
         .parseStringPromise(dataXML.script, {
           explicitArray: false,
@@ -52,7 +58,9 @@ export default route(function (/* { store, ssrContext } */) {
           console.error(err);
         });
 
-      const d = (jsonScript.insiemi_domande.domande as Array<object>)
+      sessioneStore.domande = (
+        jsonScript.insiemi_domande.domande as Array<object>
+      )
         .map((value) => {
           const domande = (value as { sql: string; domanda: object }).domanda;
           return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
@@ -61,36 +69,16 @@ export default route(function (/* { store, ssrContext } */) {
         .map((domanda) => {
           const d = Object.entries(domanda);
           const tipo = d[1][0];
-          const script_domanda = domanda[tipo];
-          return { tipo, script: script_domanda, proprieta: d[0][1] };
+          const script = domanda[tipo] as object;
+          return [tipo as string, script as object, d[0][1]] as [
+            string,
+            object,
+            object
+          ];
         });
-
-      console.log(d);
-
-      // const domande = [];
-      // script.forEach((element: Array<object>) => {
-      //   element.domanda.array.forEach((element) => {
-      //     domande.push(element);
-      //   });
-      // });
-      // console.log(script);
-
-      const jsonData = await xml2js
-        .parseStringPromise(dataXML.xmlData, {
-          explicitArray: false,
-          trim: true,
-        })
-        .then(function (result) {
-          return result;
-        })
-        .catch(function (err) {
-          console.error(err);
-        });
-
-      const sessioneStore = useSessioneStore();
-      sessioneStore.domande = Object.entries(jsonData.Domande);
-      console.log(sessioneStore.domande);
-      return { path: sessioneStore.domande[0][0] };
+      // return { tipo, script, props: d[0][1] as object } as IDomanda;
+      const domanda = sessioneStore.domande[0] as [string, object, object];
+      return { path: `${domanda[0]}/0` };
     }
   });
 

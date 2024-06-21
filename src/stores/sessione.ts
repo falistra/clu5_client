@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
+// import { IDomanda } from 'pages/models';
 
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
     counter: 0,
-    domande: <[string, unknown][]>[],
+    domande: <[string, unknown, unknown][]>[],
   }),
   // getters: {
   //   doubleCount: (state) => state.counter * 2,

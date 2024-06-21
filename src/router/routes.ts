@@ -6,52 +6,55 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: 'domandasceltasingola',
+        path: 'domandasceltasingola/:id',
+        name: 'domandasceltasingola',
         component: () => import('pages/DomandaSceltaSingola.vue'),
       },
       {
-        path: 'domandariordino',
+        path: 'domandariordino/:id',
         component: () => import('pages/DomandaRiordino.vue'),
       },
       {
-        path: 'domandascritturalibera',
+        path: 'domandascritturalibera/:id',
         component: () => import('pages/DomandaScritturaLibera.vue'),
       },
       {
-        path: 'domandacomprensionetesto',
+        path: 'domandacomprensionetesto/:id',
         component: () => import('pages/DomandaComprensioneTesto.vue'),
       },
       {
-        path: 'domandasceltamultipla',
+        path: 'domandasceltamultipla/:id',
         component: () => import('pages/DomandaSceltaMultipla.vue'),
       },
 
       {
-        path: 'domandariempimentotesto',
+        path: 'domandariempimentotesto/:id',
+        name: 'domandariempimentotesto',
         component: () => import('pages/DomandaRiempimentoTesto.vue'),
       },
       {
-        path: 'domandariempimentotestolibero',
+        path: 'domandariempimentotestolibero/:id',
         component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
       },
       {
-        path: 'domandaRiempimentoLibero',
+        path: 'domandaRiempimentoLibero/:id',
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {
-        path: 'domandaoutputstudente',
+        path: 'domandaoutputstudente/:id',
         component: () => import('pages/DomandaOutputStudente.vue'),
       },
       {
-        path: 'domandaabbinamentomultiplo',
+        path: 'domandaabbinamentomultiplo/:id',
         component: () => import('pages/DomandaAbbinamentoMultiplo.vue'),
       },
       {
-        path: 'domandaabbinamentosingolo',
+        path: 'domandaabbinamentosingolo/:id',
+        name: 'domandaabbinamentosingolo',
         component: () => import('pages/DomandaAbbinamentoSingolo.vue'),
       },
       {
-        path: 'domandawordpool',
+        path: 'domandawordpool/:id',
         component: () => import('pages/DomandaWordPool.vue'),
       },
     ],

@@ -72,4 +72,5 @@ const checkMove = () => null;
 
 .list-group-item
     border-style: outset
+    cursor: move
 </style>
