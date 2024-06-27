@@ -1,6 +1,66 @@
 const script = `
 <insiemi_domande>
-	<domande>
+<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 6239, 7032, 6881, 7017, 6960, 2295, 6971, 11560, 7373, 14453, 4063, 12101, 4066) AND domande.livello = 2 AND domande.specie = 2 AND domande.tipo = 1 AND domande.specializzazione = 1 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Clare Darby" id="8505" livello="A2" peso="5" tag="LETTURA" tecnica="2">
+			<domandacomprensionetesto>
+				<prologo>&amp;nbsp;Leggi il testo e rispondi alle 5 domande cliccando sull'opzione corretta.</prologo>
+				<testo_comprensione>&lt;strong&gt;An introduction to Scouting&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;The Scout Association in the United Kingdom organises adventure activities and personal development opportunities for 400,000 young people aged 6-25. %u2018Personal development%u2019 means encouraging and stimulating the physical, intellectual, social and spiritual welfare of the individual. We want to help our members realise their full potential as individuals, as responsible citizens and as members of their local, national and international communities. &lt;br&gt;&lt;br&gt;It is true that we can%u2019t solve all the problems in the world but we can help to make it a better place. Scouting makes a positive contribution to society by helping young people to become independent and responsible. Young people enjoy learning by working in partnership with adults. They participate in a variety of activities and new experiences, exploring the outdoors and working in teams. &lt;br&gt;&lt;br&gt;Our method for giving young people the opportunity to learn is by offering a continuous progression of training, activities and awards that include everything that young people do in Scouting from the age of 6 to 25.&lt;br&gt;&lt;br&gt;In Scouting, our adults have a responsibility to make sure that the programmes offered are fun and exciting and guarantee that all our activities are safe and that our members are not in any way exposed to risk. &lt;br&gt;&lt;br&gt;The Scout Association is the largest co-educational youth organisation in the world. Internationally, we have over 28 million young members in 216 countries. About 65% of the international membership is in developing countries.&amp;nbsp; &lt;br&gt;&lt;br&gt;Scouting is open to all young people aged 6 to 25 of every religious and cultural background. There are also many opportunities for adults to become Leaders, Assistants or Administrators.&lt;br&gt;&lt;br&gt;&lt;br&gt;Adapted and simplified from https://members.scouts.org.uk/</testo_comprensione>
+				<domande>
+					<domandasceltasingola hash="088966bcd91fd0d625fc8f84b354a1d7">
+						<prologo />
+						<testo>&amp;nbsp;Under half a million people in the UK:</testo>
+						<risposte tipoopzioni="TESTO">
+							<risposta hash="e1ec1db459550f92240d325bedf03467" tipo="TESTO">are adolescents</risposta>
+							<risposta hash="775f6e62b85a1b5bfe1daf2937e5fa52" tipo="TESTO">are scouts</risposta>
+							<risposta hash="0880a95600cff13ee2a1094d7e67eed1" tipo="TESTO">organize scout activities</risposta>
+						</risposte>
+					</domandasceltasingola>
+					<domandasceltasingola hash="c35cea01b134c6bdab01b8f0d84cdb35">
+						<prologo />
+						<testo>&amp;nbsp;Scouts are encouraged:&lt;br&gt;</testo>
+						<risposte tipoopzioni="TESTO">
+							<risposta hash="98cac2204c2a322deb68436be4720780" tipo="TESTO">to solve all the problems in the world</risposta>
+							<risposta hash="451f17019d806004d2ff525017c97d8a" tipo="TESTO">to depend on adults</risposta>
+							<risposta hash="cb28fda82f5d43c9e32786855924dba7" tipo="TESTO">to be autonomous</risposta>
+						</risposte>
+					</domandasceltasingola>
+					<domandasceltasingola hash="43de205949bae71c565840b41cf0d0a6">
+						<prologo />
+						<testo>&amp;nbsp;Scouts are gradually given:</testo>
+						<risposte tipoopzioni="TESTO">
+							<risposta hash="874e24a0cd81b13065295c65481ad18e" tipo="TESTO">more dangerous activities</risposta>
+							<risposta hash="8015883e2727b5bf5ed0d1c073dccf79" tipo="TESTO">prizes for learning</risposta>
+							<risposta hash="7ffdcf54546b75520b930e5353c71f42" tipo="TESTO">more teamwork</risposta>
+						</risposte>
+					</domandasceltasingola>
+					<domandasceltasingola hash="ac1c288b4d794cb8ca73ae83c688e9d1">
+						<prologo />
+						<testo>&amp;nbsp;Scouts are:</testo>
+						<risposte tipoopzioni="TESTO">
+							<risposta hash="d4f43214317ea008f3f423221573f27a" tipo="TESTO">often in dangerous situations</risposta>
+							<risposta hash="2e660f5e98f5f42a53c20c9688fb72a8" tipo="TESTO">sometimes in dangerous situations</risposta>
+							<risposta hash="e956d7c1c83d50aa97383230743312fe" tipo="TESTO">never in dangerous situations</risposta>
+						</risposte>
+					</domandasceltasingola>
+					<domandasceltasingola hash="5ecfecfb5ef6c1623a5cad9a41558897">
+						<prologo />
+						<testo>&amp;nbsp;Most of the 28 million scouts in the world are:</testo>
+						<risposte tipoopzioni="TESTO">
+							<risposta hash="7437a376619cfada229000031e3c4c11" tipo="TESTO">in Europe</risposta>
+							<risposta hash="7d55362c34a3402ce468abf4b62e9000" tipo="TESTO">not in the west</risposta>
+							<risposta hash="c44ccd703f935495440205f136e59b1f" tipo="TESTO">in the UK</risposta>
+						</risposte>
+					</domandasceltasingola>
+				</domande>
+			</domandacomprensionetesto>
+		</domanda>
+	</domande>
+
+<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
 WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND domande.specie = 7 AND (domande.tipo = 4 OR domande.tipo = 5 OR domande.tipo = 6 OR domande.tipo = 7 OR domande.tipo = 8 OR domande.tipo = 9 OR domande.tipo = 10 OR domande.tipo = 11 OR domande.tipo = 12 OR domande.tipo = 17 OR domande.tipo = 18 OR domande.tipo = 19 OR domande.tipo = 20 OR domande.tipo = 21 OR domande.tipo = 22 OR domande.tipo = 23 OR domande.tipo = 24 OR domande.tipo = 25) AND domande.specializzazione = 1 ORDER BY rand()
@@ -8,7 +68,7 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND do
 		<domanda autore="Robin Evers" id="14435" livello="A2" peso="1" tag="LG_temp" tecnica="7">
 			<domandariempimentotesto>
 				<prologo>&amp;nbsp;Trascina l'opzione corretta in ogni spazio.</prologo>
-				<testo>OBESITY IN MEXICO&lt;br&gt;&lt;br&gt;Mexico is a country with the second highest rate of obesity. The government says that around 37 million Mexicans are obese.&lt;br&gt;&lt;br&gt;The government wants to help these obese people %u2013 it ___1___ 30 health stations in 21 Metrobus stations in Mexico City. When somebody ___2___ in front of the station, it tells the person to do 10 squats. While you exercise, the station ___3___ you some advice on how to live a healthy life. When you%u2019re finished with the squats, the station gives you a free ticket!&lt;br&gt;&lt;br&gt;Experts ___4___ that so many people in Mexico are obese because of unhealthy food and drinks.</testo>
+				<testo>OBESITY IN MEXICO&lt;br&gt;&lt;br&gt;Mexico is a country with the second highest rate of obesity. The government says that around 37 million Mexicans are obese.&lt;br&gt;&lt;br&gt;The government wants to help these obese people &#x2013; it ___1___ 30 health stations in 21 Metrobus stations in Mexico City. When somebody ___2___ in front of the station, it tells the person to do 10 squats. While you exercise, the station ___3___ you some advice on how to live a healthy life. When you%u2019re finished with the squats, the station gives you a free ticket!&lt;br&gt;&lt;br&gt;Experts ___4___ that so many people in Mexico are obese because of unhealthy food and drinks.</testo>
 				<risposte>
 					<risposta hash="74c6abe13f6fc1bafd3575a8d055c56d">helps</risposta>
 					<risposta hash="84eeb81e61c76ad3f4103b0b051c7021">says</risposta>
@@ -34,6 +94,7 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND do
 			</domandariempimentotesto>
 		</domanda>
 	</domande>
+
 	<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id

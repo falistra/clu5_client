@@ -12,14 +12,17 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domandariordino/:id',
+        name: 'domandariordino',
         component: () => import('pages/DomandaRiordino.vue'),
       },
       {
         path: 'domandascritturalibera/:id',
+        name: 'domandascritturalibera',
         component: () => import('pages/DomandaScritturaLibera.vue'),
       },
       {
         path: 'domandacomprensionetesto/:id',
+        name: 'domandacomprensionetesto',
         component: () => import('pages/DomandaComprensioneTesto.vue'),
       },
       {
@@ -34,18 +37,22 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domandariempimentotestolibero/:id',
+        name: 'domandariempimentotestolibero',
         component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
       },
       {
         path: 'domandaRiempimentoLibero/:id',
+        name: 'domandaRiempimentoLibero',
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {
         path: 'domandaoutputstudente/:id',
+        name: 'domandaoutputstudente',
         component: () => import('pages/DomandaOutputStudente.vue'),
       },
       {
         path: 'domandaabbinamentomultiplo/:id',
+        name: 'domandaabbinamentomultiplo',
         component: () => import('pages/DomandaAbbinamentoMultiplo.vue'),
       },
       {
@@ -55,6 +62,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domandawordpool/:id',
+        name: 'domandawordpool',
         component: () => import('pages/DomandaWordPool.vue'),
       },
     ],

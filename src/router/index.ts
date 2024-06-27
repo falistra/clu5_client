@@ -39,9 +39,9 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach(async (to, from) => {
-    console.log(to);
-    console.log(from);
+  Router.beforeEach(async (to) => {
+    // console.log(to);
+    // console.log(from);
 
     if (to.path == '/') {
       const sessioneStore = useSessioneStore();
