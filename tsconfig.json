@@ -5,6 +5,7 @@
   },
   "exclude": [
     "./dist",
+    "./stuff",
     "./.quasar",
     "./node_modules",
     "./src-capacitor",

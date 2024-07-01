@@ -30,7 +30,13 @@
     </q-drawer> -->
 
     <q-page-container>
-      <router-view :key="$route.fullPath" />
+      <router-view :key="$route.fullPath" v-slot="{ Component }">
+        <transition>
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </transition>
+      </router-view>
     </q-page-container>
 
     <q-footer elevated>

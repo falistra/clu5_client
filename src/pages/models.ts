@@ -6,6 +6,11 @@ export interface IDomanda {
   tag: string;
   tecnica: string;
 }
+export interface RispostaDomandaSceltaSingola {
+  hash: string;
+  tipo?: string;
+  _: string;
+}
 
 export interface T_DomandaSceltaSingola {
   $?: { id: number; id_vdb: number; hash?: string };
@@ -13,9 +18,10 @@ export interface T_DomandaSceltaSingola {
   testo: string;
   risposte: {
     tipoopzioni?: string;
-    risposta: Array<{ hash: string; tipo?: string; _: string }>;
+    risposta: Array<RispostaDomandaSceltaSingola>;
   };
   immagine?: { url: string };
+  rispostaData?: string;
 }
 
 export interface T_DomandaSceltaMultipla {
