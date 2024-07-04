@@ -14,6 +14,7 @@
                 @dragover.prevent
                 @dragenter.prevent
                 @drop="onDrop($event, item.slotIndex)"
+                @dblclick="annulla(item)"
               >
                 {{ item.content }}
               </span>
@@ -25,7 +26,7 @@
           <div class="row">
             <div
               v-for="risposta in lista_risposte_disponibili"
-              class="col q-mx-sm risposta"
+              class="col-auto q-ml-md q-pa-sm risposta"
               :key="risposta.id"
               draggable
               @dragstart="startDrag($event, risposta.testo)"
@@ -47,6 +48,7 @@ import { ref, computed } from 'vue';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaRiempimentoTesto } from 'pages/models';
+import { T_Token } from 'pages/models';
 // import { IDomanda } from 'pages/models';
 
 const sessione = useSessioneStore();
@@ -55,16 +57,9 @@ const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
 
-interface T_Token {
-  index: number;
-  isSlot: boolean;
-  slotIndex: string;
-  content: string;
-}
-
 const tokens = ref(
-  script.testo.match(/([^_]+)|([_]+(\d)[_]+)/giu)?.map((content, index) => {
-    const slot = content.match(/([_]+)(\d)([_]+)/);
+  script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
+    const slot = content.match(/([_]+)(\d+)([_]+)/);
     const slotIndex = slot ? slot[2] : '';
     const isSlot = slot ? true : false;
     content = isSlot ? '_________' : content;
@@ -117,6 +112,14 @@ const lista_risposte = ref(
 const lista_risposte_disponibili = computed(() =>
   lista_risposte.value.filter((value) => value.disponibile)
 );
+
+const annulla = (item: T_Token) => {
+  const risposta = lista_risposte.value?.find(
+    (value) => value.testo == item.content
+  );
+  if (risposta) risposta.disponibile = true;
+  item.content = '__________';
+};
 </script>
 
 <style lang="sass" scoped>
@@ -125,7 +128,8 @@ const lista_risposte_disponibili = computed(() =>
   max-width: auto
 
 .risposta
-  cursor: move
+  cursor: grab
+  border: 1px solid black
 
 .drop-zone
   color: red

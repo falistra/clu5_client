@@ -42,7 +42,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domandaRiempimentoLibero/:id',
-        name: 'domandaRiempimentoLibero',
+        name: 'domandariempimentolibero',
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {

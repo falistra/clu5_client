@@ -1,5 +1,122 @@
 const script = `
 <insiemi_domande>
+
+	<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503') AND domande.specializzazione = 32 AND domande.id = 15509 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Alessandra Marazzi" id="15509" livello="A2" peso="5" tag="LG_temp" tecnica="12">
+			<domandariempimentotestolibero>
+				<prologo>Leggi il testo e coniuga i verbi al tempo giusto.</prologo>
+				<testo> Cara Francesca, come (0. stare) __stai___? Io abbastanza bene, sono sempre molto impegnata. Oggi però (essere) ___01____ a casa dal lavoro e così ho tempo per scriverti.La settimana scorsa (passare) ___02___ dai miei genitori e mia madre (dire) ___03___ che ti (vedere) ___04___ al supermercato un po' di tempo fa e che vuoi sapere qualcosa della mia nuova vita. Qui a Milano va tutto bene, di solito (alzarsi) ___05____ alle 6.00 la mattina per avere un po' di tempo per me: (andare) ___06___ spesso al parco a correre o a fare un po' di ginnastica. Soprattutto mi (piacere) ___07___ molto il mio lavoro, ho un collega molto simpatico che (lavorare) ___08___ con me, adesso (dovere) ___09___ fare un progetto insieme e sono felice perchè lui è davvero bravo.&lt;/p&gt;&lt;p&gt;Milano (essere) ___10___ una città piena di vita, e solo lo scorso fine settimana io e una mia coinquilina (andare) ___11___ a sentire un concerto e a visitare due mostre a Palazzo Reale. La mostra su Picasso mi (piacere) ___12___ tantissimo! E martedì scorso io (iscriversi) ___13___ a un corso di yoga. Purtroppo invece ieri (rimanere) ___14___ a casa perchè ho avuto la febbre, ma, almeno, così (svegliarsi) ___15___ tardi e (mettere) ___16___ in ordine la casa.&lt;/p&gt;&lt;p&gt;Perchè la prossima settimana non (venire) ___17___ a Milano a trovarmi? A casa nostra (esserci) ___18___ una camera libera quindi (potere) ___19___ dormire qui: sai quanto (costare) ___20___ gli alberghi a Milano!&lt;/p&gt;&lt;p&gt;Fammi sapere! Ci sentiamo presto!&lt;/p&gt;&lt;p&gt;Un abbraccio&lt;/p&gt;&lt;p&gt;Sonia&lt;/p&gt;</testo>
+			</domandariempimentotestolibero>
+		</domanda>
+	</domande>
+
+
+<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND domande.specie = 7 AND (domande.tipo = 4 OR domande.tipo = 5 OR domande.tipo = 6 OR domande.tipo = 7 OR domande.tipo = 8 OR domande.tipo = 9 OR domande.tipo = 10 OR domande.tipo = 11 OR domande.tipo = 12 OR domande.tipo = 17 OR domande.tipo = 18 OR domande.tipo = 19 OR domande.tipo = 20 OR domande.tipo = 21 OR domande.tipo = 22 OR domande.tipo = 23 OR domande.tipo = 24 OR domande.tipo = 25) AND domande.specializzazione = 1 ORDER BY rand()
+ LIMIT 2</sql>
+		<domanda autore="Robin Evers" id="14435" livello="A2" peso="1" tag="LG_temp" tecnica="7">
+			<domandariempimentotesto>
+				<prologo>&amp;nbsp;Trascina l'opzione corretta in ogni spazio.</prologo>
+				<testo>OBESITY IN MEXICO&lt;br&gt;&lt;br&gt;Mexico is a country with the second highest rate of obesity. The government says that around 37 million Mexicans are obese.&lt;br&gt;&lt;br&gt;The government wants to help these obese people &#x2013; it ___1___ 30 health stations in 21 Metrobus stations in Mexico City. When somebody ___2___ in front of the station, it tells the person to do 10 squats. While you exercise, the station ___3___ you some advice on how to live a healthy life. When you%u2019re finished with the squats, the station gives you a free ticket!&lt;br&gt;&lt;br&gt;Experts ___4___ that so many people in Mexico are obese because of unhealthy food and drinks.</testo>
+				<risposte>
+					<risposta hash="74c6abe13f6fc1bafd3575a8d055c56d">helps</risposta>
+					<risposta hash="84eeb81e61c76ad3f4103b0b051c7021">says</risposta>
+					<risposta hash="a53ff64efd169c1b4d085d6e7075c8d7">say</risposta>
+					<risposta hash="8e13ffc9fd9d6a6761231a764bdf106b">put</risposta>
+					<risposta hash="0a7cbd25cb6eac751b588dd3b21059e9">walks</risposta>
+					<risposta hash="3674478d09da161a0fa409f7c30380ee">gives</risposta>
+				</risposte>
+			</domandariempimentotesto>
+		</domanda>
+		<domanda autore="Clare Darby" id="6239" livello="A2" peso="1" tag="LG_modal" tecnica="7">
+			<domandariempimentotesto>
+				<prologo>&amp;nbsp;Trascina l'opzione corretta in ogni spazio.</prologo>
+				<testo>We ______1______ go and see Jeremy and Sarah this summer when we go to Edinburgh. They ______2______ certainly be at home when we are there on holiday. ______3______ I send them an email giving them the details of our stay in Edinburgh? We have a hotel booking so of course we ______4______stay with them - just dinner together one evening. What do you think?</testo>
+				<risposte>
+					<risposta hash="eeaba41a1b7e3f05b37a52ed30243699">shall</risposta>
+					<risposta hash="b7a61cf5d29e4ad809c301c74229b078">won't</risposta>
+					<risposta hash="18218139eec55d83cf82679934e5cd75">will</risposta>
+					<risposta hash="9a4b6f884971dcb4a5172876b335baab">may</risposta>
+					<risposta hash="f5f6bb1f79415f96d11a1f75d9b7dfbe">mustn't</risposta>
+					<risposta hash="d0e6ef34e76c41b0fac84f608289d013">must</risposta>
+				</risposte>
+			</domandariempimentotesto>
+		</domanda>
+	</domande>
+
+
+
+	<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509) AND domande.specializzazione = 32 AND domande.id = 15487 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Stafano Garuti" id="15487" livello="A2" peso="50" tag="LG_frasi" tecnica="11">
+			<domandariempimentolibero>
+				<prologo>Completa i dialoghi con la parola o la frase adatte.&lt;br&gt;</prologo>
+				<testo>&lt;p&gt;&lt;b&gt;A. Alla stazione dei treni&lt;/b&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;:&amp;nbsp;&amp;nbsp;&amp;nbsp; Buongiorno. (FRASE) ________________________1____________________________ per Milano, per favore.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;:&amp;nbsp; Solo andata?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: No, (FRASE) __________2_________. A che ora parte il treno?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Ci sono due treni: il Regionale Veloce delle 14.20 e il Frecciabianca delle 15.00.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _________3__________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Con il Regionale Veloce ci vogliono 1 ore e 20, con il Frecciabianca 1 ora e 45.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Prendo (FRASE) _________4___________, vorrei arrivare a Milano prima possibile. &lt;/p&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; (FRASE) _________5_______________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: No, il treno è diretto. (FRASE) ________6_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Seconda. (FRASE) _______7_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Sono 28 euro e 25 centesimi.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _____8_______. Scusi, un'ultima informazione: (FRASE) ____9_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Dal binario 3.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) ______10_______&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Arrivederci e buon viaggio.&lt;br&gt;&lt;/p&gt;</testo>
+			</domandariempimentolibero>
+		</domanda>
+	</domande>
+
+	<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498) AND domande.specializzazione = 32 AND domande.id = 15488 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Stafano Garuti" id="15488" livello="A2" peso="2.5" tag="PRA_scopo_disc" tecnica="5">
+			<domandaabbinamentosingolo>
+				<prologo>Collega le frasi a sinistra con &lt;u&gt;una sola&lt;/u&gt; delle frasi a destra.&lt;br&gt;</prologo>
+				<testo>[object Object]</testo>
+				<coppie tipoopzioni="TESTO" tipoorientamento="VERTICALE" />
+				<partiFisse>
+					<item hash="5d2c75440444293c6c3798fc18eb5c18">Come ti sembra la pasta al pesto?</item>
+					<item hash="5487dc55d9449a6fb420904d2ece4de5">Giorgio, accompagni Simona a casa?</item>
+					<item hash="a525451d51f874986c99f0e769eafe0e">Mi dà due chili d'uva, per cortesia?</item>
+					<item hash="99158e5645fd725eda1c6cf9d141baca">Com'è la zona dove abita Sergio?</item>
+					<item hash="9cc812ecf75dc0bd6bd5bf363c78a696">Ieri mia sorella si è laureata in storia dell'arte.</item>
+				</partiFisse>
+				<partiMobili>
+					<item hash="6055ede7259402afb15935cb422ea5d4">Condoglianze!</item>
+					<item hash="6320e3d2bf5f71d0d88a5696e0eaae71">La adoro! Complimenti!</item>
+					<item hash="e0a23662d404595c8691147157d08296">Come no! La vuole bianca o nera?</item>
+					<item hash="ddffe18c648449c6d9a435d72f8530de">Congratulazioni!</item>
+					<item hash="cfa1ce4971fa304f16f2543996e597f6">Lo voglio regalare a mio padre.</item>
+					<item hash="242e672a7a78e2a79dfde51099b0fa04">Non molto, tre o quattro volte all'anno.</item>
+					<item hash="79bdf4b1fc4565601b319d5f7933d729">No, non lo conosco.</item>
+					<item hash="77608911755a5b40d09d72089ca1227b">Sembra tranquilla, si trova molto bene.</item>
+					<item hash="d58337d8fea40eaf8ee4f91e301e9f36">Volentieri, la porto subito!</item>
+				</partiMobili>
+			</domandaabbinamentosingolo>
+		</domanda>
+	</domande>
+
+  	<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498, 15488) AND domande.specializzazione = 32 AND domande.id = 15489 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Stafano Garuti" id="15489" livello="A2" peso="50" tag="SCRITTURA" tecnica="10">
+			<domandascritturalibera>
+				<prologo>Cos'ha fatto Giacomo ieri? &lt;br&gt;</prologo>
+				<testo>Guarda le immagini e scrivi &lt;u&gt;&lt;b&gt;cinque &lt;/b&gt;&lt;/u&gt;frasi. Devi scrivere tutto quello che ha fatto ( da a. ad h.).</testo>
+				<immagine url="tmp_xu6oqmy.uso_della_lingua_classe_1_15489.png" />
+			</domandascritturalibera>
+		</domanda>
+	</domande>
+
+
+
+
+
+
+
 <domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
@@ -60,40 +177,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 
 		</domanda>
 	</domande>
 
-<domande>
-		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND domande.specie = 7 AND (domande.tipo = 4 OR domande.tipo = 5 OR domande.tipo = 6 OR domande.tipo = 7 OR domande.tipo = 8 OR domande.tipo = 9 OR domande.tipo = 10 OR domande.tipo = 11 OR domande.tipo = 12 OR domande.tipo = 17 OR domande.tipo = 18 OR domande.tipo = 19 OR domande.tipo = 20 OR domande.tipo = 21 OR domande.tipo = 22 OR domande.tipo = 23 OR domande.tipo = 24 OR domande.tipo = 25) AND domande.specializzazione = 1 ORDER BY rand()
- LIMIT 2</sql>
-		<domanda autore="Robin Evers" id="14435" livello="A2" peso="1" tag="LG_temp" tecnica="7">
-			<domandariempimentotesto>
-				<prologo>&amp;nbsp;Trascina l'opzione corretta in ogni spazio.</prologo>
-				<testo>OBESITY IN MEXICO&lt;br&gt;&lt;br&gt;Mexico is a country with the second highest rate of obesity. The government says that around 37 million Mexicans are obese.&lt;br&gt;&lt;br&gt;The government wants to help these obese people &#x2013; it ___1___ 30 health stations in 21 Metrobus stations in Mexico City. When somebody ___2___ in front of the station, it tells the person to do 10 squats. While you exercise, the station ___3___ you some advice on how to live a healthy life. When you%u2019re finished with the squats, the station gives you a free ticket!&lt;br&gt;&lt;br&gt;Experts ___4___ that so many people in Mexico are obese because of unhealthy food and drinks.</testo>
-				<risposte>
-					<risposta hash="74c6abe13f6fc1bafd3575a8d055c56d">helps</risposta>
-					<risposta hash="84eeb81e61c76ad3f4103b0b051c7021">says</risposta>
-					<risposta hash="a53ff64efd169c1b4d085d6e7075c8d7">say</risposta>
-					<risposta hash="8e13ffc9fd9d6a6761231a764bdf106b">put</risposta>
-					<risposta hash="0a7cbd25cb6eac751b588dd3b21059e9">walks</risposta>
-					<risposta hash="3674478d09da161a0fa409f7c30380ee">gives</risposta>
-				</risposte>
-			</domandariempimentotesto>
-		</domanda>
-		<domanda autore="Clare Darby" id="6239" livello="A2" peso="1" tag="LG_modal" tecnica="7">
-			<domandariempimentotesto>
-				<prologo>&amp;nbsp;Trascina l'opzione corretta in ogni spazio.</prologo>
-				<testo>We ______1______ go and see Jeremy and Sarah this summer when we go to Edinburgh. They ______2______ certainly be at home when we are there on holiday. ______3______ I send them an email giving them the details of our stay in Edinburgh? We have a hotel booking so of course we ______4______stay with them - just dinner together one evening. What do you think?</testo>
-				<risposte>
-					<risposta hash="eeaba41a1b7e3f05b37a52ed30243699">shall</risposta>
-					<risposta hash="b7a61cf5d29e4ad809c301c74229b078">won't</risposta>
-					<risposta hash="18218139eec55d83cf82679934e5cd75">will</risposta>
-					<risposta hash="9a4b6f884971dcb4a5172876b335baab">may</risposta>
-					<risposta hash="f5f6bb1f79415f96d11a1f75d9b7dfbe">mustn't</risposta>
-					<risposta hash="d0e6ef34e76c41b0fac84f608289d013">must</risposta>
-				</risposte>
-			</domandariempimentotesto>
-		</domanda>
-	</domande>
 
 	<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello

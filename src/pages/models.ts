@@ -58,13 +58,14 @@ export interface T_DomandaRiempimentoTesto {
   prologo: string;
   testo: string;
   risposte: { risposta: Array<{ hash: string; _: string }> };
+  rispostaData?: Array<{ hash: string; _: string }>;
 }
 
 export interface T_DomandaRiempimentoTestoLibero {
   $?: { id: number };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ ordine: number; _: string }> };
+  rispostaData?: { risposta: Array<{ ordine: number; _: string }> };
 }
 
 export interface T_DomandaRiempimentoLibero {
@@ -102,4 +103,18 @@ export interface T_DomandaWordPool {
   prologo: string;
   testo: string;
   wordpools: { wordpool: Array<{ pool: string; words: string }> };
+}
+
+export interface Buco {
+  index: number;
+  isSlot: boolean;
+  slotIndex: number;
+  content: string;
+}
+
+export interface T_Token {
+  index: number;
+  isSlot: boolean;
+  slotIndex: string;
+  content: string;
 }
