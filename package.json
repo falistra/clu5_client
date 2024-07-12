@@ -13,6 +13,8 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@chenfengyuan/vue-countdown": "^2.1.2",
+    "@dongivan/virtual-keyboard": "^0.1.5",
     "@quasar/extras": "^1.16.4",
     "@types/jquery": "^3.5.30",
     "@vueuse/components": "^10.11.0",

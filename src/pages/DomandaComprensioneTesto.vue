@@ -129,6 +129,7 @@ const barraStyle = ref<Partial<CSSStyleDeclaration>>({
   width: 100%
   max-width: auto
   min-height: 500px
+  border: 2px solid
 
 .risposte
   margin-bottom: 5px

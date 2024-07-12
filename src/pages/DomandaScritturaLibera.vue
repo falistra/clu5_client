@@ -38,4 +38,5 @@ const testo = ref('');
 .my-card
   width: 100%
   max-width: auto
+  border: 2px solid
 </style>

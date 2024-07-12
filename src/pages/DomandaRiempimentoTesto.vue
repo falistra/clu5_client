@@ -4,33 +4,23 @@
       <q-card class="my-card" flat bordered>
         <q-card-section>
           <div class="text-overline" v-html="script.prologo"></div>
-          <!-- <div class="text-subtitle q-mt-sm q-mb-xs" v-html="testo"></div> -->
-          <div class="text-subtitle q-mt-sm q-mb-xs">
-            <span v-for="item in tokens" :key="item.index">
-              <span v-if="!item.isSlot" v-html="item.content"></span>
-              <span
-                v-else-if="item.isSlot"
-                class="drop-zone"
-                @dragover.prevent
-                @dragenter.prevent
-                @drop="onDrop($event, item.slotIndex)"
-                @dblclick="annulla(item)"
-              >
-                {{ item.content }}
+          <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
+            <div class="text-subtitle q-mt-sm q-mb-xs">
+              <span v-for="item in tokens" :key="item.index">
+                <span v-if="!item.isSlot" v-html="item.content"></span>
+                <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
+                  @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
+                  {{ item.content }}
+                </span>
               </span>
-            </span>
-          </div>
+            </div>
+          </q-scroll-area>
         </q-card-section>
         <q-separator />
         <q-card-section>
           <div class="row">
-            <div
-              v-for="risposta in lista_risposte_disponibili"
-              class="col-auto q-ml-md q-pa-sm risposta"
-              :key="risposta.id"
-              draggable
-              @dragstart="startDrag($event, risposta.testo)"
-            >
+            <div v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta"
+              :key="risposta.id" draggable @dragstart="startDrag($event, risposta.testo)">
               {{ risposta.testo }}
             </div>
           </div>
@@ -60,14 +50,14 @@ const script = sessione.domande[
 const tokens = ref(
   script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
     const slot = content.match(/([_]+)(\d+)([_]+)/);
-    const slotIndex = slot ? slot[2] : '';
+    const slotIndex = slot ? parseInt(slot[2]) : NaN;
     const isSlot = slot ? true : false;
-    content = isSlot ? '_________' : content;
+    content = isSlot ? '_________' : content.replace(/\%u(\d+)/g, '&#x$1;');
     return { index, isSlot, slotIndex, content } as T_Token;
   })
 );
 
-const onDrop = function (evt: DragEvent, slotIndex: string) {
+const onDrop = function (evt: DragEvent, slotIndex: number) {
   if (evt.dataTransfer) {
     const item = tokens.value?.find(
       (item: T_Token) => item.slotIndex == slotIndex
@@ -85,7 +75,6 @@ const onDrop = function (evt: DragEvent, slotIndex: string) {
 };
 
 const startDrag = (evt: DragEvent, item: string) => {
-  console.log(typeof evt);
   if (evt.dataTransfer) {
     evt.dataTransfer.dropEffect = 'move';
     evt.dataTransfer.effectAllowed = 'move';
@@ -120,12 +109,28 @@ const annulla = (item: T_Token) => {
   if (risposta) risposta.disponibile = true;
   item.content = '__________';
 };
+
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
+  right: '4px',
+  borderRadius: '5px',
+  backgroundColor: '#027be3',
+  width: '5px',
+  opacity: '0.75',
+});
+
+const barStyle = ref<Partial<CSSStyleDeclaration>>({
+  right: '2px',
+  borderRadius: '9px',
+  backgroundColor: '#027be3',
+  width: '9px',
+  opacity: '0.2',
+});
 </script>
 
 <style lang="sass" scoped>
 .my-card
   width: 100%
-  max-width: auto
+  border: 2px solid
 
 .risposta
   cursor: grab

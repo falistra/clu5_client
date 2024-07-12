@@ -4,6 +4,68 @@ const script = `
 	<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498) AND domande.specializzazione = 32 AND domande.id = 15488 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Stafano Garuti" id="15488" livello="A2" peso="2.5" tag="PRA_scopo_disc" tecnica="5">
+			<domandaabbinamentosingolo>
+				<prologo>Collega le frasi a sinistra con &lt;u&gt;una sola&lt;/u&gt; delle frasi a destra.&lt;br&gt;</prologo>
+				<testo>[object Object]</testo>
+				<coppie tipoopzioni="TESTO" tipoorientamento="VERTICALE" />
+				<partiFisse>
+					<item hash="5d2c75440444293c6c3798fc18eb5c18">Come ti sembra la pasta al pesto?</item>
+					<item hash="5487dc55d9449a6fb420904d2ece4de5">Giorgio, accompagni Simona a casa?</item>
+					<item hash="a525451d51f874986c99f0e769eafe0e">Mi dà due chili d'uva, per cortesia?</item>
+					<item hash="99158e5645fd725eda1c6cf9d141baca">Com'è la zona dove abita Sergio?</item>
+					<item hash="9cc812ecf75dc0bd6bd5bf363c78a696">Ieri mia sorella si è laureata in storia dell'arte.</item>
+				</partiFisse>
+				<partiMobili>
+					<item hash="6055ede7259402afb15935cb422ea5d4">Condoglianze!</item>
+					<item hash="6320e3d2bf5f71d0d88a5696e0eaae71">La adoro! Complimenti!</item>
+					<item hash="e0a23662d404595c8691147157d08296">Come no! La vuole bianca o nera?</item>
+					<item hash="ddffe18c648449c6d9a435d72f8530de">Congratulazioni!</item>
+					<item hash="cfa1ce4971fa304f16f2543996e597f6">Lo voglio regalare a mio padre.</item>
+					<item hash="242e672a7a78e2a79dfde51099b0fa04">Non molto, tre o quattro volte all'anno.</item>
+					<item hash="79bdf4b1fc4565601b319d5f7933d729">No, non lo conosco.</item>
+					<item hash="77608911755a5b40d09d72089ca1227b">Sembra tranquilla, si trova molto bene.</item>
+					<item hash="d58337d8fea40eaf8ee4f91e301e9f36">Volentieri, la porto subito!</item>
+				</partiMobili>
+			</domandaabbinamentosingolo>
+		</domanda>
+	</domande>
+
+
+
+  <domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 6239, 7032, 6881, 7017, 6960, 2295, 6971, 11560, 7373) AND domande.livello = 2 AND domande.specie = 5 AND domande.tipo = 28 AND domande.specializzazione = 1 ORDER BY rand()
+ LIMIT 1</sql>
+		<domanda autore="Robin Evers" id="14453" livello="A2" peso="1" tag="LG_lex_img" tecnica="5">
+			<domandaabbinamentosingolo>
+				<prologo>Abbina ad ogni immagine una sola descrizione trascinandola con il mouse.</prologo>
+				<testo>words with "book"</testo>
+				<coppie tipoopzioni="IMMAGINE" tipoorientamento="VERTICALE" />
+				<partiFisse>
+					<item hash="cd343f8e1af28e50143bf75d9d405b1c">tmprYtNDH.jpg</item>
+					<item hash="c68134d2411d9aae9e64257cc53b2b33">tmprrzH6c.jpg</item>
+					<item hash="ee27055341a3443dce3263aafb8605b2">tmpLKwW4y.jpg</item>
+					<item hash="5d83e72e672beb5a161871a0532c3ebb">tmprRiULo.jpg</item>
+				</partiFisse>
+				<partiMobili>
+					<item hash="fb5d1b4a2312e239652b13a24ed9a74f">notebook</item>
+					<item hash="b75624ce7f285ca15322ab80d4d54565">bookshelf</item>
+					<item hash="2a4a0bf95d32e1e3699eb55927334851">bookshop</item>
+					<item hash="994d5713c92167a0051cb7baaa2c312a">textbook</item>
+					<item hash="4684cddc2fdd1f00234aca819c872304">ebook</item>
+					<item hash="796ab53acf966fbacf8f078ecd10a9ce">bookcase</item>
+				</partiMobili>
+			</domandaabbinamentosingolo>
+		</domanda>
+	</domande>
+
+	<domande>
+		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
 WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503') AND domande.specializzazione = 32 AND domande.id = 15509 ORDER BY rand()
  LIMIT 1</sql>
 		<domanda autore="Alessandra Marazzi" id="15509" livello="A2" peso="5" tag="LG_temp" tecnica="12">
@@ -50,8 +112,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND do
 		</domanda>
 	</domande>
 
-
-
 	<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
@@ -65,37 +125,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505'
 		</domanda>
 	</domande>
 
-	<domande>
-		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498) AND domande.specializzazione = 32 AND domande.id = 15488 ORDER BY rand()
- LIMIT 1</sql>
-		<domanda autore="Stafano Garuti" id="15488" livello="A2" peso="2.5" tag="PRA_scopo_disc" tecnica="5">
-			<domandaabbinamentosingolo>
-				<prologo>Collega le frasi a sinistra con &lt;u&gt;una sola&lt;/u&gt; delle frasi a destra.&lt;br&gt;</prologo>
-				<testo>[object Object]</testo>
-				<coppie tipoopzioni="TESTO" tipoorientamento="VERTICALE" />
-				<partiFisse>
-					<item hash="5d2c75440444293c6c3798fc18eb5c18">Come ti sembra la pasta al pesto?</item>
-					<item hash="5487dc55d9449a6fb420904d2ece4de5">Giorgio, accompagni Simona a casa?</item>
-					<item hash="a525451d51f874986c99f0e769eafe0e">Mi dà due chili d'uva, per cortesia?</item>
-					<item hash="99158e5645fd725eda1c6cf9d141baca">Com'è la zona dove abita Sergio?</item>
-					<item hash="9cc812ecf75dc0bd6bd5bf363c78a696">Ieri mia sorella si è laureata in storia dell'arte.</item>
-				</partiFisse>
-				<partiMobili>
-					<item hash="6055ede7259402afb15935cb422ea5d4">Condoglianze!</item>
-					<item hash="6320e3d2bf5f71d0d88a5696e0eaae71">La adoro! Complimenti!</item>
-					<item hash="e0a23662d404595c8691147157d08296">Come no! La vuole bianca o nera?</item>
-					<item hash="ddffe18c648449c6d9a435d72f8530de">Congratulazioni!</item>
-					<item hash="cfa1ce4971fa304f16f2543996e597f6">Lo voglio regalare a mio padre.</item>
-					<item hash="242e672a7a78e2a79dfde51099b0fa04">Non molto, tre o quattro volte all'anno.</item>
-					<item hash="79bdf4b1fc4565601b319d5f7933d729">No, non lo conosco.</item>
-					<item hash="77608911755a5b40d09d72089ca1227b">Sembra tranquilla, si trova molto bene.</item>
-					<item hash="d58337d8fea40eaf8ee4f91e301e9f36">Volentieri, la porto subito!</item>
-				</partiMobili>
-			</domandaabbinamentosingolo>
-		</domanda>
-	</domande>
 
   	<domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
@@ -110,9 +139,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505'
 			</domandascritturalibera>
 		</domanda>
 	</domande>
-
-
-
 
 
 
@@ -273,34 +299,9 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 
 			</domandasceltasingola>
 		</domanda>
 	</domande>
-	<domande>
-		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 6239, 7032, 6881, 7017, 6960, 2295, 6971, 11560, 7373) AND domande.livello = 2 AND domande.specie = 5 AND domande.tipo = 28 AND domande.specializzazione = 1 ORDER BY rand()
- LIMIT 1</sql>
-		<domanda autore="Robin Evers" id="14453" livello="A2" peso="1" tag="LG_lex_img" tecnica="5">
-			<domandaabbinamentosingolo>
-				<prologo>Abbina ad ogni immagine una sola descrizione trascinandola con il mouse.</prologo>
-				<testo>words with "book"</testo>
-				<coppie tipoopzioni="IMMAGINE" tipoorientamento="VERTICALE" />
-				<partiFisse>
-					<item hash="cd343f8e1af28e50143bf75d9d405b1c">tmprYtNDH.jpg</item>
-					<item hash="c68134d2411d9aae9e64257cc53b2b33">tmprrzH6c.jpg</item>
-					<item hash="ee27055341a3443dce3263aafb8605b2">tmpLKwW4y.jpg</item>
-					<item hash="5d83e72e672beb5a161871a0532c3ebb">tmprRiULo.jpg</item>
-				</partiFisse>
-				<partiMobili>
-					<item hash="fb5d1b4a2312e239652b13a24ed9a74f">notebook</item>
-					<item hash="b75624ce7f285ca15322ab80d4d54565">bookshelf</item>
-					<item hash="2a4a0bf95d32e1e3699eb55927334851">bookshop</item>
-					<item hash="994d5713c92167a0051cb7baaa2c312a">textbook</item>
-					<item hash="4684cddc2fdd1f00234aca819c872304">ebook</item>
-					<item hash="796ab53acf966fbacf8f078ecd10a9ce">bookcase</item>
-				</partiMobili>
-			</domandaabbinamentosingolo>
-		</domanda>
-	</domande>
-	<domande>
+
+
+  <domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
 WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 6239, 7032, 6881, 7017, 6960, 2295, 6971, 11560, 7373, 14453) AND domande.livello = 2 AND domande.specie = 1 AND domande.tipo = 1 AND domande.specializzazione = 1 ORDER BY rand()

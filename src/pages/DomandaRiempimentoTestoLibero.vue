@@ -22,14 +22,26 @@
                 <input
                   class="q-ml-sm q-mt-sm"
                   v-else-if="item.isSlot"
-                  @change="setRisposta($event, item)"
+                  v-model="item.content"
+                  @change="setRisposta(item)"
                 />
               </span>
             </div>
           </q-scroll-area>
         </q-card-section>
         <q-separator />
-        <q-card-section> T_DomandaRiempimentoTestoLibero </q-card-section>
+        <q-card-section>
+          <VirtualKeyboard class="..." @key-pressed="carattere">
+            <div class="...">
+              <KeyButton
+                v-for="v of i18n.caratteri.IT.split('')"
+                :key="`key-${v}`"
+                :children="[v.toUpperCase()]"
+                :value="v"
+              />
+            </div>
+          </VirtualKeyboard>
+        </q-card-section>
       </q-card>
     </div>
   </q-page>
@@ -39,7 +51,11 @@
 defineOptions({
   name: 'DomandaRiempimentoTestoLibero',
 });
+import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
+import '@dongivan/virtual-keyboard/default.css';
+
 import { useSessioneStore } from 'stores/sessione';
+import { useI18nStore } from 'stores/i18n';
 import { T_DomandaRiempimentoTestoLibero } from 'pages/models';
 import { T_Token } from 'pages/models';
 import { ref } from 'vue';
@@ -48,21 +64,24 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTestoLibero;
-console.log(script);
+if (!script.rispostaData) script.rispostaData = [];
+
+const i18n = ref(useI18nStore());
 
 const tokens = ref(
   script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
     const slot = content.match(/([_]+)(\d+)([_]+)/);
-    const slotIndex = slot ? slot[2] : '';
+    const slotIndex = slot ? parseInt(slot[2]) : NaN;
     const isSlot = slot ? true : false;
-    content = isSlot ? '_________' : content;
+    const risposta = script.rispostaData ? script.rispostaData[slotIndex] : '';
+    content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
     return { index, isSlot, slotIndex, content } as T_Token;
   })
 );
 
-const setRisposta = (event: Event, item: unknown) => {
-  console.log(event);
+const setRisposta = (item: T_Token) => {
   console.log(item);
+  if (script.rispostaData) script.rispostaData[item.slotIndex] = item.content;
 };
 
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
@@ -80,10 +99,15 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>({
   width: '9px',
   opacity: '0.2',
 });
+
+const carattere = (key: string) => {
+  console.log(key);
+};
 </script>
 
 <style lang="sass" scoped>
 .my-card
   width: 100%
   max-width: auto
+  border: 2px solid
 </style>

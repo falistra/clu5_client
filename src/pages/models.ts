@@ -65,7 +65,7 @@ export interface T_DomandaRiempimentoTestoLibero {
   $?: { id: number };
   prologo: string;
   testo: string;
-  rispostaData?: { risposta: Array<{ ordine: number; _: string }> };
+  rispostaData?: Array<string>;
 }
 
 export interface T_DomandaRiempimentoLibero {
@@ -73,6 +73,7 @@ export interface T_DomandaRiempimentoLibero {
   prologo: string;
   testo: string;
   immagine?: { url: string };
+  rispostaData?: Array<string>;
 }
 
 export interface T_DomandaOutputStudente {
@@ -94,8 +95,16 @@ export interface T_DomandaAbbinamentoSingolo {
   prologo: string;
   testo: string;
   coppie: { tipoopzioni: string; tipoorientamento: string };
-  partiFisse: { item: Array<{ hash: string; _: string }> };
-  partiMobili: { item: Array<{ hash: string; _: string }> };
+  partiFisse: {
+    item: Array<{
+      $: { hash: string };
+      _: string;
+      rispostaData?: { $: { hash: string }; _: string };
+    }>;
+  };
+  partiMobili: {
+    item: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+  };
 }
 
 export interface T_DomandaWordPool {
@@ -115,6 +124,7 @@ export interface Buco {
 export interface T_Token {
   index: number;
   isSlot: boolean;
-  slotIndex: string;
+  slotIndex: number;
   content: string;
+  size?: number;
 }

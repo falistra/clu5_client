@@ -89,6 +89,7 @@ const setRisposta = (risposta: string) => {
 .my-card
   width: 100%
   max-width: auto
+  border: 2px solid
 
 .risposta
   font-size: medium
