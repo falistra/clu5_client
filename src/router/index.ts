@@ -47,7 +47,7 @@ export default route(function (/* { store, ssrContext } */) {
       const sessioneStore = useSessioneStore();
 
       const jsonScript = await xml2js
-        .parseStringPromise(dataXML.script, {
+        .parseStringPromise(dataXML.domande, {
           explicitArray: false,
           trim: true,
         })

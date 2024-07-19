@@ -88,6 +88,16 @@ export interface T_DomandaAbbinamentoMultiplo {
   prologo: string;
   testo: string;
   coppie: { coppia: Array<{ fissa?: string; mobile: string }> };
+  partiFisse: {
+    item: Array<{
+      $: { hash: string };
+      _: string;
+      rispostaData?: Array<{ $: { hash: string }; _: string }>;
+    }>;
+  };
+  partiMobili: {
+    item: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+  };
 }
 
 export interface T_DomandaAbbinamentoSingolo {
@@ -111,7 +121,16 @@ export interface T_DomandaWordPool {
   $?: { id: number };
   prologo: string;
   testo: string;
-  wordpools: { wordpool: Array<{ pool: string; words: string }> };
+  pools: {
+    pool: Array<{
+      $: { hash: string };
+      _: string;
+      rispostaData?: Array<{ $: { hash: string }; _: string }>;
+    }>;
+  };
+  words: {
+    word: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+  };
 }
 
 export interface Buco {

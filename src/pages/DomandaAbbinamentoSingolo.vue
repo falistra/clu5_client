@@ -5,21 +5,21 @@
         <q-card-section class="col-6">
           <div class="text-overline q-mb-md" v-html="script.prologo"></div>
           <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
-            <div class="q-pa-md">
-              <q-list bordered separator>
+            <div class="q-pa-sm">
+              <q-list dense bordered separator>
                 <q-item v-for="item in script.partiFisse.item" :key="item.$.hash">
                   <q-item-section>
                     <div class="row q-my-sm">
                       <div class="col-6 parte-fissa">
                         <div class="q-ma-sm item">{{ item._ }}</div>
                       </div>
-                      <div class="col-6 zona-ricevente" @dragover.prevent @dragenter.prevent
+                      <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                         @drop="onDrop($event, item)" @dblclick="annulla(item)">
-                        <q-tooltip v-if="item.rispostaData" class="bg-red text-body2" anchor="center middle"
-                          self="center middle">
-                          Doppio click per togliere
-                        </q-tooltip>
-                        <div class="text-subtitle q-ma-sm item">{{ item.rispostaData?._ }}</div>
+                        <div class="text-subtitle q-ma-sm item">{{ item.rispostaData?._ }}
+                          <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                            <strong>Doppio click per togliere</strong>
+                          </q-tooltip>
+                        </div>
                       </div>
                     </div>
                   </q-item-section>
@@ -30,16 +30,15 @@
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
-            <q-list class="q-mr-md" bordered separator>
+          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 350px">
+            <q-list dense class="q-mr-md" bordered separator>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
-                <q-item-section>
-                  <div class="parte-mobile" draggable @dragstart="startDrag($event, item)">
-                    <q-tooltip class="bg-indigo text-body2" anchor="center middle" self="center middle">
-                      Doppio click per selezionare, poi drag
-                    </q-tooltip>
-                    <div class="q-ma-sm item">{{ item._ }}</div>
-                  </div>
+                <q-item-section side>
+                  <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
+                    <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                      <strong>Trascina...</strong>
+                    </q-tooltip>{{ item._ }}
+                  </p>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -64,7 +63,13 @@ const script = ref(
 );
 
 script.value.partiMobili.item.forEach((item) => {
-  item.disponibile = true;
+  const risposta_presente = script.value.partiFisse.item.find(
+    (value) => {
+      if (value.rispostaData && value.rispostaData.$.hash == item.$.hash) return true
+      else return false
+    }
+  );
+  item.disponibile = risposta_presente ? false : true;
 });
 
 interface Item {
@@ -73,13 +78,24 @@ interface Item {
   rispostaData?: { $: { hash: string }; _: string };
 }
 
+const isDragging = ref(false)
+
 const startDrag = (evt: DragEvent, item: Item) => {
+  if (evt)
+    (((evt as Event).target) as Element).classList.add('dragging')
   if (evt.dataTransfer) {
+    isDragging.value = true
     evt.dataTransfer.dropEffect = 'move';
     evt.dataTransfer.effectAllowed = 'move';
+    evt.dataTransfer.clearData()
     evt.dataTransfer.setData('risposta', item.$.hash);
   }
 };
+
+// const endDrag = () => { //(evt: DragEvent, item: Item) => {
+//   isDragging.value = false
+// }
+
 
 const lista_risposte_disponibili = computed(() =>
   script.value.partiMobili.item.filter((value) => value.disponibile)
@@ -155,22 +171,21 @@ const myTweak = (offset: number) => { // offset: number
 
 .zona-ricevente
   border: 2px dotted black
-  min-height: 50px
+  min-height: 40px
   min-width: 150px
 
 .parte-fissa
   border: 2px solid black
-  min-height: 50px
-
-.parte-mobile
-  cursor: grab
-  border: 2px dotted black
-  min-height: 50px
+  min-height: 40px
 
 .item
+  cursor: grab
   font-size: small
   font-weight: bold
   text-align: justify
   line-height: 85%
+  width: auto
 
+.dragging
+  background-color : $indigo-2
 </style>

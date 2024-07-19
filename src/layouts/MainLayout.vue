@@ -27,7 +27,7 @@
       <router-view :key="$route.fullPath" v-slot="{ Component }">
         <!--- server per il cambio pagina -->
         <keep-alive>
-          <component :is="Component" />
+          <component :is="Component" v-if="$route.meta.keepAlive" />
         </keep-alive>
       </router-view>
     </q-page-container>

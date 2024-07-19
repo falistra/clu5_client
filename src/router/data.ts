@@ -1,4 +1,4 @@
-const script = `
+const domande = `
 <insiemi_domande>
 
 	<domande>
@@ -6,6 +6,97 @@ const script = `
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
 WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498) AND domande.specializzazione = 32 AND domande.id = 15488 ORDER BY rand()
  LIMIT 1</sql>
+
+    <domanda autore="45" id="15031" lingua="1" livello="4" tag="1" tecnica="6">
+      <domandaabbinamentomultiplo>
+        <prologo>Match ALL 8 options to the corresponding texts by dragging them with the mouse.</prologo>
+        <testo>The Four Best Charities in the World, and How Much You Should Give to Each&lt;br&gt;By Chris Weller&lt;br&gt;&lt;br&gt;http://uk.businessinsider.com/the-4-best-charities-in-the-world-and-how-much-you-should-give-to-each-2015-7?r=US&amp;IR=T</testo>
+        <coppie tipoopzioni="TESTO" tipoorientamento="VERTICALE" />
+        <partiFisse>
+          <item hash="37111e41239df58c21b218efc74fab0f">&lt;strong&gt;Against Malaria Foundation&lt;/strong&gt;&lt;br&gt;&lt;br&gt;Easily the most threatening disease to kids in low-income countries is malaria. Approximately 600,000 people die every year as a result of malaria infection, and the only vaccine that's been approved won't reach patients until 2017.&lt;br&gt;&lt;br&gt;AMF avoids the curative route and instead opts for treatment. To do that, they use insecticide-treated bed nets - mesh tarps that drape over kids' beds and kill mosquitoes as they attempt to enter.&lt;br&gt;&lt;br&gt;GiveWell finds through its research that, based on malaria's prevalence and the low cost of distributing bed nets, AMF is far and away the charity most deserving of people's dollars.&lt;br&gt;&lt;br&gt;Donating $1.50 to AMF can protect one person from malaria for one year. If you're feeling especially generous, however, GiveWell recommends a donation of $3,340. It might seem like a lot, but you'd be saving an entire life.</item>
+          <item hash="095507fa0e5d15dabc1643e3be0408b1">&lt;strong&gt;GiveDirectly&lt;/strong&gt;&lt;br&gt;&lt;br&gt;GiveDirectly makes good on its name, becauase its entire mission is giving cash to people who need it in Kenya and Uganda.&lt;br&gt;&lt;br&gt;"We believe that this approach faces an unusually low burden of proof," GiveWell states, "and that the available evidence supports the idea that unconditional cash transfers significantly help people."&lt;br&gt;&lt;br&gt;
+    Essentially, GiveDirectly takes the model of giving a beggar on the street your money and reassures donors their money is being used for basic needs, not booze or drugs. Money most often goes toward durable goods like furniture and clothes, healthcare, education, and food.&lt;br&gt;&lt;br&gt;Though there were no observable changes to people's stress levels, research showed their psychological well-beings rose substantially after receiving the donations.&lt;br&gt;&lt;br&gt;
+    More good news for donors: GiveDirectly absorbs little for overhead. Approximately 87% of donations go directly to a family in poverty.</item>
+          <item hash="d0f534a31ea65d70eaf1d3bafb6d2b45">&lt;strong&gt;Schistosomiasis Control Initiative&lt;/strong&gt;&lt;br&gt;&lt;br&gt;Roughly 240 million people live with parasitic worm infections, and 90% of those cases occur in just 20 countries.&lt;br&gt;&lt;br&gt;Thankfully, GiveWell finds that approximately $1.23 can rid a child of these worms.&lt;br&gt;&lt;br&gt;"This cost is based on several difficult-to-estimate inputs including (a) how to account for donated drugs and (b) the portion of costs paid for by the governments with which SCI works," GiveWell states. The cost is several times greater than DtWI's cost because SCI deals primarily in regions where the deadliest worms are more prevalent, typically in sub-Saharan Africa.&lt;br&gt;&lt;br&gt;Few countries are wealthy enough to create the infrastructure on their own. SCI is so valuable because the ceiling for support is so high.</item>
+          <item hash="16c33722cdc3d2e9086ed2829fbe8909">&lt;strong&gt;Deworm the World Initiative&lt;/strong&gt;&lt;br&gt;&lt;br&gt;The Deworm the World Initiative assists government-run programs in schools to strengthen deworming efforts. Most often that relies on pills, which kill the intestinal parasite that enters kids' bodies through unsanity conditions in soil or water.&lt;br&gt;&lt;br&gt;DtWI's main goal is advocating and supporting the programs that deliver kids those pills. GiveWell estimates children can be dewormed for about $0.30 per child all in with DtWI's help, or $0.09 per child if the cost excludes "the value of teachers' and principals' time spent on the program."&lt;br&gt;&lt;br&gt;"Even for small amounts of money you're still giving pills to children," says Sean Conley, a research analyst at GiveWell, "which seem to be making a very big difference in their lives later on."</item>
+        </partiFisse>
+        <partiMobili>
+          <item hash="f159e8b8fd668e8990801e14f43626e0">This organization mainly acts in areas where the most dangerous parasites are more common.</item>
+          <item hash="a38fd1d8a1ef2143efc6861ba8213ac0">This organization takes into account other sources of donations as well as government funding when calculating their costs per person helped.</item>
+          <item hash="cda20b05919ac1b6f8fd7356faf43df5">This organization helps to fight against the illness most dangerous to children in poor countries.</item>
+          <item hash="5fb725d81a7ff6664a5593f238e52035">This organization helps people pay for basic needs.</item>
+          <item hash="f9aec90563488b4863067d55173a28f7">Through this organization, even an amount of money under a dollar can help resolve a child's problem.</item>
+          <item hash="64474b05eeabba4c5e82de952cba4466">This organization's principal objective is to provide support to programs that directly help children.</item>
+          <item hash="98c672e18f56f0884d9ca5881a349bd4">This organization takes a relatively small proportion of the money donated to use for its own costs.</item>
+          <item hash="da63db0c52044a4e1c2d8840eb6179a0">This organization chooses to try to prevent infection rather than cure it.</item>
+        </partiMobili>
+      </domandaabbinamentomultiplo>
+    </domanda>
+
+
+
+     <domanda autore="12" id="15354" lingua="1" livello="2" tag="26" tecnica="8">
+      <domandawordpool>
+        <prologo>Trascina tutte le parole date nel riquadro corrispondente.</prologo>
+        <testo>Domanda 22</testo>
+        <pools>
+          <pool hash="5110efca9d8f2ed8f26a5a3917c3ffe1">Respiratory system</pool>
+          <pool hash="fd277af096dacb6fd3f045253e5ac244">Digestive system</pool>
+          <pool hash="d36f5a5121e20e95b119fd6f2954b8c9">Circulatory system</pool>
+        </pools>
+        <words>
+          <word hash="fd951d4d187b5063794700abb97f28dd"> gall bladder</word>
+          <word hash="d1703a4d03487550dd21062fe5c2a3d8"> stomach</word>
+          <word hash="db879dedf7673953ba0f17f04294a551"> vein</word>
+          <word hash="41d1de28e96dc1cde568d3b068fa17bb">nose</word>
+          <word hash="a320ef5c460a53a2d01c52cd8b21eec2">bronchus</word>
+          <word hash="7861e915d9b0f9854fb388c88a61e551">clot</word>
+          <word hash="f2f6c6fcc9d771590942e476e9f729bf">trachea</word>
+          <word hash="ffec601cfe7073a232acf220615a26db"> capillary</word>
+          <word hash="0d39a370788dac64c3c783a3cdbb6f97"> carbon dioxide</word>
+          <word hash="3a6621ffc8a329b0fd4cd8115990ba23"> air</word>
+          <word hash="e420b3e5c9ce703b57d859329a3a806a"> liver</word>
+          <word hash="a1c929100243c5ec8aef34e0a4e80d2c"> blood pressure</word>
+          <word hash="83739245016cac2af442a5aaac18a791"> thorax</word>
+          <word hash="3e7ea6a86117122b7b47cab77b3f9e47">pancreas</word>
+          <word hash="6124d98749365e3db2c9e5b27ca04db6">oxygen</word>
+          <word hash="b2ad40115c594fdddb73b9f7660a93a7"> pulse</word>
+        </words>
+      </domandawordpool>
+    </domanda>
+
+    <domanda autore="14" id="14565" lingua="2" livello="2" tag="2" tecnica="3">
+      <domandasceltamultipla risposteCorrette="4">
+        <prologo>&amp;nbsp;Ascoltate la registrazione.</prologo>
+        <testo>Cliccate sulle &lt;strong&gt;4 opzioni corrette&lt;/strong&gt;.</testo>
+        <audio nrMaxRipetizioni="2" url="tmpaDlnFx.ogg" />
+        <immagine />
+        <risposte tipoopzioni="TESTO">
+          <risposta hash="f8e94c0a5b2d7aa01c13a1a329db6cc9" tipo="TESTO">Brigitte dit que sa vie a changé</risposta>
+          <risposta hash="06748aa0c76aff6f9517d9af11ba9b6f" tipo="TESTO">Brigitte et Pascal vivent ensemble depuis 3 mois</risposta>
+          <risposta hash="1fc1aec173a25bb35ae88654e2d65664" tipo="TESTO">Sophie semble heureuse d'avoir des nouvelles de Brigitte</risposta>
+          <risposta hash="4605e159555ca77fec788d73b998efe6" tipo="TESTO">Samedi, Brigitte ira faire des achats avec son compagnon</risposta>
+          <risposta hash="a8e8b28f4ac52fada6619c96b04d310e" tipo="TESTO">Brigitte a toujours été ponctuelle</risposta>
+          <risposta hash="95c7421056318b57dc5d703d0da6bed2" tipo="TESTO">Le 18ème arrondissement est un quartier agréable</risposta>
+        </risposte>
+      </domandasceltamultipla>
+    </domanda>
+
+    <domanda autore="14" id="14041" lingua="2" livello="2" tag="1" tecnica="4">
+      <domandariordino>
+        <prologo>&amp;nbsp;Riordinate la lettera di candidatura.</prologo>
+        <testo>Risposta a una proposta di lavoro.</testo>
+        <audio nrmaxripetizioni="2" url="nessuno" />
+        <risposte tipoopzioni="TESTO">
+          <risposta hash="733de62c00e127f417ecd0c08fa41ffb">Madame,</risposta>
+          <risposta hash="1dbf7f57975388cd43b43b0529ea7877">J'ai bon espoir que mon profil puisse retenir votre attention, c'est pouquoi, dans l'attente de vous rencontrer directement, je vous prie d'agréer, Madame, mes meilleurs salutations.</risposta>
+          <risposta hash="d235792234caa9238f98182d33daf43f">Je possède une bonne expérience puisque lors de mes trois années d'études, j'ai eu la chance de garder 2 jumeaux de 3 mois jusqu'à leur insertion en crèche. Je suis calme, ponctuelle, passionnée par mon futur métier et disponible à n'importe quel horaire puisque j'ai choisi une modalité de cours à distance.</risposta>
+          <risposta hash="2937608e8842bbd2d2096c79d3d0624f">Diplomée de l'école d'infirmière, je fréquente actuellement une école de puéricultrice à Strasbourg et souhaite garder de très jeunes enfants afin de subvenir en partie à mes besoins et de développer mon sens du contact avec les bébés.</risposta>
+          <risposta hash="01042418711c0df61d5b191be9426041">Suite à votre annonce parue le 4 mai dernier dans les DNA, je me permets de vous envoyer ma candidature pour la garde de votre bébé de 10 mois essentiellement tous les matins de 7h à 11h.</risposta>
+        </risposte>
+      </domandariordino>
+    </domanda>
+
 		<domanda autore="Stafano Garuti" id="15488" livello="A2" peso="2.5" tag="PRA_scopo_disc" tecnica="5">
 			<domandaabbinamentosingolo>
 				<prologo>Collega le frasi a sinistra con &lt;u&gt;una sola&lt;/u&gt; delle frasi a destra.&lt;br&gt;</prologo>
@@ -406,6 +497,89 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 
 	</domande>
 </insiemi_domande>
 `;
+
+const script = `
+<test descrizione="placement test ITA L2_da febbraio 2017" id="841" idUser="2" serverTime="2024-07-12T15:21:01.305928" sessionId="422" signed_userId="16404">
+	<prologo autore="Alessandra Marazzi" corso_di_laurea="placement test ITALIANO Erasmus" data_revisione="2017-02-16" lingua="5"/>
+	<stazioni>
+		<stazione ID="liv_A1" countdown="30" iniziale="true" numero_ordine="1">
+			<insieme_domande>
+				<domande id="13169" peso_unitario="2" quantita="1"/>
+				<domande id="13156" peso_unitario="2" quantita="1"/>
+				<domande id="12959" peso_unitario="2" quantita="1"/>
+				<domande id="12943" peso_unitario="2" quantita="1"/>
+				<domande id="12942" peso_unitario="2" quantita="1"/>
+				<domande id="13176" peso_unitario="2" quantita="1"/>
+				<domande id="13163" peso_unitario="2" quantita="1"/>
+				<domande id="12969" peso_unitario="2" quantita="1"/>
+				<domande id="12967" peso_unitario="2" quantita="1"/>
+				<domande id="12054" peso_unitario="5" quantita="1"/>
+				<domande id="12060" peso_unitario="5" quantita="1"/>
+			</insieme_domande>
+			<caso condizione="lt16.5">
+				<azione stato_acquisito="NL" vai_a="uscita"/>
+			</caso>
+			<caso condizione="ge16.5,le19.5">
+				<azione stato_acquisito="A2 da confermare" vai_a="uscita"/>
+			</caso>
+			<altrimenti>
+				<azione stato_acquisito="A1" vai_a="liv_A2"/>
+			</altrimenti>
+		</stazione>
+		<stazione ID="liv_A2" countdown="40" iniziale="false" numero_ordine="2">
+			<insieme_domande>
+				<domande livello="2" peso_unitario="1" quantita="2" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26" tecnica="7"/>
+				<domande livello="2" peso_unitario="0.5" quantita="12" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26" tecnica="1"/>
+				<domande livello="2" peso_unitario="1" quantita="10" specializzazione="1" tag="17, 21, 23" tecnica="12"/>
+				<domande livello="2" peso_unitario="1" quantita="1" specializzazione="1" tag="28" tecnica="5"/>
+				<domande livello="2" peso_unitario="1" quantita="1" specializzazione="1" tag="26" tecnica="5"/>
+				<domande livello="2" peso_unitario="5" quantita="1" specializzazione="1" tag="1" tecnica="2"/>
+			</insieme_domande>
+			<caso condizione="lt17.5">
+				<azione stato_acquisito="corso A2" vai_a="uscita"/>
+			</caso>
+			<altrimenti>
+				<azione stato_acquisito="A2" vai_a="liv_B1"/>
+			</altrimenti>
+		</stazione>
+		<stazione ID="liv_B1" countdown="40" iniziale="false" numero_ordine="3">
+			<insieme_domande>
+				<domande livello="3" peso_unitario="1" quantita="3" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25" tecnica="5"/>
+				<domande livello="3" peso_unitario="0.5" quantita="6" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26" tecnica="1"/>
+				<domande livello="3" peso_unitario="1" quantita="6" specializzazione="1" tag="17, 21, 23" tecnica="12"/>
+				<domande livello="3" peso_unitario="3" quantita="1" specializzazione="1" tag="1" tecnica="6"/>
+				<domande livello="3" peso_unitario="5" quantita="1" specializzazione="1" tag="2" tecnica="2"/>
+				<domande livello="3" peso_unitario="5" quantita="1" specializzazione="1" tag="1" tecnica="2"/>
+			</insieme_domande>
+			<caso condizione="lt17.5">
+				<azione stato_acquisito="corso B1" vai_a="uscita"/>
+			</caso>
+			<altrimenti>
+				<azione stato_acquisito="B1" vai_a="liv_B2"/>
+			</altrimenti>
+		</stazione>
+		<stazione ID="liv_B2" countdown="40" iniziale="false" numero_ordine="4">
+			<insieme_domande>
+				<domande livello="4" peso_unitario="1" quantita="3" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26" tecnica="5"/>
+				<domande livello="4" peso_unitario="1" quantita="6" specializzazione="1" tag="17, 21, 23" tecnica="12"/>
+				<domande livello="4" peso_unitario="0.5" quantita="6" specializzazione="1" tag="4, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26" tecnica="1"/>
+				<domande livello="4" peso_unitario="3" quantita="1" specializzazione="1" tag="1" tecnica="6"/>
+				<domande livello="4" peso_unitario="5" quantita="1" specializzazione="1" tag="2" tecnica="2"/>
+				<domande livello="4" peso_unitario="5" quantita="1" specializzazione="1" tag="1" tecnica="2"/>
+			</insieme_domande>
+			<caso condizione="lt17.5">
+				<azione stato_acquisito="corso B2" vai_a="uscita"/>
+			</caso>
+			<altrimenti>
+				<azione stato_acquisito="corso C1" vai_a="uscita"/>
+			</altrimenti>
+		</stazione>
+	</stazioni>
+	<studente cognome="Marazzi" nome="Alessandra"/>
+</test>
+`;
+
 export default {
+  domande,
   script,
 };
