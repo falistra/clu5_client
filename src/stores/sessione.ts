@@ -5,6 +5,7 @@ export const useSessioneStore = defineStore('sessione', {
   state: () => ({
     counter: 0,
     domande: <[string, unknown, unknown][]>[],
+    lingua: <string>'2',
   }),
   // getters: {
   //   doubleCount: (state) => state.counter * 2,

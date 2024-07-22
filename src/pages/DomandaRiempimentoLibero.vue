@@ -1,31 +1,15 @@
 <template>
-  <q-page
-    class="row items-center justify-evenly"
-    style="height: 250px; width: auto"
-  >
+  <q-page class="row items-center justify-evenly" style="height: 250px; width: auto">
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
           <div class="text-overline" v-html="script.prologo"></div>
-          <q-scroll-area
-            style="height: 250px; width: 100%"
-            :thumb-style="thumbStyle"
-            :bar-style="barStyle"
-          >
+          <q-scroll-area style="height: 250px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
             <div class="text-subtitle q-mr-md">
               <span v-for="item in tokens" :key="item.index">
-                <span
-                  class="q-ml-sm q-mt-sm"
-                  v-if="!item.isSlot"
-                  v-html="item.content"
-                ></span>
-                <input
-                  :size="item.size"
-                  class="q-ml-sm q-mt-sm"
-                  v-else-if="item.isSlot"
-                  v-model="item.content"
-                  @change="setRisposta(item)"
-                />
+                <span class="q-ml-sm q-mt-sm" v-if="!item.isSlot" v-html="item.content"></span>
+                <input :size="item.size" class="q-ml-sm q-mt-sm" v-else-if="item.isSlot" v-model="item.content"
+                  @change="setRisposta(item)" />
               </span>
             </div>
           </q-scroll-area>
@@ -34,12 +18,7 @@
         <q-card-section>
           <VirtualKeyboard class="..." @key-pressed="carattere">
             <div class="...">
-              <KeyButton
-                v-for="v of i18n.caratteri.IT.split('')"
-                :key="`key-${v}`"
-                :children="[v.toUpperCase()]"
-                :value="v"
-              />
+              <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
             </div>
           </VirtualKeyboard>
         </q-card-section>
@@ -104,7 +83,29 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>({
 
 const carattere = (key: string) => {
   console.log(key);
+  console.log(document.activeElement as HTMLInputElement)
+  insertAtCaret(key, document.activeElement as HTMLInputElement)
 };
+
+
+const insertAtCaret = function (text: string, ta?: HTMLInputElement | null,) {
+  if (ta) {
+    const txtarea = ta
+    const scrollPos = txtarea.scrollTop;
+    var strPos = txtarea.selectionStart || 0;
+    const front = (txtarea.value).substring(0, strPos);
+    const back = (txtarea.value).substring(strPos, txtarea.value.length);
+    txtarea.value = front + text + back;
+    strPos = strPos + text.length;
+    txtarea.selectionStart = strPos;
+    txtarea.selectionEnd = strPos;
+    txtarea.focus();
+    txtarea.scrollTop = scrollPos;
+  }
+}
+
+
+
 </script>
 
 <style lang="sass" scoped>

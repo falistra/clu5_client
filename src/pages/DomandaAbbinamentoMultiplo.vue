@@ -70,6 +70,8 @@ const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoMultiplo
 );
 
+console.log(script.value.$)
+
 script.value.partiMobili.item.forEach((item) => {
   const risposta_presente = script.value.partiFisse.item.find(
     (value) => {

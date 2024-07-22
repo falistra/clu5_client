@@ -13,7 +13,7 @@ export interface RispostaDomandaSceltaSingola {
 }
 
 export interface T_DomandaSceltaSingola {
-  $?: { id: number; id_vdb: number; hash?: string };
+  $: { id: number; lingua?: number; id_vdb: number; hash?: string };
   prologo: string;
   testo: string;
   risposte: {
@@ -25,15 +25,20 @@ export interface T_DomandaSceltaSingola {
 }
 
 export interface T_DomandaSceltaMultipla {
-  $?: { id?: number; maxrisposte: number };
+  $: { id?: number; lingua: string; risposteCorrette: string };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ corretta: number; _: string }> };
   immagine?: { url: string };
+  audio?: { $: { nrMaxRipetizioni: string; url: string } };
+  risposte: {
+    tipoopzioni?: string;
+    risposta: Array<{ hash: string; _: string }>;
+  };
+  rispostaData?: Array<{ hash: string; _: string }>;
 }
 
 export interface T_DomandaComprensioneTesto {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo_comprensione: string;
   domande: { domandasceltasingola: Array<T_DomandaSceltaSingola> };
@@ -41,20 +46,20 @@ export interface T_DomandaComprensioneTesto {
 }
 
 export interface T_DomandaRiordino {
-  $: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   risposte: { risposta: Array<{ ordine: number; _: string }> };
 }
 
 export interface T_DomandaScritturaLibera {
-  $: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
 }
 
 export interface T_DomandaRiempimentoTesto {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   risposte: { risposta: Array<{ hash: string; _: string }> };
@@ -62,14 +67,14 @@ export interface T_DomandaRiempimentoTesto {
 }
 
 export interface T_DomandaRiempimentoTestoLibero {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   rispostaData?: Array<string>;
 }
 
 export interface T_DomandaRiempimentoLibero {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   immagine?: { url: string };
@@ -77,14 +82,15 @@ export interface T_DomandaRiempimentoLibero {
 }
 
 export interface T_DomandaOutputStudente {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   risposte: { tipoCheck: string; risposta: Array<string> };
+  rispostaData: string;
 }
 
 export interface T_DomandaAbbinamentoMultiplo {
-  $?: { id: number };
+  $: { id: number };
   prologo: string;
   testo: string;
   coppie: { coppia: Array<{ fissa?: string; mobile: string }> };
@@ -101,7 +107,7 @@ export interface T_DomandaAbbinamentoMultiplo {
 }
 
 export interface T_DomandaAbbinamentoSingolo {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   coppie: { tipoopzioni: string; tipoorientamento: string };
@@ -118,7 +124,7 @@ export interface T_DomandaAbbinamentoSingolo {
 }
 
 export interface T_DomandaWordPool {
-  $?: { id: number };
+  $: { id: number; lingua: string };
   prologo: string;
   testo: string;
   pools: {

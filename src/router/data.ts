@@ -7,6 +7,45 @@ FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori O
 WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509, 15487, 15498) AND domande.specializzazione = 32 AND domande.id = 15488 ORDER BY rand()
  LIMIT 1</sql>
 
+<domanda autore="14" id="14565" lingua="2" livello="2" tag="2" tecnica="3">
+      <domandasceltamultipla risposteCorrette="4">
+        <prologo>&amp;nbsp;Ascoltate la registrazione.</prologo>
+        <testo>Cliccate sulle &lt;strong&gt;4 opzioni corrette&lt;/strong&gt;.</testo>
+        <audio nrMaxRipetizioni="2" url="esempio.ogg" />
+        <immagine />
+        <risposte tipoopzioni="TESTO">
+          <risposta hash="f8e94c0a5b2d7aa01c13a1a329db6cc9" tipo="TESTO">Brigitte dit que sa vie a changé</risposta>
+          <risposta hash="06748aa0c76aff6f9517d9af11ba9b6f" tipo="TESTO">Brigitte et Pascal vivent ensemble depuis 3 mois</risposta>
+          <risposta hash="1fc1aec173a25bb35ae88654e2d65664" tipo="TESTO">Sophie semble heureuse d'avoir des nouvelles de Brigitte</risposta>
+          <risposta hash="4605e159555ca77fec788d73b998efe6" tipo="TESTO">Samedi, Brigitte ira faire des achats avec son compagnon</risposta>
+          <risposta hash="a8e8b28f4ac52fada6619c96b04d310e" tipo="TESTO">Brigitte a toujours été ponctuelle</risposta>
+          <risposta hash="95c7421056318b57dc5d703d0da6bed2" tipo="TESTO">Le 18ème arrondissement est un quartier agréable</risposta>
+        </risposte>
+      </domandasceltamultipla>
+    </domanda>
+
+
+
+    <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
+    <domandaoutputstudente>
+      <prologo>Lea todos los enunciados y complete con una palabra que satisfaga todos los contextos.</prologo>
+      <testo>¿Quién en su sano ___ no ha tenido la tentación de acudir a la asamblea de las Naciones Unidas para denunciar este atentado ecológico?&lt;br&gt;La idea de que su antiguo maestre de campo se le hubiera rebelado, traía a Cortés fuera de ____&lt;br&gt;¿Y cuando él estaba fuera de ___, te pegaba? Y, sí, me pegaba, es que la borrachera los vuelve animales.&lt;br&gt;¿y quién mejor dictando las frases hechas que los autores de novelas baratas, denominación en la que no incluye ____ literario sino mera mención de su precio?&lt;br&gt;El poeta chileno recibió el Premio Cervantes, que a su ____ le fue concedido por azar, de manos del Rey Felipe de Borbón.&lt;br&gt;Cualquier ____ de valor presupone la proyección de la subjetividad de quien lo sostiene. &lt;br&gt;La finalidad del ____ contencioso es resolver todos y cada uno de los problemas presentados ante el tribunal, los cuales causen agravio a los particulares o hasta a la autoridad misma.</testo>
+      <risposte tipoCheck="AUTOMATICO">
+        <risposta>juicio</risposta>
+      </risposte>
+    </domandaoutputstudente>
+    </domanda>
+
+    <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
+    <domandaoutputstudente>
+      <prologo>Lea todos los enunciados y complete con una palabra que satisfaga todos los contextos.</prologo>
+      <testo>¿Quién en su sano ___ no ha tenido la tentación de acudir a la asamblea de las Naciones Unidas para denunciar este atentado ecológico?&lt;br&gt;La idea de que su antiguo maestre de campo se le hubiera rebelado, traía a Cortés fuera de ____&lt;br&gt;¿Y cuando él estaba fuera de ___, te pegaba? Y, sí, me pegaba, es que la borrachera los vuelve animales.&lt;br&gt;¿y quién mejor dictando las frases hechas que los autores de novelas baratas, denominación en la que no incluye ____ literario sino mera mención de su precio?&lt;br&gt;El poeta chileno recibió el Premio Cervantes, que a su ____ le fue concedido por azar, de manos del Rey Felipe de Borbón.&lt;br&gt;Cualquier ____ de valor presupone la proyección de la subjetividad de quien lo sostiene. &lt;br&gt;La finalidad del ____ contencioso es resolver todos y cada uno de los problemas presentados ante el tribunal, los cuales causen agravio a los particulares o hasta a la autoridad misma.</testo>
+      <risposte tipoCheck="AUTOMATICO">
+        <risposta>juicio</risposta>
+      </risposte>
+    </domandaoutputstudente>
+    </domanda>
+
     <domanda autore="45" id="15031" lingua="1" livello="4" tag="1" tecnica="6">
       <domandaabbinamentomultiplo>
         <prologo>Match ALL 8 options to the corresponding texts by dragging them with the mouse.</prologo>
@@ -65,22 +104,7 @@ WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505'
       </domandawordpool>
     </domanda>
 
-    <domanda autore="14" id="14565" lingua="2" livello="2" tag="2" tecnica="3">
-      <domandasceltamultipla risposteCorrette="4">
-        <prologo>&amp;nbsp;Ascoltate la registrazione.</prologo>
-        <testo>Cliccate sulle &lt;strong&gt;4 opzioni corrette&lt;/strong&gt;.</testo>
-        <audio nrMaxRipetizioni="2" url="tmpaDlnFx.ogg" />
-        <immagine />
-        <risposte tipoopzioni="TESTO">
-          <risposta hash="f8e94c0a5b2d7aa01c13a1a329db6cc9" tipo="TESTO">Brigitte dit que sa vie a changé</risposta>
-          <risposta hash="06748aa0c76aff6f9517d9af11ba9b6f" tipo="TESTO">Brigitte et Pascal vivent ensemble depuis 3 mois</risposta>
-          <risposta hash="1fc1aec173a25bb35ae88654e2d65664" tipo="TESTO">Sophie semble heureuse d'avoir des nouvelles de Brigitte</risposta>
-          <risposta hash="4605e159555ca77fec788d73b998efe6" tipo="TESTO">Samedi, Brigitte ira faire des achats avec son compagnon</risposta>
-          <risposta hash="a8e8b28f4ac52fada6619c96b04d310e" tipo="TESTO">Brigitte a toujours été ponctuelle</risposta>
-          <risposta hash="95c7421056318b57dc5d703d0da6bed2" tipo="TESTO">Le 18ème arrondissement est un quartier agréable</risposta>
-        </risposte>
-      </domandasceltamultipla>
-    </domanda>
+
 
     <domanda autore="14" id="14041" lingua="2" livello="2" tag="1" tecnica="4">
       <domandariordino>

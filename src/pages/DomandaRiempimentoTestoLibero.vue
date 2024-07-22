@@ -3,28 +3,13 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
-          <div
-            class="text-overline q-mt-sm q-mb-sm"
-            v-html="script.prologo"
-          ></div>
-          <q-scroll-area
-            style="height: 250px; width: 1000px"
-            :thumb-style="thumbStyle"
-            :bar-style="barStyle"
-          >
+          <div class="text-overline q-mt-sm q-mb-sm" v-html="script.prologo"></div>
+          <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
             <div class="text-subtitle q-mr-md">
               <span v-for="item in tokens" :key="item.index">
-                <span
-                  class="q-ml-sm q-mt-sm"
-                  v-if="!item.isSlot"
-                  v-html="item.content"
-                ></span>
-                <input
-                  class="q-ml-sm q-mt-sm"
-                  v-else-if="item.isSlot"
-                  v-model="item.content"
-                  @change="setRisposta(item)"
-                />
+                <span class="q-ml-sm q-mt-sm" v-if="!item.isSlot" v-html="item.content"></span>
+                <input class="q-ml-sm q-mt-sm" v-else-if="item.isSlot" v-model="item.content"
+                  @change="setRisposta(item)" />
               </span>
             </div>
           </q-scroll-area>
@@ -33,12 +18,7 @@
         <q-card-section>
           <VirtualKeyboard class="..." @key-pressed="carattere">
             <div class="...">
-              <KeyButton
-                v-for="v of i18n.caratteri.IT.split('')"
-                :key="`key-${v}`"
-                :children="[v.toUpperCase()]"
-                :value="v"
-              />
+              <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
             </div>
           </VirtualKeyboard>
         </q-card-section>
@@ -64,6 +44,8 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTestoLibero;
+
+
 if (!script.rispostaData) script.rispostaData = [];
 
 const i18n = ref(useI18nStore());
