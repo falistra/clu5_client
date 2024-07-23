@@ -8,29 +8,34 @@
 
             <div class="q-pa-sm">
               <q-list dense bordered separator>
-                <q-item v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
-                  <q-item-section>
-                    <div class="row q-my-sm">
-                      <div class="col-6 parte-fissa">
-                        <div class="q-ma-sm item" v-html="partefissa._"></div>
-                      </div>
-                      <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
-                        @drop="onDrop($event, partefissa)">
-                        <div class="row">
-                          <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
-                            @dblclick="annulla(item, partefissa)">
-                            <div class="text-subtitle q-ma-sm item">
-                              {{ item._ }}
-                              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                                <strong>Doppio click per togliere</strong>
-                              </q-tooltip>
+                <div class="column">
+                  <q-item class="col-auto" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
+                    <q-item-section>
+                      <div class="row q-my-sm">
+                        <div class="col-6 parte-fissa">
+                          <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
+                            <q-img :src="partefissa._" height="200px"> </q-img>
+                          </div>
+                          <div class="q-ma-sm item" v-html="partefissa._"></div>
+                        </div>
+                        <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                          @drop="onDrop($event, partefissa)">
+                          <div class="row">
+                            <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
+                              @dblclick="annulla(item, partefissa)">
+                              <div class="text-subtitle q-ma-sm item">
+                                {{ item._ }}
+                                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                                  <strong>Doppio click per togliere</strong>
+                                </q-tooltip>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </q-item-section>
-                </q-item>
+                    </q-item-section>
+                  </q-item>
+                </div>
               </q-list>
             </div>
           </q-scroll-area>

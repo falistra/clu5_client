@@ -6,15 +6,22 @@
         <div class="text-subtitle1 q-mb-xs" v-html="script.testo"></div>
         <div class="text-overline q-mt-sm q-mb-xs">
           Numero massimo risposte possibili:
-          <span>{{ script.$?.risposteCorrette }}</span>
+          <span>{{ script.$.risposteCorrette }}</span>
         </div>
       </q-card-section>
       <q-separator />
-      <audio controls>
+      <audio class="q-ma-md" controls>
         <source :src="script.audio?.$.url" type="audio/ogg">
       </audio>
       <q-card-section>
-        <q-option-group class="scelta" v-model="scelta" dense :options="opzioni" type="checkbox" />
+        <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
+          @update:model-value="setRispostaData" type="checkbox">
+          <template v-slot:label="opt">
+            <div class="row items-center">
+              <span class="q-ml-md text-weight-bold text-left">{{ opt.label }}</span>
+            </div>
+          </template>
+        </q-option-group>
       </q-card-section>
     </q-card>
   </q-page>
@@ -34,12 +41,45 @@ const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMulti
 const opzioni = ref(
   script.value.risposte.risposta.map((item) => {
     return {
+      // hash: item.$.hash,
       label: item._,
-      value: item._,
+      value: item,
+      disable: false
     };
   })
 );
-const scelta = ref([]);
+if (!script.value.rispostaData) script.value.rispostaData = []
+
+const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
+  if (values.length == parseInt(script.value.$.risposteCorrette)) {
+    if (script.value.rispostaData) {
+      opzioni.value.forEach(x => {
+        if (!script.value.rispostaData?.includes(x.value)) x.disable = true
+        else x.disable = false
+      })
+    }
+  } else opzioni.value.forEach(x => { x.disable = false })
+}
+
+setRispostaData(script.value.rispostaData)
+/*
+const audio = document.querySelector('audio');
+const ascolti = ref(0)
+
+if (audio) {
+  audio.addEventListener('play', () => {
+    ascolti.value = + 1
+    console.log(ascolti.value)
+    const nrMaxRipetizioni = script.value.audio?.$.nrMaxRipetizioni || '-1'
+    if (ascolti.value == parseInt(nrMaxRipetizioni)) {
+      console.log('MAX raggiunto')
+      audio.muted = true
+    }
+  }
+  )
+}
+*/
+
 </script>
 
 <style lang="sass" scoped>
@@ -47,6 +87,7 @@ const scelta = ref([]);
   width: 98%
   border: 2px solid
 
+/* non usato */
 .scelta
   text-align: left !important
   font-size: small

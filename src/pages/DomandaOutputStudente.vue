@@ -94,7 +94,7 @@ const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
   right: '4px',
   borderRadius: '5px',
   backgroundColor: '#027be3',
-  width: '5px',
+  width: '10px',
   opacity: '0.75',
 });
 
@@ -102,7 +102,7 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>({
   right: '2px',
   borderRadius: '9px',
   backgroundColor: '#027be3',
-  width: '9px',
+  width: '15px',
   opacity: '0.2',
 });
 

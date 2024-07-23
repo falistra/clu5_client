@@ -1,29 +1,35 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <div class="q-pa-md row items-start q-gutter-md">
-      <q-card class="my-card" flat bordered>
-        <q-card-section>
-          <div class="text-overline q-mt-sm q-mb-sm" v-html="script.prologo"></div>
-          <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
-            <div class="text-subtitle q-mr-md">
-              <span v-for="item in tokens" :key="item.index">
+    <q-card class="my-card" flat bordered>
+      <q-card-section>
+        <div class="text-overline" v-html="script.prologo"></div>
+        <q-scroll-area style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
+          <div class="text-subtitle q-mr-md">
+            <div class="row items-center justify-start">
+              <!-- <span v-for="item in tokens" :key="item.index">
                 <span class="q-ml-sm q-mt-sm" v-if="!item.isSlot" v-html="item.content"></span>
                 <input class="q-ml-sm q-mt-sm" v-else-if="item.isSlot" v-model="item.content"
                   @change="setRisposta(item)" />
+              </span> -->
+
+              <span class="col-auto q-mt-sm" v-for="item in tokens" :key="item.index">
+                <span class="q-ml-sm " v-if="!item.isSlot" v-html="item.content"></span>
+                <q-input class="q-ml-sm" v-else-if="item.isSlot" dense rounded standout v-model="item.content"
+                  @change="setRisposta(item)" />
               </span>
+
             </div>
-          </q-scroll-area>
-        </q-card-section>
-        <q-separator />
-        <q-card-section>
-          <VirtualKeyboard class="..." @key-pressed="carattere">
-            <div class="...">
-              <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
-            </div>
-          </VirtualKeyboard>
-        </q-card-section>
-      </q-card>
-    </div>
+          </div>
+        </q-scroll-area>
+      </q-card-section>
+      <q-card-section>
+        <VirtualKeyboard class="..." @key-pressed="carattere">
+          <div class="...">
+            <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
+          </div>
+        </VirtualKeyboard>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
@@ -70,7 +76,7 @@ const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
   right: '4px',
   borderRadius: '5px',
   backgroundColor: '#027be3',
-  width: '5px',
+  width: '10px',
   opacity: '0.75',
 });
 
@@ -78,9 +84,10 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>({
   right: '2px',
   borderRadius: '9px',
   backgroundColor: '#027be3',
-  width: '9px',
+  width: '15px',
   opacity: '0.2',
 });
+
 
 const carattere = (key: string) => {
   console.log(key);
@@ -89,7 +96,7 @@ const carattere = (key: string) => {
 
 <style lang="sass" scoped>
 .my-card
-  width: 100%
-  max-width: auto
-  border: 2px solid
+  width: 98%
+  border: 2px solid black
+
 </style>

@@ -7,23 +7,28 @@
           <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
-                <q-item v-for="item in script.partiFisse.item" :key="item.$.hash">
-                  <q-item-section>
-                    <div class="row q-my-sm">
-                      <div class="col-6 parte-fissa">
-                        <div class="q-ma-sm item">{{ item._ }}</div>
-                      </div>
-                      <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
-                        @drop="onDrop($event, item)" @dblclick="annulla(item)">
-                        <div class="text-subtitle q-ma-sm item">{{ item.rispostaData?._ }}
-                          <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                            <strong>Doppio click per togliere</strong>
-                          </q-tooltip>
+                <div class="column">
+                  <q-item class="col-auto" v-for="item in script.partiFisse.item" :key="item.$.hash">
+                    <q-item-section>
+                      <div class="row">
+                        <div class="col-6 parte-fissa">
+                          <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
+                            <q-img :src="item._" height="200px"> </q-img>
+                          </div>
+                          <div v-else class="q-ma-sm ">{{ item._ }}</div>
+                        </div>
+                        <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                          @drop="onDrop($event, item)" @dblclick="annulla(item)">
+                          <div class="text-subtitle q-ma-sm item">{{ item.rispostaData?._ }}
+                            <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                              <strong>Doppio click per togliere</strong>
+                            </q-tooltip>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </q-item-section>
-                </q-item>
+                    </q-item-section>
+                  </q-item>
+                </div>
               </q-list>
             </div>
           </q-scroll-area>
@@ -167,7 +172,7 @@ const myTweak = (offset: number) => { // offset: number
 <style lang="sass" scoped>
 .my-card
   width: 98%
-  border: 2px solid
+  border: 2px solid black
 
 .zona-ricevente
   border: 2px dotted black

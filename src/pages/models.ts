@@ -31,10 +31,10 @@ export interface T_DomandaSceltaMultipla {
   immagine?: { url: string };
   audio?: { $: { nrMaxRipetizioni: string; url: string } };
   risposte: {
-    tipoopzioni?: string;
-    risposta: Array<{ hash: string; _: string }>;
+    $?: { tipoopzioni?: string };
+    risposta: Array<{ $: { hash: string }; _: string }>;
   };
-  rispostaData?: Array<{ hash: string; _: string }>;
+  rispostaData?: Array<{ $: { hash: string }; _: string }>;
 }
 
 export interface T_DomandaComprensioneTesto {
@@ -93,7 +93,7 @@ export interface T_DomandaAbbinamentoMultiplo {
   $: { id: number };
   prologo: string;
   testo: string;
-  coppie: { coppia: Array<{ fissa?: string; mobile: string }> };
+  coppie: { $: { tipoopzioni: string; tipoorientamento: string } };
   partiFisse: {
     item: Array<{
       $: { hash: string };
@@ -110,7 +110,7 @@ export interface T_DomandaAbbinamentoSingolo {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  coppie: { tipoopzioni: string; tipoorientamento: string };
+  coppie: { $: { tipoopzioni: string; tipoorientamento: string } };
   partiFisse: {
     item: Array<{
       $: { hash: string };
