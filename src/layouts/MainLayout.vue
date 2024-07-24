@@ -2,11 +2,17 @@
   <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-primary text-white" height-hint="98">
       <div class="row items-center justify-around ">
-        <q-toolbar class="col-4">
+        <q-toolbar class="col-5">
           <q-toolbar-title>Titolo Esame</q-toolbar-title>
         </q-toolbar>
-        <q-toolbar class="col-4 bg-primary text-white">
+        <q-toolbar class="col-6 bg-primary text-white">
           <q-toolbar-title>Nome Studente</q-toolbar-title>
+        </q-toolbar>
+        <q-toolbar class="col-1 bg-primary text-white">
+          <q-toolbar-title>
+            <q-btn color="secondary" @click="$q.fullscreen.toggle()"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" />
+          </q-toolbar-title>
         </q-toolbar>
       </div>
     </q-header>
@@ -60,6 +66,27 @@ import BarraNavigazione from 'src/components/BarraNavigazione.vue';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 const $q = useQuasar()
 const gameover = () => { $q.notify('Tempo scaduto') }
+
+// Requesting fullscreen mode:
+$q.fullscreen.request()
+  .then(() => {
+    // success!
+  })
+  .catch(err => {
+    console.log(err)
+    // oh, no!!!
+  })
+
+// Exiting fullscreen mode:
+$q.fullscreen.exit()
+  .then(() => {
+    // success!
+  })
+  .catch(err => {
+    console.log(err)
+    // oh, no!!!
+  })
+
 
 </script>
 

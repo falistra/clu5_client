@@ -70,7 +70,7 @@ export interface T_DomandaRiempimentoTestoLibero {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  rispostaData?: Array<string>;
+  rispostaData: { [Key: string]: string };
 }
 
 export interface T_DomandaRiempimentoLibero {

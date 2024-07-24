@@ -6,13 +6,28 @@ const domande = `
 FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
 WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503') AND domande.specializzazione = 32 AND domande.id = 15509 ORDER BY rand()
  LIMIT 1</sql>
-		<domanda autore="Alessandra Marazzi" id="15509" livello="A2" peso="5" tag="LG_temp" tecnica="12">
+
+
+    <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
+    <domandaoutputstudente>
+      <prologo>Lea todos los enunciados y complete con una palabra que satisfaga todos los contextos.</prologo>
+      <testo>¿Quién en su sano ___ no ha tenido la tentación de acudir a la asamblea de las Naciones Unidas para denunciar este atentado ecológico?&lt;br&gt;La idea de que su antiguo maestre de campo se le hubiera rebelado, traía a Cortés fuera de ____&lt;br&gt;¿Y cuando él estaba fuera de ___, te pegaba? Y, sí, me pegaba, es que la borrachera los vuelve animales.&lt;br&gt;¿y quién mejor dictando las frases hechas que los autores de novelas baratas, denominación en la que no incluye ____ literario sino mera mención de su precio?&lt;br&gt;El poeta chileno recibió el Premio Cervantes, que a su ____ le fue concedido por azar, de manos del Rey Felipe de Borbón.&lt;br&gt;Cualquier ____ de valor presupone la proyección de la subjetividad de quien lo sostiene. &lt;br&gt;La finalidad del ____ contencioso es resolver todos y cada uno de los problemas presentados ante el tribunal, los cuales causen agravio a los particulares o hasta a la autoridad misma.</testo>
+      <risposte tipoCheck="AUTOMATICO">
+        <risposta>juicio</risposta>
+      </risposte>
+    </domandaoutputstudente>
+    </domanda>
+
+
+
+    <domanda autore="Alessandra Marazzi" id="15509" livello="A2" peso="5" tag="LG_temp" tecnica="12">
 			<domandariempimentotestolibero>
 				<prologo>Leggi il testo e coniuga i verbi al tempo giusto.</prologo>
 				<testo> Cara Francesca, come (0. stare) __stai___? Io abbastanza bene, sono sempre molto impegnata. Oggi però (essere) ___01____ a casa dal lavoro e così ho tempo per scriverti.La settimana scorsa (passare) ___02___ dai miei genitori e mia madre (dire) ___03___ che ti (vedere) ___04___ al supermercato un po' di tempo fa e che vuoi sapere qualcosa della mia nuova vita. Qui a Milano va tutto bene, di solito (alzarsi) ___05____ alle 6.00 la mattina per avere un po' di tempo per me: (andare) ___06___ spesso al parco a correre o a fare un po' di ginnastica. Soprattutto mi (piacere) ___07___ molto il mio lavoro, ho un collega molto simpatico che (lavorare) ___08___ con me, adesso (dovere) ___09___ fare un progetto insieme e sono felice perchè lui è davvero bravo.&lt;/p&gt;&lt;p&gt;Milano (essere) ___10___ una città piena di vita, e solo lo scorso fine settimana io e una mia coinquilina (andare) ___11___ a sentire un concerto e a visitare due mostre a Palazzo Reale. La mostra su Picasso mi (piacere) ___12___ tantissimo! E martedì scorso io (iscriversi) ___13___ a un corso di yoga. Purtroppo invece ieri (rimanere) ___14___ a casa perchè ho avuto la febbre, ma, almeno, così (svegliarsi) ___15___ tardi e (mettere) ___16___ in ordine la casa.&lt;/p&gt;&lt;p&gt;Perchè la prossima settimana non (venire) ___17___ a Milano a trovarmi? A casa nostra (esserci) ___18___ una camera libera quindi (potere) ___19___ dormire qui: sai quanto (costare) ___20___ gli alberghi a Milano!&lt;/p&gt;&lt;p&gt;Fammi sapere! Ci sentiamo presto!&lt;/p&gt;&lt;p&gt;Un abbraccio&lt;/p&gt;&lt;p&gt;Sonia&lt;/p&gt;</testo>
 			</domandariempimentotestolibero>
 		</domanda>
-	</domande>
+
+  </domande>
 
 <domande>
 		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
@@ -123,15 +138,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.id NOT IN (14435, 
 
 
 
-    <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
-    <domandaoutputstudente>
-      <prologo>Lea todos los enunciados y complete con una palabra que satisfaga todos los contextos.</prologo>
-      <testo>¿Quién en su sano ___ no ha tenido la tentación de acudir a la asamblea de las Naciones Unidas para denunciar este atentado ecológico?&lt;br&gt;La idea de que su antiguo maestre de campo se le hubiera rebelado, traía a Cortés fuera de ____&lt;br&gt;¿Y cuando él estaba fuera de ___, te pegaba? Y, sí, me pegaba, es que la borrachera los vuelve animales.&lt;br&gt;¿y quién mejor dictando las frases hechas que los autores de novelas baratas, denominación en la que no incluye ____ literario sino mera mención de su precio?&lt;br&gt;El poeta chileno recibió el Premio Cervantes, que a su ____ le fue concedido por azar, de manos del Rey Felipe de Borbón.&lt;br&gt;Cualquier ____ de valor presupone la proyección de la subjetividad de quien lo sostiene. &lt;br&gt;La finalidad del ____ contencioso es resolver todos y cada uno de los problemas presentados ante el tribunal, los cuales causen agravio a los particulares o hasta a la autoridad misma.</testo>
-      <risposte tipoCheck="AUTOMATICO">
-        <risposta>juicio</risposta>
-      </risposte>
-    </domandaoutputstudente>
-    </domanda>
 
      <domanda autore="12" id="15354" lingua="1" livello="2" tag="26" tecnica="8">
       <domandawordpool>

@@ -1,19 +1,19 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <q-card class="my-card q-ma-sm" flat bordered>
+    <q-card class="my-card q-ma-sm">
       <q-card-section>
         <div class="text-overline" v-html="script.prologo"></div>
-        <q-scroll-area style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
-          <div class="q-mt-md q-mb-sm q-mr-md testo-domanda">
-            <div class="column">
-              <div class="col q-py-xs" v-for="(riga, index) in righe" :key="index">
+        <q-scroll-area visible style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
+          <div class="q-mb-sm q-mr-md testo-domanda">
+            <div class="column q-gutter-y-sm">
+              <div class="col" v-for="(riga, index) in righe" :key="index">
                 <div class="row">
                   <div class="col-5">
-                    <div class="q-pr-sm text-right testo">{{ riga[0] }}</div>
+                    <div class="q-pr-sm  q-my-xs text-right testo">{{ riga[0] }}</div>
                   </div>
                   <div class="col-2"></div>
                   <div class="col-5">
-                    <div class="q-pl-sm testo">{{ riga[1] }}</div>
+                    <div class="q-pl-sm q-my-xs testo">{{ riga[1] }}</div>
                   </div>
                 </div>
               </div>
@@ -27,7 +27,7 @@
               <div class="col-5"></div>
               <div class="col-2">
                 <q-input input-class="text-subtitle1 text-weight-bold" v-model="script.rispostaData" name="risposta"
-                  autofocus clearable label="Risposta" dense />
+                  autofocus clearable rounded standout label="Risposta" dense />
               </div>
               <div class="col-5"></div>
             </div>

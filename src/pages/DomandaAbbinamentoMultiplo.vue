@@ -1,10 +1,10 @@
 <template>
   <q-page class="row items-center justify-evenly" :style-fn="myTweak">
-    <q-card class="my-card" flat bordered>
+    <q-card class="my-card q-ma-sm">
       <q-card-section horizontal>
         <q-card-section class="col-6">
           <div class="text-overline q-mb-md" v-html="script.prologo"></div>
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
+          <q-scroll-area visible :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
 
             <div class="q-pa-sm">
               <q-list dense bordered separator>
@@ -42,7 +42,7 @@
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 350px">
+          <q-scroll-area visible :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 350px">
             <q-list dense class="q-mr-md" bordered separator>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
@@ -74,8 +74,6 @@ const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoMultiplo
 );
-
-console.log(script.value.$)
 
 script.value.partiMobili.item.forEach((item) => {
   const risposta_presente = script.value.partiFisse.item.find(
