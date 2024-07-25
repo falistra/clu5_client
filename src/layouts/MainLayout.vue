@@ -58,6 +58,10 @@
 <script setup lang="ts">
 
 import { useQuasar } from 'quasar'
+// import Vue from 'vue'
+// import Plugin from '@quasar/quasar-ui-qmediaplayer'
+// import '@quasar/quasar-ui-qmediaplayer/dist/index.css'
+// Vue.use(Plugin)
 
 defineOptions({
   name: 'MainLayout',

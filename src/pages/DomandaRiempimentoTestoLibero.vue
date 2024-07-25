@@ -6,12 +6,6 @@
         <q-scroll-area visible style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="text-subtitle q-mr-md">
             <div class="row items-center justify-start">
-              <!-- <span v-for="item in tokens" :key="item.index">
-                <span class="q-ml-sm q-mt-sm" v-if="!item.isSlot" v-html="item.content"></span>
-                <input class="q-ml-sm q-mt-sm" v-else-if="item.isSlot" v-model="item.content"
-                  @change="setRisposta(item)" />
-              </span> -->
-
               <span class="col-auto q-mt-sm" v-for="item in tokens" :key="item.index">
                 <span class="q-ml-sm " v-if="!item.isSlot" v-html="item.content"></span>
                 <q-input class="q-ml-sm" v-else-if="item.isSlot" dense rounded standout :name="`slot_${item.slotIndex}`"
@@ -77,7 +71,6 @@ const currentSlot = ref<string>('')
 
 const setRisposta = (item: T_Token) => {
   script.rispostaData[item.slotIndex] = item.content;
-
 };
 
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>({

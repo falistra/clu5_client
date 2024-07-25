@@ -7,8 +7,35 @@ FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori O
 WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503') AND domande.specializzazione = 32 AND domande.id = 15509 ORDER BY rand()
  LIMIT 1</sql>
 
+ <domanda autore="14" id="14565" lingua="2" livello="2" tag="2" tecnica="3">
+ <domandasceltamultipla risposteCorrette="4">
+   <prologo>&amp;nbsp;Ascoltate la registrazione.</prologo>
+   <testo>Cliccate sulle &lt;strong&gt;4 opzioni corrette&lt;/strong&gt;.</testo>
+   <audio nrMaxRipetizioni="2" url="media/esempio.ogg" />
+   <immagine />
+   <risposte tipoopzioni="TESTO">
+     <risposta hash="f8e94c0a5b2d7aa01c13a1a329db6cc9" tipo="TESTO">Brigitte dit que sa vie a changé</risposta>
+     <risposta hash="06748aa0c76aff6f9517d9af11ba9b6f" tipo="TESTO">Brigitte et Pascal vivent ensemble depuis 3 mois</risposta>
+     <risposta hash="1fc1aec173a25bb35ae88654e2d65664" tipo="TESTO">Sophie semble heureuse d'avoir des nouvelles de Brigitte</risposta>
+     <risposta hash="4605e159555ca77fec788d73b998efe6" tipo="TESTO">Samedi, Brigitte ira faire des achats avec son compagnon</risposta>
+     <risposta hash="a8e8b28f4ac52fada6619c96b04d310e" tipo="TESTO">Brigitte a toujours été ponctuelle</risposta>
+     <risposta hash="95c7421056318b57dc5d703d0da6bed2" tipo="TESTO">Le 18ème arrondissement est un quartier agréable</risposta>
+   </risposte>
+ </domandasceltamultipla>
+</domanda>
 
-    <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
+
+
+
+ <domanda autore="Stafano Garuti" id="15487" livello="A2" peso="50" tag="LG_frasi" tecnica="11">
+   <domandariempimentolibero>
+     <prologo>Completa i dialoghi con la parola o la frase adatte.&lt;br&gt;</prologo>
+     <testo>&lt;p&gt;&lt;b&gt;A. Alla stazione dei treni&lt;/b&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;:&amp;nbsp;&amp;nbsp;&amp;nbsp; Buongiorno. (FRASE) ________________________1____________________________ per Milano, per favore.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;:&amp;nbsp; Solo andata?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: No, (FRASE) __________2_________. A che ora parte il treno?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Ci sono due treni: il Regionale Veloce delle 14.20 e il Frecciabianca delle 15.00.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _________3__________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Con il Regionale Veloce ci vogliono 1 ore e 20, con il Frecciabianca 1 ora e 45.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Prendo (FRASE) _________4___________, vorrei arrivare a Milano prima possibile. &lt;/p&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; (FRASE) _________5_______________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: No, il treno è diretto. (FRASE) ________6_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Seconda. (FRASE) _______7_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Sono 28 euro e 25 centesimi.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _____8_______. Scusi, un'ultima informazione: (FRASE) ____9_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Dal binario 3.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) ______10_______&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Arrivederci e buon viaggio.&lt;br&gt;&lt;/p&gt;</testo>
+   </domandariempimentolibero>
+ </domanda>
+
+
+     <domanda autore="39" id="15134" lingua="4" livello="6" tag="8" tecnica="9">
     <domandaoutputstudente>
       <prologo>Lea todos los enunciados y complete con una palabra que satisfaga todos los contextos.</prologo>
       <testo>¿Quién en su sano ___ no ha tenido la tentación de acudir a la asamblea de las Naciones Unidas para denunciar este atentado ecológico?&lt;br&gt;La idea de que su antiguo maestre de campo se le hubiera rebelado, traía a Cortés fuera de ____&lt;br&gt;¿Y cuando él estaba fuera de ___, te pegaba? Y, sí, me pegaba, es que la borrachera los vuelve animales.&lt;br&gt;¿y quién mejor dictando las frases hechas que los autores de novelas baratas, denominación en la que no incluye ____ literario sino mera mención de su precio?&lt;br&gt;El poeta chileno recibió el Premio Cervantes, que a su ____ le fue concedido por azar, de manos del Rey Felipe de Borbón.&lt;br&gt;Cualquier ____ de valor presupone la proyección de la subjetividad de quien lo sostiene. &lt;br&gt;La finalidad del ____ contencioso es resolver todos y cada uno de los problemas presentados ante el tribunal, los cuales causen agravio a los particulares o hasta a la autoridad misma.</testo>
@@ -248,18 +275,6 @@ WHERE domande.attiva = 1 AND domande.lingua = '1' AND domande.livello = 2 AND do
 		</domanda>
 	</domande>
 
-	<domande>
-		<sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-WHERE domande.attiva = 1 AND domande.lingua = '5' AND domande.id NOT IN ('15505', '15486', '15490', '15491', '15492', '15493', '15503', 15509) AND domande.specializzazione = 32 AND domande.id = 15487 ORDER BY rand()
- LIMIT 1</sql>
-		<domanda autore="Stafano Garuti" id="15487" livello="A2" peso="50" tag="LG_frasi" tecnica="11">
-			<domandariempimentolibero>
-				<prologo>Completa i dialoghi con la parola o la frase adatte.&lt;br&gt;</prologo>
-				<testo>&lt;p&gt;&lt;b&gt;A. Alla stazione dei treni&lt;/b&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;:&amp;nbsp;&amp;nbsp;&amp;nbsp; Buongiorno. (FRASE) ________________________1____________________________ per Milano, per favore.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;:&amp;nbsp; Solo andata?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: No, (FRASE) __________2_________. A che ora parte il treno?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Ci sono due treni: il Regionale Veloce delle 14.20 e il Frecciabianca delle 15.00.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _________3__________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Con il Regionale Veloce ci vogliono 1 ore e 20, con il Frecciabianca 1 ora e 45.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Prendo (FRASE) _________4___________, vorrei arrivare a Milano prima possibile. &lt;/p&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; (FRASE) _________5_______________?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: No, il treno è diretto. (FRASE) ________6_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: Seconda. (FRASE) _______7_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Sono 28 euro e 25 centesimi.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) _____8_______. Scusi, un'ultima informazione: (FRASE) ____9_______?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Dal binario 3.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cliente&lt;/b&gt;: (FRASE) ______10_______&lt;/p&gt;&lt;p&gt;&lt;b&gt;Impiegato&lt;/b&gt;: Arrivederci e buon viaggio.&lt;br&gt;&lt;/p&gt;</testo>
-			</domandariempimentolibero>
-		</domanda>
-	</domande>
 
 
   	<domande>

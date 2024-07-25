@@ -10,9 +10,12 @@
         </div>
       </q-card-section>
       <q-separator />
-      <audio class="q-ma-md" controls>
+
+      <q-media-player v-if="script.audio" type="audio" :sources="sources"></q-media-player>
+
+      <!-- <audio class="q-ma-md" controls>
         <source :src="script.audio?.$.url" type="audio/ogg">
-      </audio>
+      </audio> -->
       <q-card-section>
         <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
           @update:model-value="setRispostaData" type="checkbox">
@@ -34,6 +37,7 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaSceltaMultipla } from 'pages/models';
 import { ref } from 'vue';
+import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla);
@@ -61,9 +65,17 @@ const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
   } else opzioni.value.forEach(x => { x.disable = false })
 }
 
+const sources = ref([
+  {
+    src: 'script.audio?.$.url',
+    type: 'audio/ogg'
+  }
+])
+
+
 setRispostaData(script.value.rispostaData)
-/*
 const audio = document.querySelector('audio');
+console.log(audio)
 const ascolti = ref(0)
 
 if (audio) {
@@ -78,7 +90,7 @@ if (audio) {
   }
   )
 }
-*/
+
 
 </script>
 
