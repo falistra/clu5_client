@@ -11,11 +11,16 @@
       </q-card-section>
       <q-separator />
 
-      <q-media-player v-if="script.audio" type="audio" :sources="sources"></q-media-player>
+      <div v-if="script.audio">
+        <div style=“display:none”>
+          <audio id="audio-player">
+            <source :src="script.audio?.$.url" type="audio/ogg">
+          </audio>
+        </div>
+        <q-btn :disable='btn_disabilitato' class="q-ml-md q-mt-sm btn-audio" align="between" color="primary"
+          :label="label_btn_audio" :icon="icona_btn_audio" outline rounded @click="ascolta" />
+      </div>
 
-      <!-- <audio class="q-ma-md" controls>
-        <source :src="script.audio?.$.url" type="audio/ogg">
-      </audio> -->
       <q-card-section>
         <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
           @update:model-value="setRispostaData" type="checkbox">
@@ -37,7 +42,7 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaSceltaMultipla } from 'pages/models';
 import { ref } from 'vue';
-import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
+
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla);
@@ -53,6 +58,7 @@ const opzioni = ref(
   })
 );
 if (!script.value.rispostaData) script.value.rispostaData = []
+if (!script.value.ascolti_rimanenti) script.value.ascolti_rimanenti = -1
 
 const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
   if (values.length == parseInt(script.value.$.risposteCorrette)) {
@@ -65,30 +71,34 @@ const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
   } else opzioni.value.forEach(x => { x.disable = false })
 }
 
-const sources = ref([
-  {
-    src: 'script.audio?.$.url',
-    type: 'audio/ogg'
-  }
-])
-
-
-setRispostaData(script.value.rispostaData)
-const audio = document.querySelector('audio');
-console.log(audio)
+const nrMaxRipetizioni = ref(parseInt(script.value.audio?.$.nrMaxRipetizioni || '') || NaN)
 const ascolti = ref(0)
+const label_btn_audio = ref(`Numero massimo ascolti permessi : ${nrMaxRipetizioni.value}`)
+const icona_btn_audio = ref('volume_up')
+const btn_disabilitato = ref(false)
 
-if (audio) {
-  audio.addEventListener('play', () => {
-    ascolti.value = + 1
-    console.log(ascolti.value)
-    const nrMaxRipetizioni = script.value.audio?.$.nrMaxRipetizioni || '-1'
-    if (ascolti.value == parseInt(nrMaxRipetizioni)) {
-      console.log('MAX raggiunto')
-      audio.muted = true
+//let ascolti_rimanenti = -1
+
+const ascolta = () => {
+  if (script.value.ascolti_rimanenti == 0) {
+    label_btn_audio.value = `Raggiunto il Numero massimo di ascolti permessi : ${nrMaxRipetizioni.value}`
+    icona_btn_audio.value = 'volume_off'
+    btn_disabilitato.value = true
+  } else {
+    ascolti.value = ascolti.value + 1
+    script.value.ascolti_rimanenti = nrMaxRipetizioni.value - ascolti.value
+    label_btn_audio.value = `Numero ascolti ancora permessi : ${script.value.ascolti_rimanenti}`
+    const audio = document.getElementById('audio-player') as HTMLMediaElement;
+    if (audio) {
+      audio.play();
+      audio.addEventListener('pause', () => {
+        btn_disabilitato.value = false
+      });
+      audio.addEventListener('play', () => {
+        btn_disabilitato.value = true
+      });
     }
   }
-  )
 }
 
 
@@ -103,4 +113,7 @@ if (audio) {
 .scelta
   text-align: left !important
   font-size: small
+
+.btn-audio
+  width: auto
 </style>

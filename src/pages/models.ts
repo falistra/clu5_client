@@ -35,6 +35,7 @@ export interface T_DomandaSceltaMultipla {
     risposta: Array<{ $: { hash: string }; _: string }>;
   };
   rispostaData?: Array<{ $: { hash: string }; _: string }>;
+  ascolti_rimanenti?: number;
 }
 
 export interface T_DomandaComprensioneTesto {

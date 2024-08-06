@@ -58,10 +58,6 @@
 <script setup lang="ts">
 
 import { useQuasar } from 'quasar'
-// import Vue from 'vue'
-// import Plugin from '@quasar/quasar-ui-qmediaplayer'
-// import '@quasar/quasar-ui-qmediaplayer/dist/index.css'
-// Vue.use(Plugin)
 
 defineOptions({
   name: 'MainLayout',
@@ -70,27 +66,6 @@ import BarraNavigazione from 'src/components/BarraNavigazione.vue';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 const $q = useQuasar()
 const gameover = () => { $q.notify('Tempo scaduto') }
-
-// Requesting fullscreen mode:
-$q.fullscreen.request()
-  .then(() => {
-    // success!
-  })
-  .catch(err => {
-    console.log(err)
-    // oh, no!!!
-  })
-
-// Exiting fullscreen mode:
-$q.fullscreen.exit()
-  .then(() => {
-    // success!
-  })
-  .catch(err => {
-    console.log(err)
-    // oh, no!!!
-  })
-
 
 </script>
 
