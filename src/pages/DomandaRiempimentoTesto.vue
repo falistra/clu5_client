@@ -38,14 +38,25 @@ import { ref, computed } from 'vue';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaRiempimentoTesto } from 'pages/models';
-import { T_Token } from 'pages/models';
-// import { IDomanda } from 'pages/models';
+
+import * as Common from 'pages/common';
 
 const sessione = useSessioneStore();
 
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
+
+
+interface T_Token {
+  index: number;
+  isSlot: boolean;
+  slotIndex: number;
+  content: string;
+}
+
+
+
 
 const tokens = ref(
   script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
@@ -110,21 +121,10 @@ const annulla = (item: T_Token) => {
   item.content = '__________';
 };
 
-const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '5px',
-  opacity: '0.75',
-});
 
-const barStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '9px',
-  opacity: '0.2',
-});
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
+
 </script>
 
 <style lang="sass" scoped>

@@ -151,7 +151,6 @@ export interface Buco {
 export interface T_Token {
   index: number;
   isSlot: boolean;
-  slotIndex: number;
+  slotIndex: string;
   content: string;
-  size?: number;
 }

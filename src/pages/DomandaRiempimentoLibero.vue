@@ -4,14 +4,34 @@
       <q-card-section>
         <div class="text-overline" v-html="script.prologo"></div>
         <q-scroll-area visible style="height: 250px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
-          <div class="text-subtitle q-mr-md">
+          <!-- <div class="text-subtitle q-mr-md">
             <span class=" q-mt-sm" v-for="item in tokens" :key="item.index">
               <span class="q-ml-sm " v-if="!item.isSlot" v-html="item.content"></span>
               <q-input class="q-ml-sm" v-else-if="item.isSlot" dense rounded standout :name="`slot_${item.slotIndex}`"
                 @focus="() => { currentSlot = item.slotIndex }" v-model:model-value="item.content"
                 @update:model-value="setRisposta(item)" :autofocus="item.index == 0" />
             </span>
+          </div> -->
+
+          <div class="text-subtitle q-mr-lg">
+            <span v-for="item in tokens" :key="item.index">
+              <span v-if="!item.isSlot" v-html="item.content"> </span>
+              <!-- <q-input class="q-ml-sm" v-else-if="item.isSlot" dense rounded standout :name="`slot_${item.slotIndex}`"
+                  @focus="() => { currentSlot = item.slotIndex }" v-model:model-value="item.content"
+                  @update:model-value="setRisposta(item)" :autofocus="item.index == 0" /> -->
+              <!-- <q-input class="q-ml-sm" v-else-if="item.isSlot" dense rounded standout :name="`slot_${item.slotIndex}`"
+                  @focus="() => { currentSlot = item.slotIndex }"
+                  v-model:model-value="script.rispostaData[item.slotIndex]" :autofocus="item.index == 0" /> -->
+              <span v-else-if="item.isSlot">
+                <input @focus="() => { currentSlot = item.slotIndex }" :id="`campo_input_${item.index}`"
+                  :name="`slot_${item.slotIndex}`" v-model="script.rispostaData[item.slotIndex]" />
+              </span>
+            </span>
           </div>
+
+
+
+
         </q-scroll-area>
       </q-card-section>
       <q-separator />
@@ -35,8 +55,10 @@ import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
 import '@dongivan/virtual-keyboard/default.css';
 
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaRiempimentoLibero } from 'pages/models';
-import { ref } from 'vue';
+import { T_DomandaRiempimentoLibero, T_Token } from 'pages/models';
+import { ref, onMounted } from 'vue';
+
+import * as Common from 'pages/common';
 
 const sessione = useSessioneStore();
 import { useI18nStore } from 'stores/i18n';
@@ -44,15 +66,11 @@ const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoLibero;
 
+if (!script.rispostaData) script.rispostaData = {}
+
 const i18n = ref(useI18nStore());
 
-interface T_Token {
-  index: number;
-  isSlot: boolean;
-  slotIndex: string;
-  content: string;
-}
-
+let primo_campo_input_indice = -1
 const tokens = ref(
   script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
     const slot = content.match(/([_]+)(\d+)([_]+)/);
@@ -60,32 +78,29 @@ const tokens = ref(
     const isSlot = slot ? true : false;
     const risposta = script.rispostaData ? script.rispostaData[slotIndex] : '';
     content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
+    if ((primo_campo_input_indice == -1) && isSlot) primo_campo_input_indice = index
     return { index, isSlot, slotIndex, content } as T_Token;
   })
 );
 
-const currentSlot = ref<string>('')
-
-const setRisposta = (item: T_Token) => {
-  script.rispostaData[item.slotIndex] = item.content;
+const focusInput = () => {
+  const primo_campo_input = document.getElementById(`campo_input_${primo_campo_input_indice}`) as HTMLInputElement
+  if (primo_campo_input) {
+    primo_campo_input.focus();
+  }
 };
 
+onMounted(focusInput);
 
-const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '10px',
-  opacity: '0.75',
-});
+const currentSlot = ref<string>('')
 
-const barStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '15px',
-  opacity: '0.2',
-});
+// const setRisposta = (item: T_Token) => {
+//   script.rispostaData[item.slotIndex] = item.content;
+// };
+
+
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 const carattere = (key: string) => {
   const campi_input = document.getElementsByName(`slot_${currentSlot.value}`)
