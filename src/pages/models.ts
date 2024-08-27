@@ -21,6 +21,7 @@ export interface T_DomandaSceltaSingola {
     risposta: Array<RispostaDomandaSceltaSingola>;
   };
   immagine?: { url: string };
+  audio?: { url: string };
   rispostaData?: string;
 }
 
@@ -63,8 +64,11 @@ export interface T_DomandaRiempimentoTesto {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ hash: string; _: string }> };
-  rispostaData?: Array<{ hash: string; _: string }>;
+  immagine?: { url: string };
+  risposte: {
+    risposta: Array<{ hash: string; _: string; disponibile?: boolean }>;
+  };
+  rispostaData: { [Key: string]: { hash: string; _: string } };
 }
 
 export interface T_DomandaRiempimentoTestoLibero {

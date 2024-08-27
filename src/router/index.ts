@@ -7,11 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-import xml2js from 'xml2js';
 import { useSessioneStore } from 'stores/sessione';
-// import { IDomanda } from 'pages/models';
-
-import dataXML from './data';
 
 /*
  * If not building with SSR mode, you can
@@ -45,38 +41,6 @@ export default route(function (/* { store, ssrContext } */) {
 
     if (to.path == '/') {
       const sessioneStore = useSessioneStore();
-
-      const jsonScript = await xml2js
-        .parseStringPromise(dataXML.domande, {
-          explicitArray: false,
-          trim: true,
-        })
-        .then(function (result) {
-          return result;
-        })
-        .catch(function (err) {
-          console.error(err);
-        });
-
-      sessioneStore.domande = (
-        jsonScript.insiemi_domande.domande as Array<object>
-      )
-        .map((value) => {
-          const domande = (value as { sql: string; domanda: object }).domanda;
-          return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
-        })
-        .reduce((accumulator, value) => accumulator.concat(value), []) // flat
-        .map((domanda) => {
-          const d = Object.entries(domanda);
-          const tipo = d[1][0];
-          const script = domanda[tipo] as object;
-          return [tipo as string, script as object, d[0][1]] as [
-            string,
-            object,
-            object
-          ];
-        });
-      // return { tipo, script, props: d[0][1] as object } as IDomanda;
       const domanda = sessioneStore.domande[0] as [string, object, object];
       return { path: `${domanda[0]}/0` };
     }

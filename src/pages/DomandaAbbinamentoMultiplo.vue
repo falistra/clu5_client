@@ -3,8 +3,8 @@
     <q-card class="my-card q-ma-sm">
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline q-mb-md" v-html="script.prologo"></div>
-          <q-scroll-area visible :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
+          <div class="text-overline q-mb-md" v-html="prologo"></div>
+          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 300px">
 
             <div class="q-pa-sm">
               <q-list dense bordered separator>
@@ -14,7 +14,8 @@
                       <div class="row q-my-sm">
                         <div class="col-6 parte-fissa">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <q-img :src="partefissa._" height="200px"> </q-img>
+                            <q-img :src="partefissa._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="200px">
+                            </q-img>
                           </div>
                           <div class="q-ma-sm item" v-html="partefissa._"></div>
                         </div>
@@ -42,7 +43,7 @@
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 350px">
+          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 350px">
             <q-list dense class="q-mr-md" bordered separator>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
@@ -69,10 +70,15 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaAbbinamentoMultiplo } from 'pages/models';
 import { ref, computed } from 'vue';
+import * as Common from 'pages/common';
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoMultiplo
+);
+
+const prologo = computed(
+  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
 );
 
 script.value.partiMobili.item.forEach((item) => {
@@ -142,21 +148,8 @@ const annulla = (item: Item, partefissa: ParteFissa) => {
   }
 };
 
-const cursoreStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '10px',
-  opacity: '0.75',
-});
-
-const barraStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '15px',
-  opacity: '0.2',
-});
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 const myTweak = (offset: number) => { // offset: number
   // "offset" is a Number (pixels) that refers to the total
@@ -169,8 +162,6 @@ const myTweak = (offset: number) => { // offset: number
     // height: `calc(100vh - ${offset}px)`
   }
 }
-
-
 
 </script>
 

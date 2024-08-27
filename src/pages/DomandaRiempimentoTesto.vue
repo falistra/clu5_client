@@ -3,14 +3,15 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
-          <div class="text-overline" v-html="script.prologo"></div>
-          <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
+          <div class="text-overline" v-html="prologo"></div>
+          <q-scroll-area style="height: 200px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
             <div class="text-subtitle q-mt-sm q-mb-xs">
               <span v-for="item in tokens" :key="item.index">
                 <span v-if="!item.isSlot" v-html="item.content"></span>
                 <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
                   @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
-                  {{ item.content }}
+                  {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
+                    script.rispostaData[item.slotIndex]._ : '____________' }}
                 </span>
               </span>
             </div>
@@ -18,12 +19,14 @@
         </q-card-section>
         <q-separator />
         <q-card-section>
-          <div class="row">
-            <div v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta"
-              :key="risposta.id" draggable @dragstart="startDrag($event, risposta.testo)">
-              {{ risposta.testo }}
+          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60px">
+            <div class="row">
+              <p v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta"
+                :key="risposta.id" draggable="true" @dragstart="startDrag($event, risposta.testo)">
+                {{ risposta.testo }}
+              </p>
             </div>
-          </div>
+          </q-scroll-area>
         </q-card-section>
       </q-card>
     </div>
@@ -37,7 +40,7 @@ defineOptions({
 import { ref, computed } from 'vue';
 
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaRiempimentoTesto } from 'pages/models';
+import { T_DomandaRiempimentoTesto, T_Token } from 'pages/models';
 
 import * as Common from 'pages/common';
 
@@ -46,41 +49,68 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
+if (!script.rispostaData) script.rispostaData = {}
 
-
-interface T_Token {
-  index: number;
-  isSlot: boolean;
-  slotIndex: number;
-  content: string;
-}
-
-
+const prologo = computed(
+  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
+);
 
 
 const tokens = ref(
   script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
     const slot = content.match(/([_]+)(\d+)([_]+)/);
-    const slotIndex = slot ? parseInt(slot[2]) : NaN;
+    const slotIndex = slot ? slot[2] : '';
     const isSlot = slot ? true : false;
-    content = isSlot ? '_________' : content.replace(/\%u(\d+)/g, '&#x$1;');
+    const risposta = (script.rispostaData && (slotIndex in script.rispostaData)) ? script.rispostaData[slotIndex]._ : '____________';
+    content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
     return { index, isSlot, slotIndex, content } as T_Token;
   })
 );
 
-const onDrop = function (evt: DragEvent, slotIndex: number) {
+
+
+const onDrop = function (evt: DragEvent, slotIndex: string) {
   if (evt.dataTransfer) {
     const item = tokens.value?.find(
       (item: T_Token) => item.slotIndex == slotIndex
     );
     if (item) {
-      const risposta_data = evt.dataTransfer.getData('risposta');
-      item.content = risposta_data;
+      // se lo slot e' gia' occupato lo libera
+      if (slotIndex in script.rispostaData) {
+        const item = tokens.value?.find(
+          (item: T_Token) => item.slotIndex == slotIndex
+        );
+        if (item) {
+          const risposta = lista_risposte.value?.find(
+            (value) => value.testo == item.content
+          );
+          if (risposta) {
+            risposta.disponibile = true;
+            delete script.rispostaData[item.slotIndex]
+            item.content = '__________';
+          }
+        }
+      }
 
+      const risposta_data = evt.dataTransfer.getData('risposta');
+
+      item.content = risposta_data;
       const risposta = lista_risposte_disponibili.value?.find(
         (value) => value.testo == risposta_data
       );
-      if (risposta) risposta.disponibile = false;
+
+      if (risposta) {
+        script.rispostaData[slotIndex] = {
+          hash: risposta.id,
+          _: risposta.testo,
+        }
+        risposta.disponibile = false;
+
+        const script_risposta = script.risposte.risposta.find(
+          (value) => value._ == risposta.testo
+        );
+        if (script_risposta) script_risposta.disponibile = false
+      }
     }
   }
 };
@@ -104,7 +134,7 @@ const lista_risposte = ref(
       <IRisposta>{
         id: value.hash,
         testo: value._,
-        disponibile: true,
+        disponibile: value?.disponibile || true,
       }
   )
 );
@@ -117,8 +147,16 @@ const annulla = (item: T_Token) => {
   const risposta = lista_risposte.value?.find(
     (value) => value.testo == item.content
   );
-  if (risposta) risposta.disponibile = true;
-  item.content = '__________';
+  if (risposta) {
+    risposta.disponibile = true;
+    const script_risposta = script.risposte.risposta.find(
+      (value) => value._ == risposta.testo
+    );
+    if (script_risposta) script_risposta.disponibile = true
+
+    delete script.rispostaData[item.slotIndex]
+    item.content = '__________';
+  }
 };
 
 

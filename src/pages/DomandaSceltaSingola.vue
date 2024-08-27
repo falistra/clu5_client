@@ -5,26 +5,18 @@
         <q-card-section>
           <div class="text-overline" v-html="prologo"></div>
           <div class="text-h5 q-mt-sm q-mb-xs" v-html="testoDomanda"></div>
+          <div class="row justify-center" v-if="script.immagine">
+            <q-img :src="script.immagine?.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%" width="20%"
+              fit="contain">
+            </q-img>
+          </div>
         </q-card-section>
         <q-separator />
         <q-card-section>
           <div class="row justify-center items-center">
-            <q-btn-toggle
-              v-model="script.rispostaData"
-              no-caps
-              dense
-              push
-              glossy
-              toggle-color="primary"
-              :options="opzioni"
-              clearable
-              @update:model-value="setRisposta"
-            >
-              <template
-                v-for="button in opzioni"
-                :key="button.value"
-                v-slot:[button.slot]
-              >
+            <q-btn-toggle v-model="script.rispostaData" no-caps dense push glossy toggle-color="primary"
+              :options="opzioni" clearable @update:model-value="setRisposta">
+              <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
                 <div class="risposta q-px-sm">{{ button.testo }}</div>
               </template>
             </q-btn-toggle>
@@ -46,13 +38,25 @@ import { ref, computed } from 'vue';
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola;
 
+if (script.immagine && !script.immagine?.url) {
+  script.immagine.url = 'null.jpg'
+}
+
+if (script.audio && !script.audio?.url) {
+  script.audio.url = 'null.ogg'
+}
+
+console.log(script)
+
+
+
 let testoDomanda = ref(
   !script.rispostaData
     ? script.testo.replace(/([_]+)/gi, '<span style="color: red">$1</span>')
     : script.testo.replace(
-        /([_]+)/gi,
-        `<span style="color: red"> ${script.rispostaData} </span>`
-      )
+      /([_]+)/gi,
+      `<span style="color: red"> ${script.rispostaData} </span>`
+    )
 );
 
 const opzioni = ref(

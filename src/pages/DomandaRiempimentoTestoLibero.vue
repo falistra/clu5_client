@@ -2,7 +2,7 @@
   <q-page class="row items-center justify-evenly">
     <q-card class="my-card q-ma-sm">
       <q-card-section>
-        <div class="text-overline" v-html="script.prologo"></div>
+        <div class="text-overline" v-html="prologo"></div>
         <q-scroll-area visible :style="scrollAreaDim" :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="text-subtitle q-mr-lg">
             <span v-for="item in tokens" :key="item.index">
@@ -42,7 +42,7 @@ import '@dongivan/virtual-keyboard/default.css';
 import { useSessioneStore } from 'stores/sessione';
 import { useI18nStore } from 'stores/i18n';
 import { T_DomandaRiempimentoTestoLibero, T_Token } from 'pages/models';
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import * as Common from 'pages/common';
 
@@ -50,6 +50,10 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTestoLibero;
+
+const prologo = computed(
+  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
+);
 
 if (!script.rispostaData) script.rispostaData = {}
 

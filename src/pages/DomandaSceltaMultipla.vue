@@ -21,6 +21,10 @@
           :label="label_btn_audio" :icon="icona_btn_audio" outline rounded @click="ascolta" />
       </div>
 
+      <div v-if="script.audio">
+        <audio-wrap src="script.audio?.$.url"></audio-wrap>
+      </div>
+
       <q-card-section>
         <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
           @update:model-value="setRispostaData" type="checkbox">
@@ -43,6 +47,7 @@ import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaSceltaMultipla } from 'pages/models';
 import { ref } from 'vue';
 
+import AudioWrap from 'src/components/AudioWrap.vue';
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla);

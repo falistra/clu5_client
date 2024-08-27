@@ -3,7 +3,7 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
-          <div class="text-overline" v-html="script.prologo"></div>
+          <div class="text-overline" v-html="prologo"></div>
           <div class="text-h5 q-mt-sm q-mb-xs" v-html="script.testo"></div>
           <!-- <div class="text-overline text-orange-9">
             Ordina gli elementi spostandoli con il mouse
@@ -11,21 +11,10 @@
         </q-card-section>
         <q-separator />
         <q-card-section>
-          <draggable
-            :list="list"
-            :disabled="!enabled"
-            item-key="_"
-            class="list-group"
-            ghost-class="ghost"
-            :move="checkMove"
-            @start="dragging = true"
-            @end="dragging = false"
-          >
+          <draggable :list="list" :disabled="!enabled" item-key="_" class="list-group" ghost-class="ghost"
+            :move="checkMove" @start="dragging = true" @end="dragging = false">
             <template #item="{ element }">
-              <div
-                class="q-my-lg q-pa-sm list-group-item"
-                :class="{ 'not-draggable': !enabled }"
-              >
+              <div class="q-my-lg q-pa-sm list-group-item" :class="{ 'not-draggable': !enabled }">
                 {{ element._ }}
               </div>
             </template>
@@ -44,10 +33,16 @@ import draggable from 'vuedraggable';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaRiordino } from 'pages/models';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaRiordino;
+
+const prologo = computed(
+  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
+);
+
+
 // const testoDomanda = ref(script.Testo);
 const list = ref(script.risposte.risposta);
 

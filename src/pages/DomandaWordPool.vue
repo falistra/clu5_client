@@ -3,7 +3,7 @@
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline q-mb-md" v-html="script.prologo"></div>
+          <div class="text-overline q-mb-md" v-html="prologo"></div>
           <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
             <div class="q-pa-sm">
               <q-card class="zona-ricevente q-ma-sm" @dragover.prevent @dragenter.prevent @dragover="onPool"
@@ -58,6 +58,11 @@ const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaWordPool
 );
+
+const prologo = computed(
+  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
+);
+
 
 script.value.words.word.forEach((item) => {
   const risposta_presente = script.value.pools.pool.find(

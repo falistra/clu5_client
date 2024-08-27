@@ -3,8 +3,8 @@
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline q-mb-md" v-html="script.prologo"></div>
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
+          <div class="text-overline q-mb-md" v-html="prologo"></div>
+          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 300px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
                 <div class="column">
@@ -13,7 +13,8 @@
                       <div class="row">
                         <div class="col-6 parte-fissa">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <q-img :src="item._" height="200px"> </q-img>
+                            <q-img :src="item._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="170px">
+                            </q-img>
                           </div>
                           <div v-else class="q-ma-sm ">{{ item._ }}</div>
                         </div>
@@ -35,7 +36,7 @@
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 350px">
+          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 350px">
             <q-list dense class="q-mr-md" bordered separator>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
@@ -61,10 +62,15 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaAbbinamentoSingolo } from 'pages/models';
 import { ref, computed } from 'vue';
+import * as Common from 'pages/common';
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoSingolo
+);
+
+const prologo = computed(
+  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
 );
 
 script.value.partiMobili.item.forEach((item) => {
@@ -82,6 +88,7 @@ interface Item {
   _: string;
   rispostaData?: { $: { hash: string }; _: string };
 }
+
 
 const isDragging = ref(false)
 
@@ -137,21 +144,8 @@ const annulla = (item: Item) => {
   if (item_) item_.disponibile = true;
 };
 
-const cursoreStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '10px',
-  opacity: '0.75',
-});
-
-const barraStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '15px',
-  opacity: '0.2',
-});
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 const myTweak = (offset: number) => { // offset: number
   // "offset" is a Number (pixels) that refers to the total

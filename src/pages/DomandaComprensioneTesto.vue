@@ -3,52 +3,21 @@
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline" v-html="script.prologo"></div>
-          <q-scroll-area
-            :thumb-style="cursoreStyle"
-            :bar-style="barraStyle"
-            style="height: 500px"
-          >
-            <div
-              class="text-subtitle q-ma-sm q-pb-sm q-pr-sm"
-              v-html="testo_comprensione"
-            ></div>
+          <div class="text-overline" v-html="prologo"></div>
+          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 500px">
+            <div class="text-subtitle q-ma-sm q-pb-sm q-pr-sm" v-html="testo_comprensione"></div>
           </q-scroll-area>
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area
-            :thumb-style="cursoreStyle"
-            :bar-style="barraStyle"
-            style="height: 100%"
-          >
+          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 100%">
             <div class="q-ma-sm q-pb-sm q-pr-sm">
-              <div
-                class="domanda"
-                v-for="domanda in domande"
-                :key="domanda.testo"
-              >
+              <div class="domanda" v-for="domanda in domande" :key="domanda.testo">
                 <div class="text-overline" v-html="domanda.prologo"></div>
-                <div
-                  class="text-subtitle q-mt-sm q-mb-xs"
-                  v-html="domanda.testo"
-                ></div>
-                <q-btn-toggle
-                  class="risposte q-mx-sm"
-                  v-model="domanda.rispostaData"
-                  spread
-                  no-caps
-                  dense
-                  push
-                  toggle-color="primary"
-                  :options="domanda.risposte"
-                  clearable
-                >
-                  <template
-                    v-for="button in domanda.risposte"
-                    :key="button.value"
-                    v-slot:[button.slot]
-                  >
+                <div class="text-subtitle q-mt-sm q-mb-xs" v-html="domanda.testo"></div>
+                <q-btn-toggle class="risposte q-mx-sm" v-model="domanda.rispostaData" spread no-caps dense push
+                  toggle-color="primary" :options="domanda.risposte" clearable>
+                  <template v-for="button in domanda.risposte" :key="button.value" v-slot:[button.slot]>
                     <div class="risposta q-px-sm">{{ button.testo }}</div>
                   </template>
                 </q-btn-toggle>
@@ -59,11 +28,7 @@
       </q-card-section>
     </q-card>
 
-    <q-page-scroller
-      position="bottom-right"
-      :scroll-offset="150"
-      :offset="[18, 18]"
-    >
+    <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
       <q-btn fab icon="keyboard_arrow_up" color="accent" />
     </q-page-scroller>
   </q-page>
@@ -80,6 +45,10 @@ import { ref, computed, watch, reactive } from 'vue';
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
+);
+
+const prologo = computed(
+  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
 );
 
 const testo_comprensione = computed(

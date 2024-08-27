@@ -2,7 +2,7 @@
   <q-page class="row items-center justify-evenly">
     <q-card class="my-card q-ma-sm">
       <q-card-section>
-        <div class="text-overline" v-html="script.prologo"></div>
+        <div class="text-overline" v-html="prologo"></div>
         <q-scroll-area visible style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="q-mb-sm q-mr-md testo-domanda">
             <div class="column q-gutter-y-sm">
@@ -54,11 +54,14 @@ import '@dongivan/virtual-keyboard/default.css';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaOutputStudente } from 'pages/models';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaOutputStudente;
 
+const prologo = computed(
+  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
+);
 
 const righe = ref(script.testo
   .replace(/&nbsp;/g, '').split('<br>')
