@@ -11,7 +11,7 @@
                 <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
                   @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
                   {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
-                    script.rispostaData[item.slotIndex]._ : '____________' }}
+                    script.rispostaData[item.slotIndex]._ : '&nbsp;'.repeat(15) }}
                 </span>
               </span>
             </div>
@@ -87,7 +87,7 @@ const onDrop = function (evt: DragEvent, slotIndex: string) {
           if (risposta) {
             risposta.disponibile = true;
             delete script.rispostaData[item.slotIndex]
-            item.content = '__________';
+            item.content = '';
           }
         }
       }
@@ -155,7 +155,7 @@ const annulla = (item: T_Token) => {
     if (script_risposta) script_risposta.disponibile = true
 
     delete script.rispostaData[item.slotIndex]
-    item.content = '__________';
+    item.content = '';
   }
 };
 
@@ -175,9 +175,8 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
   border: 1px solid black
 
 .drop-zone
-  color: red
+  font-weight: 900
   width: 100px
   min-width: 100px
-  background-color: aqua
   border: 1px dotted black
 </style>

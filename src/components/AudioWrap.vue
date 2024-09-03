@@ -1,11 +1,14 @@
 <template>
-  <div style=“display:none”>
-    <audio id="audio-player">
-      <source :src="src" type="audio/ogg">
-    </audio>
+
+  <div v-if="!(src == undefined) && !(src == '')">
+    <div style=“display:none”>
+      <audio id="audio-player">
+        <source :src="src" type="audio/ogg">
+      </audio>
+    </div>
+    <q-btn :disable='btn_disabilitato' class="q-ml-md q-mt-sm btn-audio" align="between" color="primary"
+      :label="label_btn_audio" :icon="icona_btn_audio" outline rounded @click="ascolta" />
   </div>
-  <q-btn :disable='btn_disabilitato' class="q-ml-md q-mt-sm btn-audio" align="between" color="primary"
-    :label="label_btn_audio" :icon="icona_btn_audio" outline rounded @click="ascolta" />
 </template>
 
 <script setup lang="ts">
@@ -17,15 +20,18 @@ defineOptions({
 });
 
 interface Props {
-  src: string;
+  src: string | undefined;
   nrMaxRipetizioni?: number;
 };
+
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   nrMaxRipetizioni: Number.MAX_VALUE
 });
 
-
+console.log(props.src)
 const ascolti = ref(0)
 const label_btn_audio = ref(`Numero massimo ascolti permessi : ${props.nrMaxRipetizioni}`)
 const icona_btn_audio = ref('volume_up')

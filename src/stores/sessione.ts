@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
-// import { IDomanda } from 'pages/models';
-import { Script } from 'boot/models';
+import { Test } from 'stores/Test';
 
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
     counter: 0,
     domande: <[string, unknown, unknown][]>[],
     lingua: <string>'2',
-    script: <Script>{},
+    test: null as unknown as InstanceType<typeof Test>,
   }),
   // getters: {
   //   doubleCount: (state) => state.counter * 2,

@@ -1,14 +1,17 @@
 <template>
   <q-page class="row items-center justify-center">
     <div class="q-pa-md row items-start q-gutter-md">
-      <q-card class="my-card" flat bordered>
+      <PrologoComponent :prologo="script.prologo" />
+      <q-card class="my-card">
         <q-card-section>
-          <div class="text-overline" v-html="prologo"></div>
           <div class="text-h5 q-mt-sm q-mb-xs" v-html="testoDomanda"></div>
           <div class="row justify-center" v-if="script.immagine">
-            <q-img :src="script.immagine?.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%" width="20%"
-              fit="contain">
+            <q-img :src="script.immagine?.$.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%"
+              width="20%" fit="contain">
             </q-img>
+          </div>
+          <div class="row justify-center" v-if="script.audio">
+            <audio-wrap :src="script.audio?.$.url"></audio-wrap>
           </div>
         </q-card-section>
         <q-separator />
@@ -17,7 +20,13 @@
             <q-btn-toggle v-model="script.rispostaData" no-caps dense push glossy toggle-color="primary"
               :options="opzioni" clearable @update:model-value="setRisposta">
               <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
-                <div class="risposta q-px-sm">{{ button.testo }}</div>
+                <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
+                  class="risposta q-px-sm">{{ button.testo }}</div>
+                <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
+                  <q-avatar>
+                    <img src="~assets/ImmagineNonDisponibile.jpeg" />
+                  </q-avatar>
+                </div>
               </template>
             </q-btn-toggle>
           </div>
@@ -33,34 +42,30 @@ defineOptions({
 });
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaSceltaSingola } from 'pages/models';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+import AudioWrap from 'src/components/AudioWrap.vue';
 
 const sessione = useSessioneStore();
-const script = sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola;
+const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola);
+console.log(script.value.risposte)
 
-if (script.immagine && !script.immagine?.url) {
-  script.immagine.url = 'null.jpg'
+
+if (script.value.immagine && (script.value.immagine?.$.url == '' || script.value.immagine?.$.url == undefined)) {
+  delete script.value.immagine
 }
-
-if (script.audio && !script.audio?.url) {
-  script.audio.url = 'null.ogg'
-}
-
-console.log(script)
-
-
 
 let testoDomanda = ref(
-  !script.rispostaData
-    ? script.testo.replace(/([_]+)/gi, '<span style="color: red">$1</span>')
-    : script.testo.replace(
+  !script.value.rispostaData
+    ? script.value.testo.replace(/([_]+)/gi, '<span class="text-weight-bold">$1</span>')
+    : script.value.testo.replace(
       /([_]+)/gi,
-      `<span style="color: red"> ${script.rispostaData} </span>`
+      `<span class="text-weight-bold"> ${script.value.rispostaData} </span>`
     )
 );
 
 const opzioni = ref(
-  script.risposte.risposta.map((item, index) => {
+  script.value.risposte.risposta.map((item, index) => {
     return {
       testo: item._,
       value: item._,
@@ -71,20 +76,16 @@ const opzioni = ref(
   })
 );
 
-const prologo = computed(
-  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
-
 const setRisposta = (risposta: string) => {
   if (!risposta)
-    testoDomanda.value = script.testo.replace(
+    testoDomanda.value = script.value.testo.replace(
       /([_]+)/gi,
-      '<span style="color: red">$1</span>'
+      '<span class="text-weight-bold">$1</span>'
     );
   else
-    testoDomanda.value = ` ${script.testo.replace(
+    testoDomanda.value = ` ${script.value.testo.replace(
       /[_]+/gi,
-      ` <span style="color: red">${risposta} </span> `
+      ` <span class="text-weight-bold">${risposta} </span> `
     )} `;
 };
 </script>
@@ -93,7 +94,6 @@ const setRisposta = (risposta: string) => {
 .my-card
   width: 100%
   max-width: auto
-  border: 2px solid
 
 .risposta
   font-size: medium

@@ -1,0 +1,108 @@
+import jsep from 'jsep';
+/*
+jsep.addBinaryOp('gt', 10);
+jsep.addBinaryOp('lt', 11);
+jsep.addBinaryOp('ge', 12);
+jsep.addBinaryOp('le', 13);
+jsep.addBinaryOp('eq', 14);
+
+var binops = {
+	'+' : function(a, b) { return a + b; },
+	'-' : function(a, b) { return a - b; },
+	'*' : function(a, b) { return a * b; },
+	'/' : function(a, b) { return a / b; },
+	'%' : function(a, b) { return a % b; },
+	'gt' : function(a, b) { return a > b; },
+	'lt' : function(a, b) { return a < b; },
+	'ge' : function(a, b) { return a >= b; },
+	'le' : function(a, b) { return a <= b; },
+	'eq' : function(a, b) { return a = b; }
+};
+
+var unops = {
+	'-' : function(a) { return -a; },
+	'+' : function(a) { return a; }
+};
+*/
+
+jsep.addBinaryOp('gt', 10);
+jsep.addBinaryOp('lt', 11);
+jsep.addBinaryOp('ge', 12);
+jsep.addBinaryOp('le', 13);
+jsep.addBinaryOp('eq', 14);
+
+jsep.addBinaryOp(',', 16); // 'OR'
+
+jsep.addBinaryOp('|', 17); // 'OR'
+jsep.addBinaryOp('^', 18); // 'AND'
+jsep.addUnaryOp('~'); //, 19); // 'NOT'
+
+const binops = {
+  '+': function (a, b) {
+    return a + b;
+  },
+  '-': function (a, b) {
+    return a - b;
+  },
+  '*': function (a, b) {
+    return a * b;
+  },
+  '/': function (a, b) {
+    return a / b;
+  },
+  '%': function (a, b) {
+    return a % b;
+  },
+  gt: function (a, b) {
+    return a > b;
+  },
+  lt: function (a, b) {
+    console.log('a < b', a, b);
+    return a < b;
+  },
+  ge: function (a, b) {
+    return a >= b;
+  },
+  le: function (a, b) {
+    return a <= b;
+  },
+  eq: function (a, b) {
+    return a == b;
+  },
+  ',': function (a, b) {
+    return a || b;
+  },
+  '^': function (a, b) {
+    return a && b;
+  },
+  '|': function (a, b) {
+    return a || b;
+  },
+};
+
+const unops = {
+  '-': function (a) {
+    return -a;
+  },
+  '+': function (a) {
+    return a;
+  },
+  '~': function (a) {
+    return !a;
+  },
+};
+
+export const do_eval = function (test, node) {
+  if (node.type === 'BinaryExpression') {
+    return binops[node.operator](
+      do_eval(test, node.left),
+      do_eval(test, node.right)
+    );
+  } else if (node.type === 'UnaryExpression') {
+    return unops[node.operator](do_eval(test, node.argument));
+  } else if (node.type === 'Literal') {
+    return node.value;
+  } else if (node.type === 'Identifier') {
+    return test.log.PUNTEGGI_STAZIONI[node.name];
+  } else throw 'Errore in valutazione condizione: ' + node.value;
+};

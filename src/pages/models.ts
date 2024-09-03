@@ -17,11 +17,11 @@ export interface T_DomandaSceltaSingola {
   prologo: string;
   testo: string;
   risposte: {
-    tipoopzioni?: string;
+    $?: { tipoopzioni?: string };
     risposta: Array<RispostaDomandaSceltaSingola>;
   };
-  immagine?: { url: string };
-  audio?: { url: string };
+  immagine?: { $: { url: string } };
+  audio?: { $: { url: string } };
   rispostaData?: string;
 }
 

@@ -3,10 +3,11 @@
     <q-header bordered class="bg-primary text-white" height-hint="98">
       <div class="row items-center justify-around ">
         <q-toolbar class="col-5">
-          <q-toolbar-title>Titolo Esame</q-toolbar-title>
+          <q-toolbar-title>{{ sessioneStore.test.script?.test.$.descrizione }}</q-toolbar-title>
         </q-toolbar>
         <q-toolbar class="col-6 bg-primary text-white">
-          <q-toolbar-title>Nome Studente</q-toolbar-title>
+          <q-toolbar-title>{{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
+            sessioneStore.test.script?.test.studente.$.nome}}</q-toolbar-title>
         </q-toolbar>
         <q-toolbar class="col-1 bg-primary text-white">
           <q-toolbar-title>
@@ -58,6 +59,9 @@
 <script setup lang="ts">
 
 import { useQuasar } from 'quasar'
+import { useSessioneStore } from 'stores/sessione';
+
+const sessioneStore = useSessioneStore();
 
 defineOptions({
   name: 'MainLayout',
