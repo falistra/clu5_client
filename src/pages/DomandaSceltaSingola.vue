@@ -6,12 +6,15 @@
         <q-card-section>
           <div class="text-h5 q-mt-sm q-mb-xs" v-html="testoDomanda"></div>
           <div class="row justify-center" v-if="script.immagine">
-            <q-img :src="script.immagine?.$.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%"
+            <ImgWrap :src="script.immagine?.$.url" size="100px" />
+
+
+            <!-- <q-img :src="script.immagine?.$.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%"
               width="20%" fit="contain">
-            </q-img>
+            </q-img> -->
           </div>
           <div class="row justify-center" v-if="script.audio">
-            <audio-wrap :src="script.audio?.$.url"></audio-wrap>
+            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
           </div>
         </q-card-section>
         <q-separator />
@@ -21,11 +24,15 @@
               :options="opzioni" clearable @update:model-value="setRisposta">
               <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
                 <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
-                  class="risposta q-px-sm">{{ button.testo }}</div>
+                  class="risposta q-px-sm">
+                  {{ button.testo }}
+                </div>
                 <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
-                  <q-avatar>
-                    <img src="~assets/ImmagineNonDisponibile.jpeg" />
-                  </q-avatar>
+                  <ImgWrap :src="button.testo" size="70px" />
+                  <!--
+                  <q-avatar size="70px">
+                    <q-img :src="button.testo" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+                  </q-avatar> -->
                 </div>
               </template>
             </q-btn-toggle>
@@ -42,13 +49,17 @@ defineOptions({
 });
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaSceltaSingola } from 'pages/models';
-import { ref } from 'vue';
+import { ref } from 'vue'; // , computed
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import AudioWrap from 'src/components/AudioWrap.vue';
+import ImgWrap from 'src/components/ImgWrap.vue';
+
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola);
-console.log(script.value.risposte)
+if (script.value.audio && typeof script.value.audio.ascolti_rimanenti == 'undefined') {
+  script.value.audio.ascolti_rimanenti = parseInt(script.value.audio.$.nrMaxRipetizioni)
+}
 
 
 if (script.value.immagine && (script.value.immagine?.$.url == '' || script.value.immagine?.$.url == undefined)) {
@@ -88,6 +99,16 @@ const setRisposta = (risposta: string) => {
       ` <span class="text-weight-bold">${risposta} </span> `
     )} `;
 };
+
+const set_ascolti = (val: number) => {
+  if (script.value.audio) {
+    script.value.audio.ascolti_rimanenti = val
+    console.log(script.value.audio.ascolti_rimanenti)
+  }
+}
+
+
+
 </script>
 
 <style lang="sass" scoped>

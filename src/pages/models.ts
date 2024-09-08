@@ -12,6 +12,11 @@ export interface RispostaDomandaSceltaSingola {
   _: string;
 }
 
+export interface Audio {
+  $: { nrMaxRipetizioni: string; url: string };
+  ascolti_rimanenti?: number;
+}
+
 export interface T_DomandaSceltaSingola {
   $: { id: number; lingua?: number; id_vdb: number; hash?: string };
   prologo: string;
@@ -21,8 +26,9 @@ export interface T_DomandaSceltaSingola {
     risposta: Array<RispostaDomandaSceltaSingola>;
   };
   immagine?: { $: { url: string } };
-  audio?: { $: { url: string } };
+  audio?: Audio;
   rispostaData?: string;
+  ascolti_rimanenti: number;
 }
 
 export interface T_DomandaSceltaMultipla {
@@ -30,7 +36,7 @@ export interface T_DomandaSceltaMultipla {
   prologo: string;
   testo: string;
   immagine?: { url: string };
-  audio?: { $: { nrMaxRipetizioni: string; url: string } };
+  audio?: Audio;
   risposte: {
     $?: { tipoopzioni?: string };
     risposta: Array<{ $: { hash: string }; _: string }>;
