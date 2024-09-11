@@ -1,9 +1,11 @@
 <template>
-  <q-page class="row items-center justify-evenly" :style-fn="myTweak">
+  <q-page class="row items-center justify-evenly">
+    <!-- :style-fn="myTweak"> -->
+    <PrologoComponent :prologo="script.prologo" />
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline q-mb-md" v-html="prologo"></div>
+          <div class="text-subtitle1" v-html="common_api.sanitizeUnicode(script.testo)"></div>
           <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 300px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
@@ -13,17 +15,19 @@
                       <div class="row">
                         <div class="col-6 parte-fissa">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <q-img :src="item._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="170px">
-                            </q-img>
+                            <ImgWrap :src="item._" size="100px" />
+                            <!-- <q-img :src="item._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="170px">
+                            </q-img> -->
                           </div>
-                          <div v-else class="q-ma-sm ">{{ item._ }}</div>
+                          <div v-else class="q-ma-sm " v-html="item.label" />
                         </div>
                         <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                           @drop="onDrop($event, item)" @dblclick="annulla(item)">
-                          <div class="text-subtitle q-ma-sm item">{{ item.rispostaData?._ }}
+                          <div class="text-subtitle q-ma-sm item">
                             <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                               <strong>Doppio click per togliere</strong>
                             </q-tooltip>
+                            <span v-html="item.rispostaData?.label" />
                           </div>
                         </div>
                       </div>
@@ -43,7 +47,9 @@
                   <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                     <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                       <strong>Trascina...</strong>
-                    </q-tooltip>{{ item._ }}
+                    </q-tooltip>
+                    <span v-html="item.label"></span>
+                    <!-- {{ item.label }} -->
                   </p>
                 </q-item-section>
               </q-item>
@@ -63,15 +69,16 @@ import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaAbbinamentoSingolo } from 'pages/models';
 import { ref, computed } from 'vue';
 import * as Common from 'pages/common';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+import ImgWrap from 'src/components/ImgWrap.vue';
+import { common_api } from 'src/boot/common-utils';
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoSingolo
 );
-
-const prologo = computed(
-  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
+script.value.partiMobili.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
+script.value.partiFisse.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
 
 script.value.partiMobili.item.forEach((item) => {
   const risposta_presente = script.value.partiFisse.item.find(
@@ -147,19 +154,17 @@ const annulla = (item: Item) => {
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
-const myTweak = (offset: number) => { // offset: number
-  // "offset" is a Number (pixels) that refers to the total
-  // height of header + footer that occupies on screen,
-  // based on the QLayout "view" prop configuration
+// const myTweak = (offset: number) => { // offset: number
+//   // "offset" is a Number (pixels) that refers to the total
+//   // height of header + footer that occupies on screen,
+//   // based on the QLayout "view" prop configuration
 
-  // this is actually what the default style-fn does in Quasar
-  return {
-    minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
-    // height: `calc(100vh - ${offset}px)`
-  }
-}
-
-
+//   // this is actually what the default style-fn does in Quasar
+//   return {
+//     minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
+//     // height: `calc(100vh - ${offset}px)`
+//   }
+// }
 
 </script>
 

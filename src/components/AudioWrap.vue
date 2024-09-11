@@ -1,11 +1,23 @@
 <template>
+
   <figure v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti">
-    <q-badge color="orange" text-color="black" :label="`Ascolti rimanenti: ${audio.ascolti_rimanenti}`" />
+    <q-badge v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange" text-color="black"
+      :label="`Ascolti rimanenti: ${audio.ascolti_rimanenti}`" />
     <figcaption></figcaption>
-    <audio ref="player" :src="mySource" controls />
+    <audio controls ref="player" id="my_audio" :src="mySource">
+    </audio>
   </figure>
 
-  <div v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0">
+  <div class="q-mt-md" v-if="audio && audio.$.url && audio.$.url != 'nessuno' && !fileEsiste">
+    <q-banner inline-actions class=" text-white bg-red">
+      <template v-slot:avatar>
+        <q-icon name="volume_off" color="white" />
+      </template>
+      Audio {{ audio.$.url }} non disponibile
+    </q-banner>
+  </div>
+
+  <div class="q-mt-md" v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0">
     <q-banner inline-actions class="text-white bg-red">
       <template v-slot:avatar>
         <q-icon name="volume_off" color="white" />
@@ -19,36 +31,27 @@
 
 import { Audio } from 'pages/models';
 import { ref, onMounted } from 'vue';
-// import { useAVBars } from 'vue-audio-visual'
+
+defineOptions({ name: 'AudioWrap' });
+
+const props = defineProps<{ audio: Audio; }>()
 
 const player = ref(null)
-// const canvas = ref(null)
 
-defineOptions({
-  name: 'AudioWrap',
-});
-
-interface Props {
-  audio: Audio;
-};
-
-const props = defineProps<Props>()
-// props.audio?.$.url ||
 
 const fileEsiste = ref(true)
 let ascolti_rimanenti = props.audio.ascolti_rimanenti
 
-// const ascolti_rimanenti = defineModel<number | undefined>()
-
 const emit = defineEmits(['update'])
 
-
-const mySource = ref('/esempio.ogg') // props.audio?.$.url
-// useAVBars(player, canvas, { src: mySource, canvHeight: 40, canvWidth: 200, barColor: 'lime' })
+// const mySource = ref('/esempio.ogg') // ref(props.audio?.$.url) // props.audio?.$.url
+const mySource = ref(props.audio?.$.url) // props.audio?.$.url
 
 onMounted(() => {
+  //  console.log(player.value)
   if (player.value) {
     (player.value as HTMLAudioElement).addEventListener('ended', () => {
+      //      console.log(`${ascolti_rimanenti}`)
       if (ascolti_rimanenti) {
         ascolti_rimanenti--
         emit('update', ascolti_rimanenti)
@@ -61,6 +64,5 @@ onMounted(() => {
     })
   }
 })
-
 
 </script>

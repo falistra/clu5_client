@@ -10,9 +10,10 @@ export const Stazione = class {
   constructor(scriptStazione: Script_Stazione) {
     this.script = scriptStazione;
     // this.ID_STAZIONE_CORRENTE = this.script.$.ID;
+    const domande = this.script.insieme_domande.domande;
 
-    this.set_query = this.script.insieme_domande.domande.map((domanda) =>
-      this.setQuery(domanda)
+    this.set_query = (Array.isArray(domande) ? domande : [domande]).map(
+      (domanda) => this.setQuery(domanda)
     );
     // console.log(this.set_query);
   }
@@ -56,7 +57,7 @@ export const Stazione = class {
 
     // console.log(parms);
 
-    const domande = await api
+    const domandeXML = await api
       .post('http://localhost/clu4/test/domande/', new URLSearchParams(parms))
       .then((response) => {
         return response.data;
@@ -73,7 +74,7 @@ export const Stazione = class {
     // console.log(domande);
 
     const jsonDomande = await xml2js
-      .parseStringPromise(domande, {
+      .parseStringPromise(domandeXML, {
         explicitArray: false,
         trim: true,
       })
@@ -84,9 +85,13 @@ export const Stazione = class {
         console.error(err);
       });
     const sessioneStore = useSessioneStore();
-    sessioneStore.domande = (
-      jsonDomande.insiemi_domande.domande as Array<object>
+
+    const domande: Array<object> = Array.isArray(
+      jsonDomande.insiemi_domande.domande
     )
+      ? jsonDomande.insiemi_domande.domande
+      : [jsonDomande.insiemi_domande.domande];
+    sessioneStore.domande = (domande as Array<object>)
       .map((value) => {
         const domande = (value as { sql: string; domanda: object }).domanda;
         return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array

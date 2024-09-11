@@ -1,22 +1,21 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <div class="q-pa-md row items-start q-gutter-md">
+      <PrologoComponent :prologo="script.prologo" />
       <q-card class="my-card" flat bordered>
         <q-card-section>
-          <div class="text-overline" v-html="prologo"></div>
-          <div class="text-h5 q-mt-sm q-mb-xs" v-html="script.testo"></div>
-          <!-- <div class="text-overline text-orange-9">
-            Ordina gli elementi spostandoli con il mouse
-          </div> -->
+          <div class="text-h5 q-mt-sm " v-html="common_api.sanitizeUnicode(script.testo)"></div>
+          <div class="row justify-center" v-if="script.audio">
+            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+          </div>
         </q-card-section>
-        <q-separator />
         <q-card-section>
           <draggable :list="list" :disabled="!enabled" item-key="_" class="list-group" ghost-class="ghost"
-            :move="checkMove" @start="dragging = true" @end="dragging = false">
+            :move="checkMove" @start="dragging = true" @end="dragging = false" draggable=".not-draggable">
             <template #item="{ element }">
-              <div class="q-my-lg q-pa-sm list-group-item" :class="{ 'not-draggable': !enabled }">
-                {{ element._ }}
-              </div>
+              <div class="q-my-sm q-pa-sm list-group-item"
+                :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
+                v-html="element.label" />
             </template>
           </draggable>
         </q-card-section>
@@ -33,22 +32,45 @@ import draggable from 'vuedraggable';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaRiordino } from 'pages/models';
-import { ref, computed } from 'vue';
+
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import { common_api } from 'src/boot/common-utils'
+import { setAudioPams } from 'pages/common'
+import { ref } from 'vue';
+//import { VNodeRef } from 'vue';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaRiordino;
 
-const prologo = computed(
-  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
+if (typeof script.rispostaData == 'undefined') {
+  script.rispostaData = JSON.parse(JSON.stringify(script.risposte))
+}
 
+if (script.audio) setAudioPams(script.audio)
+
+script.rispostaData?.risposta.map((item, index) => {
+  item.ordine = index
+  item.label = common_api.sanitizeUnicode(item._)
+})
 
 // const testoDomanda = ref(script.Testo);
-const list = ref(script.risposte.risposta);
+const list = ref(script.rispostaData?.risposta);
 
 const dragging = ref(false);
 const enabled = ref(true);
 const checkMove = () => null;
+
+const check_primoItem = (ordine: number) => {
+  return (ordine == 0) ? false : true
+}
+
+const set_ascolti = (val: number) => {
+  if (script.audio) {
+    script.audio.ascolti_rimanenti = val
+  }
+}
+
 </script>
 <style lang="sass" scoped>
 .my-card
@@ -68,4 +90,7 @@ const checkMove = () => null;
 .list-group-item
     border-style: outset
     cursor: move
+
+.primo-Item
+  font-weight: bold
 </style>

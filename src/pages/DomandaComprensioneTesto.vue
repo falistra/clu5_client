@@ -3,24 +3,37 @@
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline" v-html="prologo"></div>
+          <PrologoComponent :prologo="script.prologo" />
+          <ImgWrap :src="primaDomanda.immagine?.$?.url" size="150px" />
+          <div class="row justify-center" v-if="primaDomanda.audio">
+            <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti"></audio-wrap>
+          </div>
+
           <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 500px">
-            <div class="text-subtitle q-ma-sm q-pb-sm q-pr-sm" v-html="testo_comprensione"></div>
+            <div class="text-subtitle q-ma-sm q-pb-sm q-pr-sm"
+              v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
           </q-scroll-area>
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 100%">
+          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="common_api.barStyle" style="height: 100%">
             <div class="q-ma-sm q-pb-sm q-pr-sm">
               <div class="domanda" v-for="domanda in domande" :key="domanda.testo">
                 <div class="text-overline" v-html="domanda.prologo"></div>
-                <div class="text-subtitle q-mt-sm q-mb-xs" v-html="domanda.testo"></div>
-                <q-btn-toggle class="risposte q-mx-sm" v-model="domanda.rispostaData" spread no-caps dense push
+                <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
+                  v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
+                <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
+                  :options="domanda.risposte" dense color="primary" />
+
+
+
+                <!-- <q-btn-toggle class="risposte q-mx-sm" v-model="domanda.rispostaData" no-caps dense push
                   toggle-color="primary" :options="domanda.risposte" clearable>
                   <template v-for="button in domanda.risposte" :key="button.value" v-slot:[button.slot]>
                     <div class="risposta q-px-sm">{{ button.testo }}</div>
                   </template>
-                </q-btn-toggle>
+</q-btn-toggle> -->
+
               </div>
             </div>
           </q-scroll-area>
@@ -39,21 +52,22 @@ defineOptions({
   name: 'DomandaComprensioneTesto',
 });
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaComprensioneTesto } from 'pages/models';
-import { ref, computed, watch, reactive } from 'vue';
+import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola } from 'pages/models';
+import { ref, watch, reactive } from 'vue';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import ImgWrap from 'src/components/ImgWrap.vue';
+import { common_api } from 'src/boot/common-utils'
+import { setAudioPams } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
 );
 
-const prologo = computed(
-  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
+const primaDomanda: T_DomandaSceltaSingola = script.value.domande.domandasceltasingola[0]
+if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
 
-const testo_comprensione = computed(
-  () => script.value.testo_comprensione.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
 
 const domande = reactive(
   script.value.domande.domandasceltasingola.map((dss) => ({
@@ -61,9 +75,10 @@ const domande = reactive(
     testo: dss.testo,
     risposte: dss.risposte.risposta.map((item, index) => ({
       testo: item._,
+      label: item._,
       value: item._,
       slot: index.toString(),
-      style: { 'margin-right': '5px', border: '1px solid' },
+      style: { 'line-height': '85%', 'font-size': 'small', 'margin-right': '5px', border: '1px solid' },
     })),
     rispostaData: dss.rispostaData,
   }))
@@ -75,6 +90,13 @@ watch(domande, async (risposte) => {
       item.rispostaData || undefined;
   });
 });
+
+const set_ascolti = (val: number) => {
+  console.log(`OK set: ${val}`)
+  if (primaDomanda.audio) {
+    primaDomanda.audio.ascolti_rimanenti = val
+  }
+}
 
 const cursoreStyle = ref<Partial<CSSStyleDeclaration>>({
   right: '4px',
@@ -91,6 +113,7 @@ const barraStyle = ref<Partial<CSSStyleDeclaration>>({
   width: '9px',
   opacity: '0.2',
 });
+
 </script>
 
 <style lang="sass" scoped>
@@ -100,8 +123,6 @@ const barraStyle = ref<Partial<CSSStyleDeclaration>>({
   min-height: 500px
   border: 2px solid
 
-.risposte
-  margin-bottom: 5px
 
 .risposta
   font-size: small
@@ -110,5 +131,5 @@ const barraStyle = ref<Partial<CSSStyleDeclaration>>({
 
 .domanda
   border-style: solid solid solid solid
-  margin-bottom: 15px
+  margin-bottom: 10px
 </style>

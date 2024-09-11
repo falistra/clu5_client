@@ -1,7 +1,9 @@
 <template>
-  <q-avatar :size="size">
-    <q-img :src="`/media/${src}`" error-src="~assets/ImmagineNonDisponibile.jpeg" />
-  </q-avatar>
+  <div class="row justify-center">
+    <q-avatar v-if="src" :size="size">
+      <q-img :src="`/media/${src}`" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+    </q-avatar>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +14,7 @@ defineOptions({
 
 interface Props {
   size: string;
-  src: string;
+  src: string | undefined;
 };
 
 // const props =

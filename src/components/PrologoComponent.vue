@@ -1,26 +1,25 @@
 <template>
-  <div class="text-overline" v-html="prologo"></div>
+  <q-chip square size="md" icon="bookmark" color="teal-2">
+    <div class="text-overline prologo" v-html="`${common_api.sanitizeUnicode(props.prologo)}`"></div>
+  </q-chip>
 </template>
 
 <script setup lang="ts">
 
-import { computed } from 'vue';
+import { common_api } from 'src/boot/common-utils';
 
 defineOptions({
   name: 'PrologoComponent',
 });
 
-interface Props {
-  prologo: string;
-};
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<{ prologo: string; }>(), {
   prologo: 'Manca prologo'
 });
 
-
-const prologo = computed(
-  () => props.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
-
 </script>
+
+<style lang="sass" scoped>
+.prologo
+  font-size: small
+  line-height: 90%
+</style>

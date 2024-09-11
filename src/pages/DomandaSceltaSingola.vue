@@ -1,18 +1,11 @@
 <template>
   <q-page class="row items-center justify-center">
     <div class="q-pa-md row items-start q-gutter-md">
-      <PrologoComponent :prologo="script.prologo" />
+      <PrologoComponent class="absolute-top-left" :prologo="script.prologo" />
       <q-card class="my-card">
         <q-card-section>
-          <div class="text-h5 q-mt-sm q-mb-xs" v-html="testoDomanda"></div>
-          <div class="row justify-center" v-if="script.immagine">
-            <ImgWrap :src="script.immagine?.$.url" size="100px" />
-
-
-            <!-- <q-img :src="script.immagine?.$.url" error-src="~assets/ImmagineNonDisponibile.jpeg" height="20%"
-              width="20%" fit="contain">
-            </q-img> -->
-          </div>
+          <div class="text-h5 q-mt-sm q-mb-xs" v-html="common_api.sanitizeUnicode(testoDomanda)"></div>
+          <ImgWrap :src="script.immagine?.$?.url" size="150px" />
           <div class="row justify-center" v-if="script.audio">
             <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
           </div>
@@ -24,8 +17,7 @@
               :options="opzioni" clearable @update:model-value="setRisposta">
               <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
                 <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
-                  class="risposta q-px-sm">
-                  {{ button.testo }}
+                  class="risposta q-px-sm" v-html="`${common_api.sanitizeUnicode(button.testo)}`">
                 </div>
                 <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
                   <ImgWrap :src="button.testo" size="70px" />
@@ -44,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+
 defineOptions({
   name: 'DomandaSceltaSingola',
 });
@@ -54,17 +47,17 @@ import PrologoComponent from 'src/components/PrologoComponent.vue';
 import AudioWrap from 'src/components/AudioWrap.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 
+import { common_api } from 'src/boot/common-utils'
+import { setAudioPams } from 'pages/common'
+
+// const sanitizeUnicode = (testo: string) => testo.replace(/\%u(\d+)/g, '&#x$1;')
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola);
 if (script.value.audio && typeof script.value.audio.ascolti_rimanenti == 'undefined') {
   script.value.audio.ascolti_rimanenti = parseInt(script.value.audio.$.nrMaxRipetizioni)
 }
-
-
-if (script.value.immagine && (script.value.immagine?.$.url == '' || script.value.immagine?.$.url == undefined)) {
-  delete script.value.immagine
-}
+if (script.value.audio) setAudioPams(script.value.audio)
 
 let testoDomanda = ref(
   !script.value.rispostaData
@@ -96,18 +89,15 @@ const setRisposta = (risposta: string) => {
   else
     testoDomanda.value = ` ${script.value.testo.replace(
       /[_]+/gi,
-      ` <span class="text-weight-bold">${risposta} </span> `
+      ` <span class="text-weight-bold">${common_api.sanitizeUnicode(risposta)} </span> `
     )} `;
 };
 
 const set_ascolti = (val: number) => {
   if (script.value.audio) {
     script.value.audio.ascolti_rimanenti = val
-    console.log(script.value.audio.ascolti_rimanenti)
   }
 }
-
-
 
 </script>
 

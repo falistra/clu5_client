@@ -1,15 +1,19 @@
 <template>
   <q-page class="row items-center justify-evenly">
+    <PrologoComponent class="top-left" :prologo="script.prologo" />
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card class="my-card" flat bordered>
         <q-card-section>
           <div class="text-overline" v-html="prologo"></div>
           <q-scroll-area style="height: 200px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
-            <div class="text-subtitle q-mt-sm q-mb-xs">
+            <div class="text-subtitle q-mt-sm q-mb-xs q-ml-md">
               <span v-for="item in tokens" :key="item.index">
                 <span v-if="!item.isSlot" v-html="item.content"></span>
                 <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
                   @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
+                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                    <strong>Doppio click per togliere</strong>
+                  </q-tooltip>
                   {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
                     script.rispostaData[item.slotIndex]._ : '&nbsp;'.repeat(15) }}
                 </span>
@@ -41,6 +45,7 @@ import { ref, computed } from 'vue';
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaRiempimentoTesto, T_Token } from 'pages/models';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
 
 import * as Common from 'pages/common';
 

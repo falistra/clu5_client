@@ -13,7 +13,7 @@ export interface RispostaDomandaSceltaSingola {
 }
 
 export interface Audio {
-  $: { nrMaxRipetizioni: string; url: string };
+  $: { nrMaxRipetizioni: string; url: string; nrmaxripetizioni: string };
   ascolti_rimanenti?: number;
 }
 
@@ -28,7 +28,6 @@ export interface T_DomandaSceltaSingola {
   immagine?: { $: { url: string } };
   audio?: Audio;
   rispostaData?: string;
-  ascolti_rimanenti: number;
 }
 
 export interface T_DomandaSceltaMultipla {
@@ -50,14 +49,17 @@ export interface T_DomandaComprensioneTesto {
   prologo: string;
   testo_comprensione: string;
   domande: { domandasceltasingola: Array<T_DomandaSceltaSingola> };
-  immagine?: { url: string };
 }
 
 export interface T_DomandaRiordino {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  risposte: { risposta: Array<{ ordine: number; _: string }> };
+  audio?: Audio;
+  risposte: { risposta: Array<{ ordine: number; _: string; label: string }> };
+  rispostaData?: {
+    risposta: Array<{ ordine: number; _: string; label: string }>;
+  };
 }
 
 export interface T_DomandaScritturaLibera {
@@ -110,11 +112,21 @@ export interface T_DomandaAbbinamentoMultiplo {
     item: Array<{
       $: { hash: string };
       _: string;
-      rispostaData?: Array<{ $: { hash: string }; _: string }>;
+      label: string;
+      rispostaData?: Array<{
+        $: { hash: string };
+        _: string;
+        label: string;
+      }>;
     }>;
   };
   partiMobili: {
-    item: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+    item: Array<{
+      $: { hash: string };
+      _: string;
+      label: string;
+      disponibile?: boolean;
+    }>;
   };
 }
 
@@ -127,11 +139,21 @@ export interface T_DomandaAbbinamentoSingolo {
     item: Array<{
       $: { hash: string };
       _: string;
-      rispostaData?: { $: { hash: string }; _: string };
+      label: string;
+      rispostaData?: {
+        $: { hash: string };
+        _: string;
+        label: string;
+      };
     }>;
   };
   partiMobili: {
-    item: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+    item: Array<{
+      $: { hash: string };
+      _: string;
+      label: string;
+      disponibile?: boolean;
+    }>;
   };
 }
 
@@ -143,11 +165,21 @@ export interface T_DomandaWordPool {
     pool: Array<{
       $: { hash: string };
       _: string;
-      rispostaData?: Array<{ $: { hash: string }; _: string }>;
+      label: string;
+      rispostaData?: Array<{
+        $: { hash: string };
+        _: string;
+        label: string;
+      }>;
     }>;
   };
   words: {
-    word: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
+    word: Array<{
+      $: { hash: string };
+      _: string;
+      label: string;
+      disponibile?: boolean;
+    }>;
   };
 }
 

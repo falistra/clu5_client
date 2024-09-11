@@ -1,9 +1,10 @@
 <template>
   <q-page class="row items-center justify-evenly" :style-fn="myTweak">
+    <PrologoComponent :prologo="script.prologo" />
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-overline q-mb-md" v-html="prologo"></div>
+          <div class="text-caption" v-html="common_api.sanitizeUnicode(script.testo)"></div>
           <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 300px">
             <div class="q-pa-sm">
               <q-card class="zona-ricevente q-ma-sm" @dragover.prevent @dragenter.prevent @dragover="onPool"
@@ -13,10 +14,10 @@
                   <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
                     @dblclick="annulla(item, pool)">
                     <div class="text-subtitle q-ma-sm item">
-                      {{ item._ }}
                       <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                         <strong>Doppio click per togliere</strong>
                       </q-tooltip>
+                      <span class="q-ma-md text-weight-medium" v-html="item.label" />
                     </div>
                   </div>
                 </div>
@@ -34,7 +35,7 @@
                     <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                       <strong>Trascina...</strong>
                     </q-tooltip>
-                    {{ item._ }}
+                    <span v-html="item.label" />
                   </p>
                 </q-item-section>
               </q-item>
@@ -53,16 +54,14 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaWordPool } from 'pages/models';
 import { ref, computed } from 'vue';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+import { common_api } from 'src/boot/common-utils';
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaWordPool
 );
-
-const prologo = computed(
-  () => script.value.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
-
+script.value.words.word.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
 
 script.value.words.word.forEach((item) => {
   const risposta_presente = script.value.pools.pool.find(
