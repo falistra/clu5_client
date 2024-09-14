@@ -1,37 +1,23 @@
 <template>
-  <q-page class="row items-center justify-center">
-    <div class="q-pa-md row items-start q-gutter-md">
-      <PrologoComponent class="absolute-top-left" :prologo="script.prologo" />
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="text-h5 q-mt-sm q-mb-xs" v-html="common_api.sanitizeUnicode(testoDomanda)"></div>
-          <ImgWrap :src="script.immagine?.$?.url" size="150px" />
-          <div class="row justify-center" v-if="script.audio">
-            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+  <q-page class="column items-center justify-center">
+    <PrologoComponent class="col-1" :prologo="script.prologo" />
+    <div class="col text-h6 q-mt-lg q-mx-md" v-html="common_api.sanitizeUnicode(testoDomanda)"></div>
+    <img-wrap v-if="script.immagine" class="col" :src="script.immagine?.$?.url" size="150px" />
+    <audio-wrap v-if="script.audio" class="col" :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    <div class="col q-mt-md">
+      <q-btn-toggle v-model="script.rispostaData" no-caps dense push glossy toggle-color="primary" :options="opzioni"
+        clearable @update:model-value="setRisposta">
+        <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
+          <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
+            class="risposta q-px-sm" v-html="`${common_api.sanitizeUnicode(button.testo)}`">
           </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-section>
-          <div class="row justify-center items-center">
-            <q-btn-toggle v-model="script.rispostaData" no-caps dense push glossy toggle-color="primary"
-              :options="opzioni" clearable @update:model-value="setRisposta">
-              <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
-                <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
-                  class="risposta q-px-sm" v-html="`${common_api.sanitizeUnicode(button.testo)}`">
-                </div>
-                <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
-                  <ImgWrap :src="button.testo" size="70px" />
-                  <!--
-                  <q-avatar size="70px">
-                    <q-img :src="button.testo" error-src="~assets/ImmagineNonDisponibile.jpeg" />
-                  </q-avatar> -->
-                </div>
-              </template>
-            </q-btn-toggle>
+          <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
+            <ImgWrap :src="button.testo" size="70px" />
           </div>
-        </q-card-section>
-      </q-card>
+        </template>
+      </q-btn-toggle>
     </div>
+
   </q-page>
 </template>
 
@@ -102,10 +88,6 @@ const set_ascolti = (val: number) => {
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 100%
-  max-width: auto
-
 .risposta
   font-size: medium
   text-align: justify
