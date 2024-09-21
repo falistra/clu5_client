@@ -1,15 +1,15 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header bordered class="bg-primary text-white" height-hint="98">
+    <q-header bordered class="bg-blue-2 text-black" height-hint="98">
       <div class="row items-center justify-around ">
         <q-toolbar class="col-5">
           <q-toolbar-title>{{ sessioneStore.test.script?.test.$.descrizione }}</q-toolbar-title>
         </q-toolbar>
-        <q-toolbar class="col-6 bg-primary text-white">
+        <q-toolbar class="col-6">
           <q-toolbar-title>{{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
-            sessioneStore.test.script?.test.studente.$.nome}}</q-toolbar-title>
+            sessioneStore.test.script?.test.studente.$.nome }}</q-toolbar-title>
         </q-toolbar>
-        <q-toolbar class="col-1 bg-primary text-white">
+        <q-toolbar class="col-1">
           <q-toolbar-title>
             <q-btn color="secondary" @click="$q.fullscreen.toggle()"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" />
@@ -39,9 +39,9 @@
       </router-view>
     </q-page-container>
 
-    <q-footer bordered class="bg-grey-8 text-white">
+    <q-footer bordered class="bg-blue-2 text-black">
       <div class="row items-center justify-evenly">
-        <q-toolbar class="col bg-primary text-white  ">
+        <q-toolbar class="col">
           <q-toolbar-title>
             <vue-countdown :time="3 * 60 * 1000" v-slot="{ minutes, seconds }" @end="gameover">
               Tempo rimanente: {{ minutes }} minuti, {{ seconds }} secondi.

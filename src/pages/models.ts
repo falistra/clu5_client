@@ -7,14 +7,24 @@ export interface IDomanda {
   tecnica: string;
 }
 export interface RispostaDomandaSceltaSingola {
-  hash: string;
-  tipo?: string;
+  $: { hash: string; tipo?: string };
   _: string;
 }
 
 export interface Audio {
   $: { nrMaxRipetizioni: string; url: string; nrmaxripetizioni: string };
   ascolti_rimanenti?: number;
+}
+
+export interface Video {
+  $: { nrMaxRipetizioni: string; url: string; nrmaxripetizioni: string };
+  ascolti_rimanenti?: number;
+}
+
+export interface T_DomandaSceltaSingola_risposta2Server {
+  specie: number;
+  peso: string;
+  risposte: string;
 }
 
 export interface T_DomandaSceltaSingola {
@@ -27,7 +37,9 @@ export interface T_DomandaSceltaSingola {
   };
   immagine?: { $: { url: string } };
   audio?: Audio;
+  video?: Video;
   rispostaData?: string;
+  risposta2Server?: T_DomandaSceltaSingola_risposta2Server;
 }
 
 export interface T_DomandaSceltaMultipla {
@@ -44,11 +56,24 @@ export interface T_DomandaSceltaMultipla {
   ascolti_rimanenti?: number;
 }
 
+export interface T_DomandaComprensioneTesto_risposta2Server {
+  specie: number;
+  peso: string;
+  risposte: { [Key: string]: string };
+}
+
 export interface T_DomandaComprensioneTesto {
   $: { id: number; lingua: string };
   prologo: string;
   testo_comprensione: string;
   domande: { domandasceltasingola: Array<T_DomandaSceltaSingola> };
+  risposta2Server?: T_DomandaComprensioneTesto_risposta2Server;
+}
+
+export interface T_DomandaRiordino_risposta2Server {
+  specie: number;
+  peso: string;
+  risposte: string[];
 }
 
 export interface T_DomandaRiordino {
@@ -56,10 +81,12 @@ export interface T_DomandaRiordino {
   prologo: string;
   testo: string;
   audio?: Audio;
+  video?: Video;
   risposte: { risposta: Array<{ ordine: number; _: string; label: string }> };
   rispostaData?: {
     risposta: Array<{ ordine: number; _: string; label: string }>;
   };
+  risposta2Server?: T_DomandaRiordino_risposta2Server;
 }
 
 export interface T_DomandaScritturaLibera {

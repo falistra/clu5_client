@@ -1,11 +1,13 @@
 <template>
-  <q-chip square size="md" icon="bookmark" color="teal-2">
-    <div class="text-overline prologo" v-html="`${common_api.sanitizeUnicode(props.prologo)}`"></div>
-  </q-chip>
+  <div class="row items-left">
+    <q-banner rounded dense class="shadow-3 bg-teal-4">
+      <div class="text-subtitle2" v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`"></div>
+    </q-banner>
+  </div>
 </template>
 
 <script setup lang="ts">
-
+// 12436
 import { common_api } from 'src/boot/common-utils';
 
 defineOptions({
@@ -15,6 +17,8 @@ defineOptions({
 const props = withDefaults(defineProps<{ prologo: string; }>(), {
   prologo: 'Manca prologo'
 });
+
+// const testo = common_api.sanitazeBR(prop.prologo)
 
 </script>
 

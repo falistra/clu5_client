@@ -1,4 +1,4 @@
-import { Audio } from 'pages/models';
+import { Audio, Video } from 'pages/models';
 
 export const thumbStyle = {
   right: '4px',
@@ -34,4 +34,47 @@ export const setAudioPams = (audio: Audio) => {
       }
     }
   }
+};
+
+export const setVideoPams = (video: Video) => {
+  if (!(typeof video.$.nrmaxripetizioni == 'undefined')) {
+    video.$.nrMaxRipetizioni = video.$.nrmaxripetizioni;
+  }
+
+  if (typeof video.ascolti_rimanenti == 'undefined') {
+    if (typeof video.$.nrMaxRipetizioni == 'undefined') {
+      video.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
+      video.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+    } else {
+      if (isNaN(parseInt(video.$.nrMaxRipetizioni))) {
+        video.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
+        video.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+      } else {
+        video.ascolti_rimanenti = parseInt(video.$.nrMaxRipetizioni);
+      }
+    }
+  }
+};
+
+export const sanitazeScript = (script: {
+  immagine?: { $: { url: string } };
+  audio?: Audio;
+}) => {
+  if (
+    script.audio &&
+    (typeof script.audio.$.url == 'undefined' ||
+      script.audio.$.url == '' ||
+      script.audio.$.url == 'nessuno')
+  )
+    delete script.audio;
+
+  if (
+    script.immagine &&
+    (typeof script.immagine.$.url == 'undefined' ||
+      script.immagine.$.url == '' ||
+      script.immagine.$.url == 'nessuno')
+  )
+    delete script.immagine;
+
+  return script;
 };

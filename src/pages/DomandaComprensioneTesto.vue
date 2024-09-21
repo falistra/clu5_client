@@ -1,73 +1,79 @@
 <template>
-  <q-page class="padding items-center justify-evenly">
-    <q-card class="my-card" flat bordered>
-      <q-card-section horizontal>
-        <q-card-section class="col-6">
-          <PrologoComponent :prologo="script.prologo" />
-          <ImgWrap :src="primaDomanda.immagine?.$?.url" size="150px" />
-          <div class="row justify-center" v-if="primaDomanda.audio">
-            <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti"></audio-wrap>
-          </div>
+  <q-page class="column justify-evenly senza-scroll">
+    <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
 
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="barraStyle" style="height: 500px">
-            <div class="text-subtitle q-ma-sm q-pb-sm q-pr-sm"
+    <div class="col">
+      <div class="row">
+        <div class="col q-mx-md q-mt-sm">
+          <div class="column">
+            <div style="max-height: 300px" class="col-auto scroll text-caption q-my-sm q-mx-md "
               v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
-          </q-scroll-area>
-        </q-card-section>
+            <img-wrap v-if="primaDomanda.immagine" class="col" :src="primaDomanda.immagine?.$?.url" size="100px" />
+            <audio-wrap v-if="primaDomanda.audio" class="col q-mt-md" :audio="primaDomanda.audio"
+              @update="set_ascolti"></audio-wrap>
+            <video-wrap class="col q-mt-md" v-if="primaDomanda.video" :video="primaDomanda.video"
+              @update="set_ascolti_video"></video-wrap>
+          </div>
+        </div>
+        <div class="col scroll q-mx-md q-mt-sm" style="max-height: 320px">
+          <div class="domanda" v-for="domanda in domande" :key="domanda.testo">
+            <div class="text-overline" v-html="domanda.prologo"></div>
+            <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
+              v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
+            <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
+              :options="domanda.risposte" dense color="primary" />
+          </div>
+        </div>
 
-        <q-card-section class="col-6">
-          <q-scroll-area :thumb-style="cursoreStyle" :bar-style="common_api.barStyle" style="height: 100%">
-            <div class="q-ma-sm q-pb-sm q-pr-sm">
-              <div class="domanda" v-for="domanda in domande" :key="domanda.testo">
-                <div class="text-overline" v-html="domanda.prologo"></div>
-                <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
-                  v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
-                <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
-                  :options="domanda.risposte" dense color="primary" />
+      </div>
+    </div>
 
-
-
-                <!-- <q-btn-toggle class="risposte q-mx-sm" v-model="domanda.rispostaData" no-caps dense push
-                  toggle-color="primary" :options="domanda.risposte" clearable>
-                  <template v-for="button in domanda.risposte" :key="button.value" v-slot:[button.slot]>
-                    <div class="risposta q-px-sm">{{ button.testo }}</div>
-                  </template>
-</q-btn-toggle> -->
-
-              </div>
-            </div>
-          </q-scroll-area>
-        </q-card-section>
-      </q-card-section>
-    </q-card>
-
-    <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
-      <q-btn fab icon="keyboard_arrow_up" color="accent" />
-    </q-page-scroller>
   </q-page>
+
 </template>
 
 <script setup lang="ts">
 defineOptions({
   name: 'DomandaComprensioneTesto',
 });
+
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola } from 'pages/models';
+import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda } from 'pages/models';
 import { ref, watch, reactive } from 'vue';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
-import AudioWrap from 'src/components/AudioWrap.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils'
-import { setAudioPams } from 'pages/common'
+import AudioWrap from 'src/components/AudioWrap.vue';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
 );
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
+
+if (typeof script.value.risposta2Server == 'undefined')
+  script.value.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: {}
+  }
 
 const primaDomanda: T_DomandaSceltaSingola = script.value.domande.domandasceltasingola[0]
-if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
 
+if (primaDomanda.audio && (typeof primaDomanda.audio.$.url == 'undefined' || primaDomanda.audio.$.url == '' || primaDomanda.audio.$.url == 'nessuno'))
+  delete primaDomanda.audio
+
+if (primaDomanda.video && (typeof primaDomanda.video.$.url == 'undefined' || primaDomanda.video.$.url == '' || primaDomanda.video.$.url == 'nessuno'))
+  delete primaDomanda.video
+
+
+if (primaDomanda.immagine && (typeof primaDomanda.immagine.$.url == 'undefined' || primaDomanda.immagine.$.url == '' || primaDomanda.immagine.$.url == 'nessuno'))
+  delete primaDomanda.immagine
+
+if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
+if (primaDomanda.video) setVideoPams(primaDomanda.video)
 
 const domande = reactive(
   script.value.domande.domandasceltasingola.map((dss) => ({
@@ -77,6 +83,7 @@ const domande = reactive(
       testo: item._,
       label: item._,
       value: item._,
+      hash: item.$.hash,
       slot: index.toString(),
       style: { 'line-height': '85%', 'font-size': 'small', 'margin-right': '5px', border: '1px solid' },
     })),
@@ -88,41 +95,33 @@ watch(domande, async (risposte) => {
   risposte.forEach((item, index) => {
     script.value.domande.domandasceltasingola[index].rispostaData =
       item.rispostaData || undefined;
+    const key = script.value.domande.domandasceltasingola[index].$.hash
+    const risposta = item.risposte.find((e) => e.testo == item.rispostaData)
+    if (script.value.risposta2Server && key && risposta)
+      script.value.risposta2Server.risposte[key] = risposta?.hash
+    else {
+      if (script.value.risposta2Server && key)
+        script.value.risposta2Server.risposte[key] = ''
+    }
   });
 });
 
 const set_ascolti = (val: number) => {
-  console.log(`OK set: ${val}`)
-  if (primaDomanda.audio) {
+  if (primaDomanda.audio)
     primaDomanda.audio.ascolti_rimanenti = val
-  }
 }
 
-const cursoreStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '5px',
-  opacity: '0.75',
-});
-
-const barraStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '9px',
-  opacity: '0.2',
-});
+const set_ascolti_video = (val: number) => {
+  if (primaDomanda.video) {
+    primaDomanda.video.ascolti_rimanenti = val
+  }
+}
 
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 100%
-  max-width: auto
-  min-height: 500px
-  border: 2px solid
-
+.senza-scroll
+  height: calc(75vh)
 
 .risposta
   font-size: small

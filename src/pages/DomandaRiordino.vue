@@ -1,25 +1,20 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <div class="q-pa-md row items-start q-gutter-md">
-      <PrologoComponent :prologo="script.prologo" />
-      <q-card class="my-card" flat bordered>
-        <q-card-section>
-          <div class="text-h5 q-mt-sm " v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <div class="row justify-center" v-if="script.audio">
-            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-          </div>
-        </q-card-section>
-        <q-card-section>
-          <draggable :list="list" :disabled="!enabled" item-key="_" class="list-group" ghost-class="ghost"
-            :move="checkMove" @start="dragging = true" @end="dragging = false" draggable=".not-draggable">
-            <template #item="{ element }">
-              <div class="q-my-sm q-pa-sm list-group-item"
-                :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
-                v-html="element.label" />
-            </template>
-          </draggable>
-        </q-card-section>
-      </q-card>
+  <q-page class="column ">
+    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
+    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
+      v-html="common_api.sanitizeUnicode(script.testo)"></div>
+    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+      @update="set_ascolti"></audio-wrap>
+    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
+    <div style="max-height: 400px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md">
+      <draggable :list="list" :disabled="!enabled" item-key="_" class="list-group" ghost-class="ghost" :move="checkMove"
+        @start="dragging = true" @end="dragging = false" draggable=".not-draggable">
+        <template #item="{ element }">
+          <div class="q-my-xs q-pa-sm list-group-item"
+            :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
+            v-html="element.label" />
+        </template>
+      </draggable>
     </div>
   </q-page>
 </template>
@@ -36,9 +31,10 @@ import { T_DomandaRiordino } from 'pages/models';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import AudioWrap from 'src/components/AudioWrap.vue';
 import { common_api } from 'src/boot/common-utils'
-import { setAudioPams } from 'pages/common'
 import { ref } from 'vue';
 //import { VNodeRef } from 'vue';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaRiordino;
@@ -47,7 +43,15 @@ if (typeof script.rispostaData == 'undefined') {
   script.rispostaData = JSON.parse(JSON.stringify(script.risposte))
 }
 
+if (script.audio && (typeof script.audio.$.url == 'undefined' || script.audio.$.url == '' || script.audio.$.url == 'nessuno'))
+  delete script.audio
+
+if (script.video && (typeof script.video.$.url == 'undefined' || script.video.$.url == '' || script.video.$.url == 'nessuno'))
+  delete script.video
+
+
 if (script.audio) setAudioPams(script.audio)
+if (script.video) setVideoPams(script.video)
 
 script.rispostaData?.risposta.map((item, index) => {
   item.ordine = index
@@ -70,15 +74,16 @@ const set_ascolti = (val: number) => {
     script.audio.ascolti_rimanenti = val
   }
 }
+const set_ascolti_video = (val: number) => {
+  if (script.video) {
+    script.video.ascolti_rimanenti = val
+  }
+}
 
 </script>
 <style lang="sass" scoped>
-.my-card
-  width: 100%
-  max-width: auto
-
-.buttons
-    margin-top: 35px
+.senza-scroll
+  height: calc(100vh)
 
 .ghost
     opacity: 0.5
@@ -90,6 +95,9 @@ const set_ascolti = (val: number) => {
 .list-group-item
     border-style: outset
     cursor: move
+    font-size: small
+    text-align: justify
+    line-height: 85%
 
 .primo-Item
   font-weight: bold

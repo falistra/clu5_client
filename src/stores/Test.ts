@@ -22,11 +22,11 @@ export const Test = class {
     this.ID_USER = this.script.test.$.idUser;
     this.LINGUA = this.script.test.prologo.$.lingua;
 
-    const stazione_corrente = this.script.test.stazioni.stazione.find(
+    const script_stazione_corrente = this.script.test.stazioni.stazione.find(
       (stazione) => stazione.$.iniziale == 'true'
     );
-    if (stazione_corrente) {
-      this.stazione_corrente = new Stazione(stazione_corrente);
+    if (script_stazione_corrente) {
+      this.stazione_corrente = new Stazione(script_stazione_corrente, this);
     }
   }
 };

@@ -34,6 +34,7 @@ export type Script_Stazione = {
   caso?: {
     $: {
       condizione: string;
+      se: string;
     };
     azione: {
       $: {
@@ -41,7 +42,7 @@ export type Script_Stazione = {
         vai_a: string;
       };
     };
-  };
+  }[];
   insieme_domande: {
     domande: Domanda[];
   };
@@ -76,3 +77,22 @@ export type Script = {
     };
   };
 };
+
+export type punteggiDomandeStazione = {
+  punteggioTotale: number;
+  punteggiDomande: { [id: number]: { domanda: string; punteggio: number } };
+};
+
+export type TRisposte =
+  | string // Scelta Singola 1, Output Test 9, Scrittura Libera 10
+  | { [Key: string]: string } // Cmprensione Testo 2, Abbinamento Singolo 5, Riempimento Testo 7
+  | string[] // Riordino 4
+  | { [Key: string]: string[] }; // Abbinamento multiplo 6, Word Pool 8
+
+export interface IRisposta2Server {
+  risposta2Server: {
+    specie: number;
+    peso: string;
+    risposte: TRisposte;
+  };
+}

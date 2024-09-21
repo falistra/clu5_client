@@ -27,6 +27,7 @@ export default boot(async () => {
     });
 
   const sessioneStore = useSessioneStore();
+
   const test = new Test(
     await xml2js
       .parseStringPromise(script, {
@@ -40,10 +41,8 @@ export default boot(async () => {
         console.error(err);
       })
   );
+
   sessioneStore.test = test;
 
-  await test.stazione_corrente.richiediDomandeServer(
-    test.script,
-    test.DOMANDE_GIA_POSTE
-  );
+  await test.stazione_corrente.richiediDomandeServer();
 });
