@@ -1,7 +1,7 @@
 <template>
 
   <div style="max-height: 400px; max-width: 500px;">
-    <div v-if="video && video.$.url && fileEsiste && video.ascolti_rimanenti">
+    <div v-if="video && validVideo && video.$.url && fileEsiste && video.ascolti_rimanenti">
       <!-- <q-badge v-if="!(video.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange"
         text-color="black" :label="`Ascolti rimanenti: ${video.ascolti_rimanenti}`" />
       <q-media-player type="video" :source="mySource" native-controls @ended="onEnded" @error="onError" /> -->
@@ -54,13 +54,15 @@
 <script setup lang="ts">
 
 import { Video } from 'pages/models';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 import '@quasar/quasar-ui-qmediaplayer/src/index.sass'
 
 defineOptions({ name: 'VideoWrap' });
 
 const props = defineProps<{ video: Video; }>()
+
+const validVideo = computed(() => !(typeof props.video.$.url == 'undefined' || props.video.$.url == '' || props.video.$.url == 'nessuno'))
 
 const fileEsiste = ref(true)
 let ascolti_rimanenti = props.video.ascolti_rimanenti

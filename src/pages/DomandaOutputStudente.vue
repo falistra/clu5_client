@@ -1,45 +1,47 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <PrologoComponent :prologo="script.prologo" />
-    <q-card class="my-card q-ma-sm">
-      <q-card-section>
-        <q-scroll-area visible style="height: 200px; width: 100%" :thumb-style="thumbStyle" :bar-style="barStyle">
-          <div class="q-mb-sm q-mr-md testo-domanda">
-            <div class="column q-gutter-y-sm">
-              <div class="col" v-for="(riga, index) in righe" :key="index">
-                <div class="row">
-                  <div class="col-5">
-                    <div class="q-pr-sm  q-my-xs text-right testo">{{ riga[0] }}</div>
-                  </div>
-                  <div class="col-2"></div>
-                  <div class="col-5">
-                    <div class="q-pl-sm q-my-xs testo">{{ riga[1] }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </q-scroll-area>
-
-        <div class="q-ma-md risposta">
-          <div class="column">
+  <q-page class="column  senza-scroll">
+    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
+    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+      @update="set_ascolti"></audio-wrap>
+    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
+    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 200px"
+      class="col-auto text-subtitle2 q-my-sm q-mx-md">
+      <div class="q-mb-sm q-mr-md testo-domanda">
+        <div class="column q-gutter-y-sm">
+          <div class="col" v-for="(riga, index) in righe" :key="index">
             <div class="row">
-              <div class="col-5"></div>
-              <div class="col-2">
-                <q-input input-class="text-subtitle1 text-weight-bold" v-model="script.rispostaData" name="risposta"
-                  autofocus clearable rounded label="Risposta" dense />
+              <div class="col-5">
+                <div class="q-pr-sm  q-my-xs text-right testo">{{ riga[0] }}</div>
               </div>
-              <div class="col-5"></div>
+              <div class="col-2"></div>
+              <div class="col-5">
+                <div class="q-pl-sm q-my-xs testo">{{ riga[1] }}</div>
+              </div>
             </div>
           </div>
         </div>
-        <VirtualKeyboard class="..." @key-pressed="carattere">
-          <div class="...">
-            <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
+      </div>
+    </q-scroll-area>
+
+    <div class="col q-ma-md risposta">
+      <div class="column">
+        <div class="row">
+          <div class="col-5"></div>
+          <div class="col-2">
+            <q-input input-class="text-subtitle1 text-weight-bold" v-model="script.rispostaData" name="risposta"
+              autofocus clearable rounded label="Risposta" @update:model-value="setRisposta" dense />
           </div>
-        </VirtualKeyboard>
-      </q-card-section>
-    </q-card>
+          <div class="col-5"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <VirtualKeyboard class="..." @key-pressed="carattere">
+        <div class="...">
+          <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
+        </div>
+      </VirtualKeyboard>
+    </div>
   </q-page>
 </template>
 
@@ -53,12 +55,29 @@ import '@dongivan/virtual-keyboard/default.css';
 
 
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaOutputStudente } from 'pages/models';
-import PrologoComponent from 'src/components/PrologoComponent.vue';
+import { T_DomandaOutputStudente, IDomanda } from 'pages/models';
 import { ref } from 'vue';
+import PrologoComponent from 'src/components/PrologoComponent.vue';
+// import { common_api } from 'src/boot/common-utils';
+import * as Common from 'pages/common';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaOutputStudente;
+
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
+
+if (typeof script.risposta2Server == 'undefined')
+  script.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: ''
+  }
+
+if (script.audio) setAudioPams(script.audio)
+if (script.video) setVideoPams(script.video)
 
 const righe = ref(script.testo
   .replace(/&nbsp;/g, '').split('<br>')
@@ -90,21 +109,24 @@ const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | n
   }
 }
 
-const thumbStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '10px',
-  opacity: '0.75',
-});
+const setRisposta = () => {
+  if (script.risposta2Server) script.risposta2Server.risposte = script.rispostaData
+  console.log(script.risposta2Server)
+}
 
-const barStyle = ref<Partial<CSSStyleDeclaration>>({
-  right: '2px',
-  borderRadius: '9px',
-  backgroundColor: '#027be3',
-  width: '15px',
-  opacity: '0.2',
-});
+const set_ascolti = (val: number) => {
+  if (script.audio) {
+    script.audio.ascolti_rimanenti = val
+  }
+}
+const set_ascolti_video = (val: number) => {
+  if (script.video) {
+    script.video.ascolti_rimanenti = val
+  }
+}
+
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 
 </script>

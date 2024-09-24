@@ -1,37 +1,25 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <PrologoComponent :prologo="script.prologo" />
-    <q-card class="my-card" flat bordered>
-      <q-card-section>
+  <q-page class="column  senza-scroll">
+    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
+    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
+      v-html="common_api.sanitizeUnicode(script.testo)"></div>
+    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
+    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+      @update="set_ascolti"></audio-wrap>
+    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
 
-        <div class="text-subtitle1 q-mb-xs" v-html="script.testo"></div>
-        <div class="text-overline q-mt-sm q-mb-xs">
-          Numero massimo risposte possibili:
-          <span>{{ script.$.risposteCorrette }}</span>
-        </div>
-      </q-card-section>
-      <div class="row justify-center" v-if="script.audio">
-        <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-      </div>
-
-      <q-separator />
-
-      <!-- <div v-if="script.audio">
-        <audio-wrap :audio="script.audio"></audio-wrap>
-      </div> -->
-
-      <q-card-section>
-        <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
-          @update:model-value="setRispostaData" type="checkbox">
-          <template v-slot:label="opt">
-            <div class="row items-center">
-              <span class="q-ml-md text-weight-bold text-left">{{ opt.label }}</span>
-            </div>
-          </template>
-        </q-option-group>
-      </q-card-section>
-    </q-card>
+    <div class="col q-my-sm q-mx-md ">
+      <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
+        @update:model-value="setRispostaData" type="checkbox">
+        <template v-slot:label="opt">
+          <div class="flex flex-left q-mt-sm">
+            <span class="q-ml-md text-weight-bold text-left" v-html="opt.label"></span>
+          </div>
+        </template>
+      </q-option-group>
+    </div>
   </q-page>
+
 </template>
 
 <script setup lang="ts">
@@ -39,32 +27,42 @@ defineOptions({
   name: 'DomandaSceltaMultipla',
 });
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaSceltaMultipla } from 'pages/models';
+import { T_DomandaSceltaMultipla, IDomanda } from 'pages/models';
+import { ref } from 'vue'; // , computed
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import AudioWrap from 'src/components/AudioWrap.vue';
-
-import { ref } from 'vue';
+import ImgWrap from 'src/components/ImgWrap.vue';
+import { common_api } from 'src/boot/common-utils'
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 // import AudioWrap from 'src/components/AudioWrap.vue';
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla);
-if (script.value.audio && typeof script.value.audio.ascolti_rimanenti == 'undefined') {
-  script.value.audio.ascolti_rimanenti = parseInt(script.value.audio.$.nrMaxRipetizioni)
-}
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
+
+if (typeof script.value.risposta2Server == 'undefined')
+  script.value.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: []
+  }
+
+if (script.value.audio) setAudioPams(script.value.audio)
+if (script.value.video) setVideoPams(script.value.video)
 
 const opzioni = ref(
   script.value.risposte.risposta.map((item) => {
     return {
       // hash: item.$.hash,
-      label: item._,
+      label: common_api.sanitizeUnicode(item._),
       value: item,
       disable: false
     };
   })
 );
 if (!script.value.rispostaData) script.value.rispostaData = []
-if (!script.value.ascolti_rimanenti) script.value.ascolti_rimanenti = -1
 
 const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
   if (values.length == parseInt(script.value.$.risposteCorrette)) {
@@ -75,12 +73,20 @@ const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
       })
     }
   } else opzioni.value.forEach(x => { x.disable = false })
+  if (script.value.risposta2Server) {
+    script.value.risposta2Server.risposte = values.map((r) => r.$.hash)
+  }
 }
 
 const set_ascolti = (val: number) => {
   if (script.value.audio) {
     script.value.audio.ascolti_rimanenti = val
-    console.log(script.value.audio.ascolti_rimanenti)
+  }
+}
+
+const set_ascolti_video = (val: number) => {
+  if (script.value.video) {
+    script.value.video.ascolti_rimanenti = val
   }
 }
 
@@ -88,15 +94,8 @@ const set_ascolti = (val: number) => {
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 98%
-  border: 2px solid
-
-/* non usato */
 .scelta
   text-align: left !important
   font-size: small
 
-.btn-audio
-  width: auto
 </style>

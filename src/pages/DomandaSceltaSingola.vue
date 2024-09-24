@@ -3,7 +3,7 @@
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
     <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
       v-html="common_api.sanitizeUnicode(testoDomanda)"></div>
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine?.$?.url" size="100px" />
+    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
     <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
       @update="set_ascolti"></audio-wrap>
     <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
@@ -16,12 +16,11 @@
             class="risposta q-px-sm" v-html="`${common_api.sanitizeUnicode(button.testo)}`">
           </div>
           <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
-            <ImgWrap :src="button.testo" size="70px" />
+            <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
           </div>
         </template>
       </q-btn-toggle>
     </div>
-
   </q-page>
 </template>
 
@@ -51,20 +50,8 @@ if (typeof script.value.risposta2Server == 'undefined')
     risposte: ''
   }
 
-if (script.value.audio && (typeof script.value.audio.$.url == 'undefined' || script.value.audio.$.url == '' || script.value.audio.$.url == 'nessuno'))
-  delete script.value.audio
-
-if (script.value.immagine && (typeof script.value.immagine.$.url == 'undefined' || script.value.immagine.$.url == '' || script.value.immagine.$.url == 'nessuno'))
-  delete script.value.immagine
-
-
-
-if (script.value.audio && typeof script.value.audio.ascolti_rimanenti == 'undefined') {
-  script.value.audio.ascolti_rimanenti = parseInt(script.value.audio.$.nrMaxRipetizioni)
-}
 if (script.value.audio) setAudioPams(script.value.audio)
 if (script.value.video) setVideoPams(script.value.video)
-
 
 let testoDomanda = ref(
   !script.value.rispostaData

@@ -6,6 +6,7 @@ export interface IDomanda {
   tag: string;
   tecnica: string;
 }
+
 export interface RispostaDomandaSceltaSingola {
   $: { hash: string; tipo?: string };
   _: string;
@@ -21,9 +22,17 @@ export interface Video {
   ascolti_rimanenti?: number;
 }
 
-export interface T_DomandaSceltaSingola_risposta2Server {
+export interface Immagine {
+  $: { url: string };
+}
+
+interface I_risposta2Server {
   specie: number;
   peso: string;
+}
+
+export interface T_DomandaSceltaSingola_risposta2Server
+  extends I_risposta2Server {
   risposte: string;
 }
 
@@ -35,30 +44,35 @@ export interface T_DomandaSceltaSingola {
     $?: { tipoopzioni?: string };
     risposta: Array<RispostaDomandaSceltaSingola>;
   };
-  immagine?: { $: { url: string } };
+  immagine?: Immagine;
   audio?: Audio;
   video?: Video;
   rispostaData?: string;
   risposta2Server?: T_DomandaSceltaSingola_risposta2Server;
 }
 
+export interface T_DomandaSceltaMultipla_risposta2Server
+  extends I_risposta2Server {
+  risposte: string[];
+}
+
 export interface T_DomandaSceltaMultipla {
   $: { id?: number; lingua: string; risposteCorrette: string };
   prologo: string;
   testo: string;
-  immagine?: { url: string };
+  immagine?: Immagine;
   audio?: Audio;
+  video?: Video;
   risposte: {
     $?: { tipoopzioni?: string };
     risposta: Array<{ $: { hash: string }; _: string }>;
   };
   rispostaData?: Array<{ $: { hash: string }; _: string }>;
-  ascolti_rimanenti?: number;
+  risposta2Server?: T_DomandaSceltaMultipla_risposta2Server;
 }
 
-export interface T_DomandaComprensioneTesto_risposta2Server {
-  specie: number;
-  peso: string;
+export interface T_DomandaComprensioneTesto_risposta2Server
+  extends I_risposta2Server {
   risposte: { [Key: string]: string };
 }
 
@@ -70,9 +84,7 @@ export interface T_DomandaComprensioneTesto {
   risposta2Server?: T_DomandaComprensioneTesto_risposta2Server;
 }
 
-export interface T_DomandaRiordino_risposta2Server {
-  specie: number;
-  peso: string;
+export interface T_DomandaRiordino_risposta2Server extends I_risposta2Server {
   risposte: string[];
 }
 
@@ -82,58 +94,119 @@ export interface T_DomandaRiordino {
   testo: string;
   audio?: Audio;
   video?: Video;
-  risposte: { risposta: Array<{ ordine: number; _: string; label: string }> };
+  risposte: {
+    risposta: Array<{
+      $: { hash: string };
+      ordine: number;
+      _: string;
+      label: string;
+    }>;
+  };
   rispostaData?: {
-    risposta: Array<{ ordine: number; _: string; label: string }>;
+    risposta: Array<{
+      $: { hash: string };
+      ordine: number;
+      _: string;
+      label: string;
+    }>;
   };
   risposta2Server?: T_DomandaRiordino_risposta2Server;
+}
+
+export interface T_DomandaScritturaLibera_risposta2Server
+  extends I_risposta2Server {
+  risposte: string;
 }
 
 export interface T_DomandaScritturaLibera {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
+  audio?: Audio;
+  video?: Video;
+  immagine?: Immagine;
+  rispostaData: string;
+  risposta2Server?: T_DomandaScritturaLibera_risposta2Server;
+}
+
+export interface T_DomandaRiempimentoTesto_risposta2Server
+  extends I_risposta2Server {
+  risposte: { [Key: string]: string };
 }
 
 export interface T_DomandaRiempimentoTesto {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  immagine?: { url: string };
+  audio?: Audio;
+  video?: Video;
+  immagine?: Immagine;
   risposte: {
-    risposta: Array<{ hash: string; _: string; disponibile?: boolean }>;
+    risposta: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
   };
   rispostaData: { [Key: string]: { hash: string; _: string } };
+  risposta2Server?: T_DomandaRiempimentoTesto_risposta2Server;
+}
+
+export interface T_DomandaRiempimentoTestoLibero_risposta2Server
+  extends I_risposta2Server {
+  risposte: { [Key: string]: string };
 }
 
 export interface T_DomandaRiempimentoTestoLibero {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  immagine?: { url: string };
+  audio?: Audio;
+  video?: Video;
+  immagine?: Immagine;
   rispostaData: { [Key: string]: string };
+  risposta2Server?: T_DomandaRiempimentoTestoLibero_risposta2Server;
+}
+
+export interface T_DomandaRiempimentoLibero_risposta2Server
+  extends I_risposta2Server {
+  risposte: { [Key: string]: string };
 }
 
 export interface T_DomandaRiempimentoLibero {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
-  immagine?: { url: string };
+  audio?: Audio;
+  video?: Video;
+  immagine?: Immagine;
   rispostaData: { [Key: string]: string };
+  risposta2Server?: T_DomandaRiempimentoLibero_risposta2Server;
+}
+
+export interface T_DomandaOutputStudente_risposta2Server
+  extends I_risposta2Server {
+  risposte: string;
 }
 
 export interface T_DomandaOutputStudente {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
+  audio?: Audio;
+  video?: Video;
   risposte: { tipoCheck: string; risposta: Array<string> };
   rispostaData: string;
+  risposta2Server?: T_DomandaOutputStudente_risposta2Server;
+}
+
+export interface T_DomandaAbbinamentoMultiplo_risposta2Server
+  extends I_risposta2Server {
+  risposte: { [Key: string]: string[] };
 }
 
 export interface T_DomandaAbbinamentoMultiplo {
   $: { id: number };
   prologo: string;
   testo: string;
+  audio?: Audio;
+  video?: Video;
   coppie: { $: { tipoopzioni: string; tipoorientamento: string } };
   partiFisse: {
     item: Array<{
@@ -155,12 +228,20 @@ export interface T_DomandaAbbinamentoMultiplo {
       disponibile?: boolean;
     }>;
   };
+  risposta2Server?: T_DomandaAbbinamentoMultiplo_risposta2Server;
+}
+
+export interface T_DomandaAbbinamentoSingolo_risposta2Server
+  extends I_risposta2Server {
+  risposte: { [Key: string]: string | undefined };
 }
 
 export interface T_DomandaAbbinamentoSingolo {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
+  audio?: Audio;
+  video?: Video;
   coppie: { $: { tipoopzioni: string; tipoorientamento: string } };
   partiFisse: {
     item: Array<{
@@ -182,12 +263,19 @@ export interface T_DomandaAbbinamentoSingolo {
       disponibile?: boolean;
     }>;
   };
+  risposta2Server?: T_DomandaAbbinamentoSingolo_risposta2Server;
+}
+
+export interface T_DomandaWordPool_risposta2Server extends I_risposta2Server {
+  risposte: { [Key: string]: string[] };
 }
 
 export interface T_DomandaWordPool {
   $: { id: number; lingua: string };
   prologo: string;
   testo: string;
+  audio?: Audio;
+  video?: Video;
   pools: {
     pool: Array<{
       $: { hash: string };
@@ -208,13 +296,7 @@ export interface T_DomandaWordPool {
       disponibile?: boolean;
     }>;
   };
-}
-
-export interface Buco {
-  index: number;
-  isSlot: boolean;
-  slotIndex: number;
-  content: string;
+  risposta2Server?: T_DomandaWordPool_risposta2Server;
 }
 
 export interface T_Token {
@@ -222,4 +304,5 @@ export interface T_Token {
   isSlot: boolean;
   slotIndex: string;
   content: string;
+  hash: string;
 }

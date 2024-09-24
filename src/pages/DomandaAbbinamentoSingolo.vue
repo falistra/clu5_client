@@ -1,12 +1,18 @@
 <template>
-  <q-page class="row items-center justify-evenly">
+  <q-page class="column">
     <!-- :style-fn="myTweak"> -->
-    <PrologoComponent :prologo="script.prologo" />
-    <q-card class="my-card" flat bordered>
+    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
+    <q-card class="col-12">
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-subtitle1" v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 300px">
+          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)"></div>
+          <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+            @update="set_ascolti"></audio-wrap>
+          <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video"
+            @update="set_ascolti_video"></video-wrap>
+
+          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
                 <div class="column">
@@ -15,7 +21,7 @@
                       <div class="row">
                         <div class="col-6 parte-fissa">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <ImgWrap :src="item._" size="100px" />
+                            <ImgWrap :src="{ $: { url: item._ } }" size="100px" />
                             <!-- <q-img :src="item._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="170px">
                             </q-img> -->
                           </div>
@@ -66,22 +72,47 @@ defineOptions({
   name: 'DomandaAbbinamentoSingolo',
 });
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaAbbinamentoSingolo } from 'pages/models';
-import { ref, computed } from 'vue';
+import { T_DomandaAbbinamentoSingolo, IDomanda } from 'pages/models';
+import { ref, reactive, computed, watch } from 'vue';
 import * as Common from 'pages/common';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
+
 
 const sessione = useSessioneStore();
-const script = ref(
+const script = reactive(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoSingolo
 );
-script.value.partiMobili.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
-script.value.partiFisse.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
-script.value.partiMobili.item.forEach((item) => {
-  const risposta_presente = script.value.partiFisse.item.find(
+if (script.audio) setAudioPams(script.audio)
+if (script.video) setVideoPams(script.video)
+
+script.partiMobili.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
+script.partiFisse.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
+
+if (typeof script.risposta2Server == 'undefined')
+  script.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: {}
+  }
+
+watch(script.partiFisse, (partiFisse) => {
+  partiFisse.item.forEach((item) => {
+    if (script.risposta2Server)
+      if (item.rispostaData) {
+        script.risposta2Server.risposte[item.$.hash] = item.rispostaData.$.hash
+      }
+  })
+})
+
+script.partiMobili.item.forEach((item) => {
+  const risposta_presente = script.partiFisse.item.find(
     (value) => {
       if (value.rispostaData && value.rispostaData.$.hash == item.$.hash) return true
       else return false
@@ -111,19 +142,14 @@ const startDrag = (evt: DragEvent, item: Item) => {
   }
 };
 
-// const endDrag = () => { //(evt: DragEvent, item: Item) => {
-//   isDragging.value = false
-// }
-
-
 const lista_risposte_disponibili = computed(() =>
-  script.value.partiMobili.item.filter((value) => value.disponibile)
+  script.partiMobili.item.filter((value) => value.disponibile)
 );
 
 const onDrop = function (evt: DragEvent, item: Item) {
   if (evt.dataTransfer) {
     if (item.rispostaData) {
-      const item_ = script.value.partiMobili.item.find(
+      const item_ = script.partiMobili.item.find(
         (value) =>
           value.$.hash == (item.rispostaData ? item.rispostaData.$.hash : null)
       );
@@ -143,9 +169,8 @@ const onDrop = function (evt: DragEvent, item: Item) {
 };
 
 const annulla = (item: Item) => {
-  const item_ = script.value.partiMobili.item.find(
-    (value) =>
-      value.$.hash == (item.rispostaData ? item.rispostaData.$.hash : null)
+  const item_ = script.partiMobili.item.find(
+    (value) => value.$.hash == (item.rispostaData ? item.rispostaData.$.hash : null)
   );
   item.rispostaData = undefined;
   if (item_) item_.disponibile = true;
@@ -153,6 +178,17 @@ const annulla = (item: Item) => {
 
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
+
+const set_ascolti = (val: number) => {
+  if (script.audio) {
+    script.audio.ascolti_rimanenti = val
+  }
+}
+const set_ascolti_video = (val: number) => {
+  if (script.video) {
+    script.video.ascolti_rimanenti = val
+  }
+}
 
 // const myTweak = (offset: number) => { // offset: number
 //   // "offset" is a Number (pixels) that refers to the total
@@ -180,7 +216,7 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 .parte-fissa
   border: 2px solid black
-  min-height: 40px
+  /* min-height: 40px */
 
 .item
   cursor: grab

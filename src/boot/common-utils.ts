@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers';
 
 const common_api = {
   sanitizeUnicode: (testo: string) => testo.replace(/\%u(\d+)/g, '&#x$1;'),
-  sanitazeBR: (testo: string) => testo.replace(/&lt;br&gt;/g, ''),
+  sanitazeBR: (testo: string) => testo.replace(/\&lt;br\&gt;/g, ''),
   thumbStyle: {
     right: '4px',
     borderRadius: '5px',

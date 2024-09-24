@@ -1,21 +1,27 @@
 <template>
-  <q-page class="scroll row items-center justify-evenly">
+  <q-page class="column">
     <!-- :style-fn="myTweak"> -->
-    <PrologoComponent :prologo="script.prologo" />
-    <q-card class="my-card" flat bordered>
+    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
+    <q-card class="col-12">
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div class="text-caption" v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 300px">
+          <div style="max-height: 50px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)"></div>
+          <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+            @update="set_ascolti"></audio-wrap>
+          <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video"
+            @update="set_ascolti_video"></video-wrap>
+
+          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
                 <div class="column">
                   <q-item class="col-auto" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
                     <q-item-section>
-                      <div class="row q-my-sm">
+                      <div class="row q-my-xs">
                         <div class="col-6 parte-fissa">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <ImgWrap :src="partefissa._" size="100px" />
+                            <ImgWrap :src="{ $: { url: partefissa._ } }" size="100px" />
                             <!-- <q-img :src="partefissa._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="200px">
                             </q-img> -->
                           </div>
@@ -26,7 +32,7 @@
                           <div class="row">
                             <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
                               @dblclick="annulla(item, partefissa)">
-                              <div class="text-subtitle q-ma-sm item">
+                              <div class="text-subtitle q-ma-xs item">
                                 <span v-html="item.label"></span>
                                 <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                                   <strong>Doppio click per togliere</strong>
@@ -45,7 +51,7 @@
         </q-card-section>
 
         <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 350px">
+          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <q-list dense class="q-mr-md" bordered separator>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
@@ -70,12 +76,15 @@ defineOptions({
   name: 'DomandaAbbinamentoMultiplo',
 });
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaAbbinamentoMultiplo } from 'pages/models';
-import { ref, computed } from 'vue';
+import { T_DomandaAbbinamentoMultiplo, IDomanda } from 'pages/models';
+import { ref, computed, watch } from 'vue';
 import * as Common from 'pages/common';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = ref(
@@ -84,6 +93,28 @@ const script = ref(
 
 script.value.partiMobili.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
 script.value.partiFisse.item.forEach((item) => item.label = common_api.sanitizeUnicode(item._))
+
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
+
+if (typeof script.value.risposta2Server == 'undefined')
+  script.value.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: {}
+  }
+
+watch(script.value.partiFisse, (partiFisse) => {
+  partiFisse.item.forEach((item) => {
+    if (script.value.risposta2Server)
+      if (item.rispostaData) {
+        script.value.risposta2Server.risposte[item.$.hash] = item.rispostaData.map((r) => r.$.hash)
+      }
+  })
+})
+
+if (script.value.audio) setAudioPams(script.value.audio)
+if (script.value.video) setVideoPams(script.value.video)
+
 
 script.value.partiMobili.item.forEach((item) => {
   const risposta_presente = script.value.partiFisse.item.find(
@@ -155,6 +186,18 @@ const annulla = (item: Item, partefissa: ParteFissa) => {
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
+
+const set_ascolti = (val: number) => {
+  if (script.value.audio) {
+    script.value.audio.ascolti_rimanenti = val
+  }
+}
+const set_ascolti_video = (val: number) => {
+  if (script.value.video) {
+    script.value.video.ascolti_rimanenti = val
+  }
+}
+
 // const myTweak = (offset: number) => { // offset: number
 //   // "offset" is a Number (pixels) that refers to the total
 //   // height of header + footer that occupies on screen,
@@ -170,9 +213,6 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 98%
-  border: 2px solid
 
 .zona-ricevente
   border: 2px solid black
@@ -183,7 +223,7 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 .parte-fissa
   border: 2px solid black
-  min-height: 40px
+  /* min-height: 40px */
 
 .item
   cursor: grab

@@ -1,32 +1,31 @@
 <template>
-  <q-page class="column justify-evenly senza-scroll">
+  <q-page class="column">
     <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
+    <q-card class="col-12">
+      <q-card-section horizontal>
+        <q-card-section class="col-6">
+          <div style="max-height: 300px" class="col-auto scroll text-caption q-my-sm q-mx-md "
+            v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
+          <img-wrap v-if="primaDomanda.immagine" class="col" :src="primaDomanda.immagine" size="100px" />
+          <audio-wrap v-if="primaDomanda.audio" class="col q-mt-md" :audio="primaDomanda.audio"
+            @update="set_ascolti"></audio-wrap>
+          <video-wrap class="col q-mt-md" v-if="primaDomanda.video" :video="primaDomanda.video"
+            @update="set_ascolti_video"></video-wrap>
+        </q-card-section>
+        <q-card-section class="col-6">
+          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: 300px">
+            <div class="domanda q-mr-md" v-for="domanda in domande" :key="domanda.testo">
+              <div class="text-overline" v-html="domanda.prologo"></div>
+              <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
+                v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
+              <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
+                :options="domanda.risposte" dense color="primary" />
+            </div>
+          </q-scroll-area>
 
-    <div class="col">
-      <div class="row">
-        <div class="col q-mx-md q-mt-sm">
-          <div class="column">
-            <div style="max-height: 300px" class="col-auto scroll text-caption q-my-sm q-mx-md "
-              v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
-            <img-wrap v-if="primaDomanda.immagine" class="col" :src="primaDomanda.immagine?.$?.url" size="100px" />
-            <audio-wrap v-if="primaDomanda.audio" class="col q-mt-md" :audio="primaDomanda.audio"
-              @update="set_ascolti"></audio-wrap>
-            <video-wrap class="col q-mt-md" v-if="primaDomanda.video" :video="primaDomanda.video"
-              @update="set_ascolti_video"></video-wrap>
-          </div>
-        </div>
-        <div class="col scroll q-mx-md q-mt-sm" style="max-height: 320px">
-          <div class="domanda" v-for="domanda in domande" :key="domanda.testo">
-            <div class="text-overline" v-html="domanda.prologo"></div>
-            <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
-              v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
-            <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
-              :options="domanda.risposte" dense color="primary" />
-          </div>
-        </div>
-
-      </div>
-    </div>
+        </q-card-section>
+      </q-card-section>
+    </q-card>
 
   </q-page>
 
@@ -45,7 +44,7 @@ import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils'
 import AudioWrap from 'src/components/AudioWrap.vue';
 import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import { setAudioPams, setVideoPams, thumbStyle, barStyle } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = ref(
@@ -61,16 +60,6 @@ if (typeof script.value.risposta2Server == 'undefined')
   }
 
 const primaDomanda: T_DomandaSceltaSingola = script.value.domande.domandasceltasingola[0]
-
-if (primaDomanda.audio && (typeof primaDomanda.audio.$.url == 'undefined' || primaDomanda.audio.$.url == '' || primaDomanda.audio.$.url == 'nessuno'))
-  delete primaDomanda.audio
-
-if (primaDomanda.video && (typeof primaDomanda.video.$.url == 'undefined' || primaDomanda.video.$.url == '' || primaDomanda.video.$.url == 'nessuno'))
-  delete primaDomanda.video
-
-
-if (primaDomanda.immagine && (typeof primaDomanda.immagine.$.url == 'undefined' || primaDomanda.immagine.$.url == '' || primaDomanda.immagine.$.url == 'nessuno'))
-  delete primaDomanda.immagine
 
 if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
 if (primaDomanda.video) setVideoPams(primaDomanda.video)
@@ -116,6 +105,9 @@ const set_ascolti_video = (val: number) => {
     primaDomanda.video.ascolti_rimanenti = val
   }
 }
+
+const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle)
+const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
 
 </script>
 

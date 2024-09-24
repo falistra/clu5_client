@@ -1,38 +1,38 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <PrologoComponent class="top-left" :prologo="script.prologo" />
-    <div class="q-pa-md row items-start q-gutter-md">
-      <q-card class="my-card" flat bordered>
-        <q-card-section>
-          <div class="text-overline" v-html="prologo"></div>
-          <q-scroll-area style="height: 200px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
-            <div class="text-subtitle q-mt-sm q-mb-xs q-ml-md">
-              <span v-for="item in tokens" :key="item.index">
-                <span v-if="!item.isSlot" v-html="item.content"></span>
-                <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
-                  @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
-                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                    <strong>Doppio click per togliere</strong>
-                  </q-tooltip>
-                  {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
-                    script.rispostaData[item.slotIndex]._ : '&nbsp;'.repeat(15) }}
-                </span>
-              </span>
-            </div>
-          </q-scroll-area>
-        </q-card-section>
-        <q-separator />
-        <q-card-section>
-          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60px">
-            <div class="row">
-              <p v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta"
-                :key="risposta.id" draggable="true" @dragstart="startDrag($event, risposta.testo)">
-                {{ risposta.testo }}
-              </p>
-            </div>
-          </q-scroll-area>
-        </q-card-section>
-      </q-card>
+  <q-page class="column  senza-scroll">
+    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
+    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
+    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
+      @update="set_ascolti"></audio-wrap>
+    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
+
+    <div class="col q-my-sm q-mx-md ">
+      <q-scroll-area style="height: 200px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
+        <div class="text-subtitle q-mt-sm q-mb-xs q-ml-md">
+          <span v-for="item in tokens" :key="item.index">
+            <span v-if="!item.isSlot" v-html="item.content"></span>
+            <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
+              @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
+              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <strong>Doppio click per togliere</strong>
+              </q-tooltip>
+              {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
+                script.rispostaData[item.slotIndex]._ : '&nbsp;'.repeat(15) }}
+            </span>
+          </span>
+        </div>
+      </q-scroll-area>
+    </div>
+
+    <div class="col q-my-sm q-mx-md ">
+      <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60px">
+        <div class="row">
+          <p v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta" :key="risposta.id"
+            draggable="true" @dragstart="startDrag($event, risposta.testo)">
+            {{ risposta.testo }}
+          </p>
+        </div>
+      </q-scroll-area>
     </div>
   </q-page>
 </template>
@@ -41,24 +41,40 @@
 defineOptions({
   name: 'DomandaRiempimentoTesto',
 });
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaRiempimentoTesto, T_Token } from 'pages/models';
+import { T_DomandaRiempimentoTesto, T_Token, IDomanda } from 'pages/models';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
+import AudioWrap from 'src/components/AudioWrap.vue';
+import ImgWrap from 'src/components/ImgWrap.vue';
+import VideoWrap from 'src/components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from 'pages/common'
 
 import * as Common from 'pages/common';
 
 const sessione = useSessioneStore();
 
-const script = sessione.domande[
-  sessione.counter
-][1] as T_DomandaRiempimentoTesto;
+const script = sessione.domande[sessione.counter][1] as T_DomandaRiempimentoTesto;
 if (!script.rispostaData) script.rispostaData = {}
+const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
-const prologo = computed(
-  () => script.prologo.replace(/\%u(\d+)/g, '&#x$1;') //&#x2013;
-);
+if (typeof script.risposta2Server == 'undefined')
+  script.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: {}
+  }
+
+watch(script.rispostaData, (rispostaData) => {
+  if (script.risposta2Server)
+    script.risposta2Server.risposte = Object.fromEntries(Object.entries(rispostaData)
+      .map(([k, o]) => [k, o.hash])
+    );
+})
+
+if (script.audio) setAudioPams(script.audio)
+if (script.video) setVideoPams(script.video)
 
 
 const tokens = ref(
@@ -71,8 +87,6 @@ const tokens = ref(
     return { index, isSlot, slotIndex, content } as T_Token;
   })
 );
-
-
 
 const onDrop = function (evt: DragEvent, slotIndex: string) {
   if (evt.dataTransfer) {
@@ -137,7 +151,7 @@ const lista_risposte = ref(
   script.risposte.risposta.map(
     (value) =>
       <IRisposta>{
-        id: value.hash,
+        id: value.$.hash,
         testo: value._,
         disponibile: value?.disponibile || true,
       }
@@ -164,6 +178,17 @@ const annulla = (item: T_Token) => {
   }
 };
 
+const set_ascolti = (val: number) => {
+  if (script.audio) {
+    script.audio.ascolti_rimanenti = val
+  }
+}
+
+const set_ascolti_video = (val: number) => {
+  if (script.video) {
+    script.video.ascolti_rimanenti = val
+  }
+}
 
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
@@ -183,5 +208,5 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
   font-weight: 900
   width: 100px
   min-width: 100px
-  border: 1px dotted black
+  /* border: 1px dotted black */
 </style>

@@ -50,7 +50,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domandaRiempimentoLibero/:id',
-        name: 'domandariempimentolibero',
+        name: 'domandaRiempimentoLibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },

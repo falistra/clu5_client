@@ -1,7 +1,7 @@
 <template>
 
   <div class="shadow-15" style="max-width: 350px;">
-    <div v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti">
+    <div v-if="audio && validAudio && audio.$.url && fileEsiste && audio.ascolti_rimanenti">
       <!-- <q-badge v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange"
         text-color="black" :label="`Ascolti rimanenti: ${audio.ascolti_rimanenti}`" /> -->
 
@@ -55,12 +55,14 @@
 <script setup lang="ts">
 
 import { Audio } from 'pages/models';
-import { ref } from 'vue';
+import { ref, computed, onBeforeUnmount } from 'vue';
 import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 
 defineOptions({ name: 'AudioWrap' });
 
 const props = defineProps<{ audio: Audio; }>()
+
+const validAudio = computed(() => !(typeof props.audio.$.url == 'undefined' || props.audio.$.url == '' || props.audio.$.url == 'nessuno'))
 
 const fileEsiste = ref(true)
 let ascolti_rimanenti = props.audio.ascolti_rimanenti
@@ -95,5 +97,7 @@ const onEnded = () => {
 const onError = () => {
   fileEsiste.value = false
 }
+
+onBeforeUnmount(() => { if (myAudio.value) myAudio.value.pause() })
 
 </script>
