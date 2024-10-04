@@ -75,6 +75,4 @@ export const sanitazeScript = (script: {
       script.immagine.$.url == 'nessuno')
   )
     delete script.immagine;
-
-  return script;
 };

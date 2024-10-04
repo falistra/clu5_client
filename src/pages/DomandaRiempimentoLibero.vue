@@ -1,11 +1,16 @@
 <template>
-  <q-page class="column  senza-scroll">
+  <q-page class="column senza-scroll">
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
-    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 150px"
+    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
+      <img-wrap :src="script.immagine" size="100px" />
+    </div>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
+    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 200px"
       class="col-auto text-subtitle2 q-my-sm q-mx-md">
 
       <div class="text-subtitle q-mr-lg">
@@ -70,8 +75,8 @@ if (script.video) setVideoPams(script.video)
 watch(script.rispostaData, (rispostaData) => {
   if (script.risposta2Server)
     if (rispostaData) {
-      console.log(rispostaData)
       script.risposta2Server.risposte = rispostaData
+      script.logRisposta = rispostaData
     }
 })
 

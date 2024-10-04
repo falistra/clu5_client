@@ -1,16 +1,28 @@
 <template>
-  <q-page class="column">
+  <q-page class="column" :style-fn="myTweak">
     <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
-    <q-card class="col-12">
+    <q-card flat>
       <q-card-section horizontal>
         <q-card-section class="col-6">
-          <div style="max-height: 300px" class="col-auto scroll text-caption q-my-sm q-mx-md "
-            v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
-          <img-wrap v-if="primaDomanda.immagine" class="col" :src="primaDomanda.immagine" size="100px" />
-          <audio-wrap v-if="primaDomanda.audio" class="col q-mt-md" :audio="primaDomanda.audio"
-            @update="set_ascolti"></audio-wrap>
-          <video-wrap class="col q-mt-md" v-if="primaDomanda.video" :video="primaDomanda.video"
-            @update="set_ascolti_video"></video-wrap>
+          <q-scroll-area class="col-auto text-caption q-my-sm q-mx-md " visible :thumb-style="my_thumbStyle"
+            :bar-style="my_barStyle" :style="textStyle">
+            <div class="q-mr-md" v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
+          </q-scroll-area>
+          <!-- <div :style="textStyle" class="col-auto scroll text-caption q-my-sm q-mr-lg "
+            v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div> -->
+
+          <div v-if="primaDomanda?.immagine" class="col">
+            <img-wrap :src="primaDomanda.immagine" size="100px" />
+          </div>
+          <div v-if="primaDomanda?.audio" class="col q-mt-md">
+            <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti"></audio-wrap>
+          </div>
+          <div v-if="primaDomanda?.video" class="col q-mt-md">
+            <video-wrap :video="primaDomanda.video" @update="set_ascolti_video"></video-wrap>
+          </div>
+
+
+
         </q-card-section>
         <q-card-section class="col-6">
           <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: 300px">
@@ -19,7 +31,11 @@
               <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
                 v-html="common_api.sanitizeUnicode(domanda.testo)"></div>
               <q-option-group class="q-mx-sm q-mb-sm text-weight-medium" v-model="domanda.rispostaData"
-                :options="domanda.risposte" dense color="primary" />
+                :options="domanda.risposte" dense color="primary">
+                <template #label="risposta">
+                  <div class="q-my-sm" :class="{ active: isActive }" v-html="risposta.label"></div>
+                </template>
+              </q-option-group>
             </div>
           </q-scroll-area>
 
@@ -38,7 +54,7 @@ defineOptions({
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda } from 'pages/models';
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, computed } from 'vue';
 import PrologoComponent from 'src/components/PrologoComponent.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils'
@@ -46,31 +62,21 @@ import AudioWrap from 'src/components/AudioWrap.vue';
 import VideoWrap from 'src/components/VideoWrap.vue';
 import { setAudioPams, setVideoPams, thumbStyle, barStyle } from 'pages/common'
 
+
 const sessione = useSessioneStore();
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
 );
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
-if (typeof script.value.risposta2Server == 'undefined')
-  script.value.risposta2Server = {
-    specie: parseInt(domanda.tecnica),
-    peso: domanda.peso,
-    risposte: {}
-  }
-
-const primaDomanda: T_DomandaSceltaSingola = script.value.domande.domandasceltasingola[0]
-
-if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
-if (primaDomanda.video) setVideoPams(primaDomanda.video)
-
 const domande = reactive(
   script.value.domande.domandasceltasingola.map((dss) => ({
     prologo: dss.prologo,
     testo: dss.testo,
+    hash: dss.$.hash || '',
     risposte: dss.risposte.risposta.map((item, index) => ({
       testo: item._,
-      label: item._,
+      label: common_api.sanitizeUnicode(item._),
       value: item._,
       hash: item.$.hash,
       slot: index.toString(),
@@ -80,34 +86,84 @@ const domande = reactive(
   }))
 );
 
-watch(domande, async (risposte) => {
+if (typeof script.value.risposta2Server == 'undefined')
+  script.value.risposta2Server = {
+    specie: parseInt(domanda.tecnica),
+    peso: domanda.peso,
+    risposte: domande.reduce((a, v) => ({ ...a, [v.hash]: null }), {})
+  }
+
+const primaDomanda: T_DomandaSceltaSingola | undefined = script.value.domande.domandasceltasingola.find(
+  (domanda) => domanda.audio && domanda.audio.$.url && domanda.audio.$.url != '')
+
+if (primaDomanda) {
+  if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
+  if (primaDomanda.video) setVideoPams(primaDomanda.video)
+}
+
+const heightText = computed(() => {
+  // console.log(window.innerHeight)
+  let dim = Math.round(script.value.testo_comprensione.length * 0.3 + 50)
+  // console.log(dim)
+  return dim
+}
+)
+const textStyle = ref({ maxHeight: '300px', height: `${heightText.value}px` })
+
+watch(domande, (risposte) => {
   risposte.forEach((item, index) => {
     script.value.domande.domandasceltasingola[index].rispostaData =
       item.rispostaData || undefined;
     const key = script.value.domande.domandasceltasingola[index].$.hash
     const risposta = item.risposte.find((e) => e.testo == item.rispostaData)
-    if (script.value.risposta2Server && key && risposta)
+    if (script.value.risposta2Server && key && risposta) {
       script.value.risposta2Server.risposte[key] = risposta?.hash
+    }
     else {
       if (script.value.risposta2Server && key)
         script.value.risposta2Server.risposte[key] = ''
     }
   });
-});
+  script.value.logRisposta = risposte.map((item) => {
+    const risposta = item.risposte.find((e) => e.testo == item.rispostaData)
+    return {
+      testo: item.testo,
+      risposta: {
+        testo: risposta?.testo || null,
+        value: risposta?.hash || null
+      }
+    }
+  }
+  )
+})
+
+const isActive = ref(false)
 
 const set_ascolti = (val: number) => {
-  if (primaDomanda.audio)
+  if (primaDomanda && primaDomanda.audio)
     primaDomanda.audio.ascolti_rimanenti = val
 }
 
 const set_ascolti_video = (val: number) => {
-  if (primaDomanda.video) {
+  if (primaDomanda && primaDomanda.video) {
     primaDomanda.video.ascolti_rimanenti = val
   }
 }
 
 const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle)
 const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
+
+const myTweak = (offset: number) => {
+  // "offset" is a Number (pixels) that refers to the total
+  // height of header + footer that occupies on screen,
+  // based on the QLayout "view" prop configuration
+
+  // this is actually what the default style-fn does in Quasar
+  // window.innerHeight
+
+  const style = { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+  return style
+}
 
 </script>
 
@@ -123,4 +179,8 @@ const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
 .domanda
   border-style: solid solid solid solid
   margin-bottom: 10px
+
+.active
+  border-style: dotted
+
 </style>

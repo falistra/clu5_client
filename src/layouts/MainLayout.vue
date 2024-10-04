@@ -1,34 +1,40 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header bordered class="bg-blue-2 text-black" height-hint="98">
-      <div class="row items-center justify-around ">
-        <q-toolbar class="col-5">
-          <q-toolbar-title>{{ sessioneStore.test.script?.test.$.descrizione }}</q-toolbar-title>
-        </q-toolbar>
-        <q-toolbar class="col-6">
-          <q-toolbar-title>{{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
-            sessioneStore.test.script?.test.studente.$.nome }}</q-toolbar-title>
-        </q-toolbar>
-        <q-toolbar class="col-1">
+    <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
+      <q-toolbar class="row flex-center">
+        <q-toolbar-title class=" col text-subtitle1">
+          <div class="row flex-center">
+            {{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
+              sessioneStore.test.script?.test.studente.$.nome }}
+          </div>
+        </q-toolbar-title>
+        <q-toolbar-title class="col text-subtitle1">
+          <div class="row flex-center">
+            Parte {{ sessioneStore.numero_stazione_corrente }} di {{
+              sessioneStore.test.script.test.stazioni.stazione.length }} ; {{ sessioneStore.domande.length }}
+            domande in questa parte
+          </div>
+        </q-toolbar-title>
+        <q-toolbar-title class="col text-subtitle1">
+          <div class="row flex-center">
+            {{ sessioneStore.test.script.test.$.descrizione }}
+          </div>
+        </q-toolbar-title>
+      </q-toolbar>
+      <!-- <q-toolbar class="col-1">
           <q-toolbar-title>
-            <q-btn color="secondary" @click="$q.fullscreen.toggle()"
+            <q-btn color="secondary" @click="$q.fullscreen.toggle()" size="xs"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" />
           </q-toolbar-title>
         </q-toolbar>
-      </div>
+
+        <q-toolbar class="col-1">
+          <q-toolbar-title>
+            <q-btn color="secondary" @click="log" icon="receipt_long" size="xs" />
+          </q-toolbar-title>
+        </q-toolbar> -->
+
     </q-header>
-
-    <!-- <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer> -->
 
     <q-page-container>
       <router-view :key="$route.fullPath" v-slot="{ Component }">
@@ -39,17 +45,12 @@
       </router-view>
     </q-page-container>
 
-    <q-footer bordered class="bg-blue-2 text-black">
-      <div class="row items-center justify-evenly">
-        <q-toolbar class="col">
+    <q-footer bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
+      <div class="row items-center justify-between">
+        <q-toolbar class="col-12">
           <q-toolbar-title>
-            <vue-countdown :time="3 * 60 * 1000" v-slot="{ minutes, seconds }" @end="gameover">
-              Tempo rimanente: {{ minutes }} minuti, {{ seconds }} secondi.
-            </vue-countdown>
+            <barra-navigazione />
           </q-toolbar-title>
-        </q-toolbar>
-        <q-toolbar class="col-auto">
-          <barra-navigazione />
         </q-toolbar>
       </div>
     </q-footer>
@@ -58,7 +59,7 @@
 
 <script setup lang="ts">
 
-import { useQuasar } from 'quasar'
+// import { useQuasar } from 'quasar'
 import { useSessioneStore } from 'stores/sessione';
 
 const sessioneStore = useSessioneStore();
@@ -67,13 +68,20 @@ defineOptions({
   name: 'MainLayout',
 });
 import BarraNavigazione from 'src/components/BarraNavigazione.vue';
-import VueCountdown from '@chenfengyuan/vue-countdown';
-const $q = useQuasar()
-const gameover = () => { $q.notify('Tempo scaduto') }
+
+// import { useRouter } from 'vue-router';
+// const router = useRouter();
+// const log = () => {
+//   router.push({
+//     name: 'log',
+//   });
+// }
+
 
 </script>
 
 <style lang="sass">
+
 .row-horizontal-alignment
   .row
     background: rgba(#aa0, .1)

@@ -23,7 +23,7 @@
 
         <template #positionSlider>
           <q-chip dense color="primary" text-color="white">
-            Ascolti rimenenti
+            Ascolti rimenenti : {{ video.ascolti_rimanenti }}
           </q-chip>
         </template>
 

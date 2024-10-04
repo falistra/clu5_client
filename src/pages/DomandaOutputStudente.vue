@@ -1,9 +1,12 @@
 <template>
   <q-page class="column  senza-scroll">
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
     <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 200px"
       class="col-auto text-subtitle2 q-my-sm q-mx-md">
       <div class="q-mb-sm q-mr-md testo-domanda">
@@ -111,7 +114,8 @@ const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | n
 
 const setRisposta = () => {
   if (script.risposta2Server) script.risposta2Server.risposte = script.rispostaData
-  console.log(script.risposta2Server)
+  script.logRisposta = script.rispostaData
+
 }
 
 const set_ascolti = (val: number) => {

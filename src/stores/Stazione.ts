@@ -8,15 +8,19 @@ import {
   QueryParms,
   punteggiDomandeStazione,
   IRisposta2Server,
+  TLogRisposte,
 } from 'stores/models';
 
 import { Test } from 'stores/Test';
+import { TRisposte, IDomande } from 'stores/models';
 
 import {
   // T_DomandaSceltaSingola,
   IDomanda,
   // T_DomandaSceltaSingola_risposta2Server,
 } from 'src/pages/models';
+
+import moment from 'moment';
 
 export const Stazione = class {
   script: Script_Stazione;
@@ -34,10 +38,22 @@ export const Stazione = class {
     // this.ID_STAZIONE_CORRENTE = this.script.$.ID;
     const domande = this.script.insieme_domande.domande;
 
+    const sessioneStore = useSessioneStore();
+    sessioneStore.log_stazioni[this.script.$.ID] = {
+      inizio: this.test.ServerTime().format(),
+    };
+
+    sessioneStore.log_STAZIONI[this.script.$.ID] = {
+      inizio: this.test.ServerTime().format(),
+    };
+
+    this.test.STORIA.push(
+      `${this.test.ServerTime()} = Inizio stazione ${this.script.$.ID}`
+    );
+
     this.set_query = (Array.isArray(domande) ? domande : [domande]).map(
       (domanda) => this.setQuery(domanda)
     );
-    // console.log(this.set_query);
   }
 
   setQuery(domanda: Domanda): object {
@@ -77,8 +93,6 @@ export const Stazione = class {
       domande_gia_poste: JSON.stringify(this.test.DOMANDE_GIA_POSTE),
     };
 
-    // console.log(parms);
-
     const domandeXML = await api
       .post('http://localhost/clu4/test/domande/', new URLSearchParams(parms))
       .then((response) => {
@@ -93,7 +107,6 @@ export const Stazione = class {
         //   icon: 'report_problem',
         // });
       });
-    // console.log(domande);
 
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
@@ -120,23 +133,60 @@ export const Stazione = class {
         return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
       })
       .reduce((accumulator, value) => accumulator.concat(value), []) // flat
-      .map((domanda) => {
+      .map((domanda, index) => {
         const d = Object.entries(domanda);
         const tipo = d[1][0];
         const script = domanda[tipo] as object;
-        return [tipo as string, script as object, d[0][1]] as [
+        return [tipo as string, script as object, d[0][1], index + 1] as [
           string,
           object,
-          object
+          object,
+          number
         ];
       });
+  }
+
+  checkRisposte(): number[] {
+    const checkRispostaNonData = (risposte: TRisposte): boolean => {
+      if (typeof risposte === 'undefined') return false;
+      if (
+        typeof risposte === 'object' &&
+        !Array.isArray(risposte) &&
+        risposte !== null
+      )
+        return Object.keys(risposte).length > 0;
+      return risposte.length > 0;
+    };
+
+    const sessioneStore = useSessioneStore();
+    sessioneStore.log_STAZIONI[this.script.$.ID].domandeStato =
+      sessioneStore.domande.reduce((Map, D) => {
+        const domanda = D[2] as IDomanda;
+        const script = D[1] as IRisposta2Server;
+        if (!(typeof script.risposta2Server == 'undefined')) {
+          Map[domanda.id] = checkRispostaNonData(
+            script.risposta2Server.risposte
+          )
+            ? 'Risposto'
+            : 'Non risposto';
+        } else Map[domanda.id] = 'Non risposto';
+        return Map;
+      }, {} as { [Key: string]: string });
+
+    const domandeSenzaRisposta = sessioneStore.domande.filter((D) => {
+      const script = D[1] as IRisposta2Server;
+      if (typeof script.risposta2Server == 'undefined') return true;
+      else return !checkRispostaNonData(script.risposta2Server.risposte);
+    });
+
+    return domandeSenzaRisposta.map((D) => D[3]);
   }
 
   async richiediPunteggio() {
     const sessioneStore = useSessioneStore();
     const test = sessioneStore.test.script.test;
 
-    const risposte = sessioneStore.domande
+    sessioneStore.risposte = sessioneStore.domande
       .map((D) => {
         const script = D[1] as IRisposta2Server; // T_DomandaSceltaSingola;
         const domanda = D[2] as IDomanda;
@@ -161,8 +211,8 @@ export const Stazione = class {
       idTest: test.$.id,
       idStazione: this.script.$.ID,
       lingua: test.prologo.$.lingua,
-      risposte: JSON.stringify(risposte),
-      risposteComplessive: JSON.stringify(risposte),
+      risposte: JSON.stringify(sessioneStore.risposte),
+      risposteComplessive: JSON.stringify(sessioneStore.risposte),
     };
 
     const punteggiDomandeServer = await api
@@ -179,8 +229,6 @@ export const Stazione = class {
         //   icon: 'report_problem',
         // });
       });
-    // console.log(domande);
-    // this.punteggioStazione =
 
     this.punteggioStazione = (
       punteggiDomandeServer as punteggiDomandeStazione
@@ -188,14 +236,21 @@ export const Stazione = class {
     this.punteggiDomande = (
       punteggiDomandeServer as punteggiDomandeStazione
     ).punteggiDomande;
-
-    // this.passaStazione();
-    // await this.test.stazione_corrente.richiediDomandeServer(
-    //   this.test.DOMANDE_GIA_POSTE
-    // );
+    this.test.STORIA.push(
+      `${this.test.ServerTime()} = Ricevuto+dal+server+punteggio ${
+        this.punteggioStazione
+      }`
+    );
   }
 
-  passaStazione() {
+  async passaStazione() {
+    this.test.STORIA.push(
+      `${this.test.ServerTime()} = Passaggio a nuova stazione`
+    );
+    if (this.script.caso && !Array.isArray(this.script.caso))
+      this.script.caso = [this.script.caso];
+    this.test.STORIA.push(`${this.test.ServerTime()} = Valutazione casi`);
+
     const caso = this.script.caso?.find((caso) => {
       let condizione = caso.$.condizione;
       if (condizione) {
@@ -212,6 +267,10 @@ export const Stazione = class {
           );
         }
         condizione = `( ${arrayCondizioni.join(' && ')} )`;
+        this.test.STORIA.push(
+          `${this.test.ServerTime()} = Valutazione+caso : ${condizione}`
+        );
+
         return eval(condizione);
       }
       // else {
@@ -224,19 +283,158 @@ export const Stazione = class {
       // }
     });
     const azione = caso ? caso.azione : this.script.altrimenti?.azione;
+    this.test.LIVELLO_ACQUISITO = azione?.$.stato_acquisito || ' ';
+    this.test.STATO_ACQUISITO = azione?.$.esito_acuisito || '';
+    const sessioneStore = useSessioneStore();
+
+    const test = sessioneStore.test;
+    const id_stazione = this.script.$.ID;
+    const domande = sessioneStore.domande;
+    test.DOMANDE_GIA_POSTE = test.DOMANDE_GIA_POSTE.concat(
+      domande.map((D) => {
+        const domanda = D[2] as IDomanda;
+        return parseInt(domanda.id);
+      })
+    );
+
+    sessioneStore.punteggiStazioni[id_stazione] = this.punteggioStazione;
+    sessioneStore.log_stazioni[id_stazione].risposte = sessioneStore.risposte;
+    const fine = moment();
+    const durata = moment
+      .duration(fine.diff(sessioneStore.log_stazioni[id_stazione].inizio))
+      .asSeconds();
+    sessioneStore.log_stazioni[id_stazione].durata = durata;
+    sessioneStore.log_stazioni[id_stazione].fine = fine.format();
+    sessioneStore.log_stazioni[id_stazione].punteggioStazione =
+      this.punteggioStazione;
+
+    sessioneStore.log_STAZIONI[id_stazione].durata = durata;
+    sessioneStore.log_STAZIONI[id_stazione].fine = fine.format();
+    sessioneStore.log_STAZIONI[id_stazione].punteggioStazione =
+      this.punteggioStazione;
+
+    sessioneStore.log_STAZIONI[id_stazione].domandeOrdine =
+      sessioneStore.domande.reduce((Map, D) => {
+        const domanda = D[2] as IDomanda;
+        Map[domanda.id] = D[3];
+        return Map;
+      }, {} as { [Key: string]: number });
+
+    sessioneStore.log_STAZIONI[id_stazione].domande =
+      sessioneStore.domande.reduce((Map, D) => {
+        const domanda = D[2] as IDomanda;
+        const script_domanda = D[1] as {
+          testo: string;
+          logRisposta?: TLogRisposte;
+        };
+
+        Map[domanda.id] = {
+          tecnica: parseInt(domanda.tecnica),
+          peso: domanda.peso,
+          testo: script_domanda.testo,
+          RISPOSTE: script_domanda.logRisposta,
+          punteggioOttenuto: this.punteggiDomande
+            ? domanda.id in this.punteggiDomande
+              ? this.punteggiDomande?.[domanda.id].punteggio
+              : 0
+            : 0,
+        };
+        return Map;
+      }, {} as IDomande);
+
     if (azione?.$.vai_a == 'uscita') {
-      console.log('uscita');
+      this.test.STORIA.push(
+        `${this.test.ServerTime()} = Raggiunta+condizione+di+uscita`
+      );
+      await this.uscita();
+      sessioneStore.testCompletato = true;
     } else {
       const script_nuova_stazione_corrente =
         this.test.script.test.stazioni.stazione.find(
           (stazione) => stazione.$.ID == azione?.$.vai_a
         );
 
-      if (script_nuova_stazione_corrente)
+      this.test.STORIA.push(
+        `${this.test.ServerTime()} = Passaggio a nuova stazione ${
+          script_nuova_stazione_corrente?.$.ID
+        }`
+      );
+
+      const parms = {
+        idUser: test.ID_USER,
+        idSession: test.ID_SESSION,
+        idTest: test.ID_TEST,
+        stazioneProssima: script_nuova_stazione_corrente?.$.ID || '',
+        risposteComplessive: JSON.stringify(sessioneStore.log_stazioni),
+        punteggiStazioni: JSON.stringify(sessioneStore.punteggiStazioni),
+      };
+
+      await api
+        .post(
+          'http://localhost/clu4/test/stazione/',
+          new URLSearchParams(parms)
+        )
+        .then((response) => {
+          return response.data;
+        })
+        .catch((errore) => {
+          console.log(errore);
+        });
+
+      if (script_nuova_stazione_corrente) {
         this.test.stazione_corrente = new Stazione(
           script_nuova_stazione_corrente,
           this.test
         );
+        sessioneStore.numero_stazione_corrente += 1;
+      }
     }
+  }
+
+  async uscita() {
+    const sessioneStore = useSessioneStore();
+    const test = sessioneStore.test;
+    const fineTest = moment();
+    const testTime = moment
+      .duration(fineTest.diff(test.inizioTest))
+      .asSeconds();
+
+    const parms = {
+      idUser: test.ID_USER,
+      idSession: test.ID_SESSION,
+      idTest: test.ID_TEST,
+      lingua: test.LINGUA,
+      livello: test.LIVELLO_ACQUISITO,
+      esitoUscita: test.STATO_ACQUISITO || '_',
+      testTime: testTime.toString(),
+      log: JSON.stringify({
+        inizioTest: test.inizioTest.format(),
+        serverTime: test.serverTime.format(),
+        clientTime: test.clientTime.format(),
+        ID_TEST: test.ID_TEST,
+        ID_SESSION: test.ID_SESSION,
+        ID_SIGNED_USER: test.script.test.$.signed_userId,
+        ID_USER: test.ID_USER,
+        LINGUA: test.LINGUA,
+        SCRIPT: test.SCRIPT,
+        STORIA: test.STORIA,
+        RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
+        fineTest: fineTest.format(),
+        testTime: testTime,
+        esito_acquisito: test.LIVELLO_ACQUISITO,
+        statoUscita: test.STATO_ACQUISITO,
+      }),
+    };
+
+    await api
+      .post('http://localhost/clu4/test/test/', new URLSearchParams(parms))
+      .then((response) => {
+        sessioneStore.logTest = response.data;
+        // return response.data;
+      })
+      .catch((errore) => {
+        console.log(errore);
+      });
+    this.test.STORIA.push(`${this.test.ServerTime()} = Invio test completo`);
   }
 };

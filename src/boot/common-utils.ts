@@ -14,7 +14,7 @@ const common_api = {
     right: '2px',
     borderRadius: '9px',
     backgroundColor: '#027be3',
-    width: '15px',
+    width: '10px',
     opacity: '0.2',
   },
 };

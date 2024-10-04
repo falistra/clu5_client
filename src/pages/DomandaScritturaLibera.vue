@@ -1,14 +1,27 @@
 <template>
   <q-page class="column  senza-scroll">
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
+    <div style="max-height: 250px" class="col-auto scroll text-caption q-my-md q-mx-md"
       v-html="common_api.sanitizeUnicode(script.testo)"></div>
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
-    <q-input class="col" v-model="script.rispostaData" filled type="textarea" name="risposta"
-      @update:model-value="setRisposta" />
+    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
+      <img-wrap :src="script.immagine" size="100px" />
+    </div>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
+    <div class="col q-mt-sm q-my-md">
+      <div class="row items-center justify-center">
+        <q-input class="col-7" v-model="script.rispostaData" autofocus outlined type="textarea" name="risposta"
+          @update:model-value="setRisposta" bg-color="teal-1" input-style="font-weight: medium">
+          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px"> Numero parole : {{
+            script.rispostaData.trim().split(/\s+/).length }}
+          </q-badge>
+        </q-input>
+      </div>
+    </div>
     <div class="col">
       <VirtualKeyboard class="..." @key-pressed="carattere">
         <div class="...">
@@ -20,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-
+//str.trim().split(/\s+/).length;
 defineOptions({
   name: 'DomandaScritturaLibera',
 });
@@ -81,8 +94,10 @@ const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | n
 }
 
 const setRisposta = () => {
-  if (script.risposta2Server) script.risposta2Server.risposte = script.rispostaData
-  console.log(script.risposta2Server)
+  if (script.risposta2Server) {
+    script.risposta2Server.risposte = script.rispostaData
+    script.logRisposta = script.rispostaData
+  }
 }
 
 const set_ascolti = (val: number) => {

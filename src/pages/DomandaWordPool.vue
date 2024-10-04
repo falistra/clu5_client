@@ -6,10 +6,12 @@
         <q-card-section class="col-6">
           <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
             v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-            @update="set_ascolti"></audio-wrap>
-          <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video"
-            @update="set_ascolti_video"></video-wrap>
+          <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+          </div>
+          <div v-if="script.video" class="col q-mt-md">
+            <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+          </div>
           <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <div class="q-pa-sm">
               <q-card class="zona-ricevente q-ma-sm" @dragover.prevent @dragenter.prevent @drop="onDrop($event, pool)"
@@ -95,11 +97,19 @@ script.value.pools.pool.forEach((item) => { item.label = common_api.sanitizeUnic
 
 
 watch(script.value.pools, (pools) => {
+  script.value.logRisposta = []
   pools.pool.forEach((item) => {
     if (script.value.risposta2Server)
       if (item.rispostaData) {
         script.value.risposta2Server.risposte[item.$.hash] = item.rispostaData.map((r) => r.$.hash)
       }
+  })
+  script.value.logRisposta = pools.pool.map((item) => {
+    const rispostaData = item.rispostaData || []
+    return {
+      fisso: { testo: item._, value: item.$.hash },
+      mobile: rispostaData.map((r) => ({ testo: r._, value: r.$.hash }))
+    }
   })
 })
 

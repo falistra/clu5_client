@@ -1,28 +1,32 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 
-// import { useSessioneStore } from 'stores/sessione';
-// const sessione = useSessioneStore();
+import { useSessioneStore } from 'stores/sessione';
+import { useRouter } from 'vue-router';
 
-const jsonData = {
-  total: 25,
-  limit: 10,
-  skip: 0
-}
+const sessioneStore = useSessioneStore();
+const router = useRouter();
+
+const jsonData = ref(sessioneStore.test)
 
 const back = () => {
-  console.log('OK')
+  router.push({
+    name: sessioneStore.domande[sessioneStore.counter][0],
+    params: { id: sessioneStore.counter },
+  });
 }
 
 </script>
 
 <template>
-  <q-page>
-    Ci sono!
-    <q-btn label="Torna" @click="back">
-
-      <json-viewer :value="jsonData" :expand-depth=5 copyable boxed sort></json-viewer>
-
-    </q-btn>
+  <q-page class="column">
+    <div class="col-12">
+      <JsonViewer :value="jsonData" copyable boxed sort theme="jv-dark" />
+    </div>
+    <div class="col-12">
+      <q-btn class="q-ma-md" label="Torna" @click="back" icon="arrow_back">
+      </q-btn>
+    </div>
   </q-page>
 
 </template>

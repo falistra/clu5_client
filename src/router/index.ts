@@ -7,7 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-import { useSessioneStore } from 'stores/sessione';
+// import { useSessioneStore } from 'stores/sessione';
 
 /*
  * If not building with SSR mode, you can
@@ -35,16 +35,15 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach(async (to) => {
-    // console.log(to);
-    // console.log(from);
-
-    if (to.path == '/') {
-      const sessioneStore = useSessioneStore();
-      const domanda = sessioneStore.domande[0] as [string, object, object];
-      return { path: `${domanda[0]}/0` };
-    }
-  });
+  // Router.beforeEach(async (to) => {
+  //   // console.log(to);
+  //   // console.log(from);
+  //   // if (to.path == '/') {
+  //   //   const sessioneStore = useSessioneStore();
+  //   //   const domanda = sessioneStore.domande[0] as [string, object, object];
+  //   //   return { path: `${domanda[0]}/0` };
+  //   // }
+  // });
 
   return Router;
 });

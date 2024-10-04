@@ -3,11 +3,15 @@
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
     <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
       v-html="common_api.sanitizeUnicode(script.testo)"></div>
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
-
+    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
+      <img-wrap :src="script.immagine" size="100px" />
+    </div>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
     <div class="col q-my-sm q-mx-md ">
       <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni"
         @update:model-value="setRispostaData" type="checkbox">
@@ -75,6 +79,7 @@ const setRispostaData = (values: Array<{ $: { hash: string }; _: string }>) => {
   } else opzioni.value.forEach(x => { x.disable = false })
   if (script.value.risposta2Server) {
     script.value.risposta2Server.risposte = values.map((r) => r.$.hash)
+    script.value.logRisposta = values.map((r) => ({ testo: r._, value: r.$.hash }))
   }
 }
 

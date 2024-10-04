@@ -7,11 +7,12 @@
         <q-card-section class="col-6">
           <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
             v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-            @update="set_ascolti"></audio-wrap>
-          <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video"
-            @update="set_ascolti_video"></video-wrap>
-
+          <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+          </div>
+          <div v-if="script.video" class="col q-mt-md">
+            <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+          </div>
           <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <div class="q-pa-sm">
               <q-list dense bordered separator>
@@ -19,13 +20,13 @@
                   <q-item class="col-auto" v-for="item in script.partiFisse.item" :key="item.$.hash">
                     <q-item-section>
                       <div class="row">
-                        <div class="col-6 parte-fissa">
+                        <div class="col-6 parte-fissa text-caption">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
                             <ImgWrap :src="{ $: { url: item._ } }" size="100px" />
                             <!-- <q-img :src="item._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="170px">
                             </q-img> -->
                           </div>
-                          <div v-else class="q-ma-sm " v-html="item.label" />
+                          <div v-else class="q-ma-sm item" v-html="item.label" />
                         </div>
                         <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                           @drop="onDrop($event, item)" @dblclick="annulla(item)">
@@ -109,6 +110,15 @@ watch(script.partiFisse, (partiFisse) => {
         script.risposta2Server.risposte[item.$.hash] = item.rispostaData.$.hash
       }
   })
+
+  script.logRisposta = partiFisse.item
+    .filter(item => item.rispostaData)
+    .map((item) => {
+      return {
+        fisso: { testo: item._, value: item.$.hash },
+        mobile: { testo: item.rispostaData?._, value: item.rispostaData?.$.hash }
+      }
+    })
 })
 
 script.partiMobili.item.forEach((item) => {
@@ -211,7 +221,7 @@ const set_ascolti_video = (val: number) => {
 
 .zona-ricevente
   border: 2px dotted black
-  min-height: 40px
+  min-height: 20px
   min-width: 150px
 
 .parte-fissa

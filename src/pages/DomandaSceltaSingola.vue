@@ -3,17 +3,21 @@
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
     <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
       v-html="common_api.sanitizeUnicode(testoDomanda)"></div>
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
-
+    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
+      <img-wrap :src="script.immagine" size="100px" />
+    </div>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
     <div class="col q-my-sm q-mx-md ">
-      <q-btn-toggle v-model="script.rispostaData" no-caps dense push glossy toggle-color="primary" :options="opzioni"
-        clearable @update:model-value="setRisposta">
+      <q-btn-toggle class="shadow-5" v-model="script.rispostaData" no-caps dense push toggle-color="primary"
+        :options="opzioni" clearable @update:model-value="setRisposta">
         <template v-for="button in opzioni" :key="button.value" v-slot:[button.slot]>
-          <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'"
-            class="risposta q-px-sm" v-html="`${common_api.sanitizeUnicode(button.testo)}`">
+          <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'" class="risposta"
+            v-html="`${common_api.sanitizeUnicode(button.testo)}`">
           </div>
           <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
             <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
@@ -37,10 +41,11 @@ import AudioWrap from 'src/components/AudioWrap.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import { common_api } from 'src/boot/common-utils'
 import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import { setAudioPams, setVideoPams, sanitazeScript } from 'pages/common'
 
 const sessione = useSessioneStore();
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola);
+sanitazeScript(script.value)
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
 if (typeof script.value.risposta2Server == 'undefined')
@@ -63,13 +68,14 @@ let testoDomanda = ref(
 );
 
 const opzioni = ref(
-  script.value.risposte.risposta.map((item, index) => {
+  script.value.risposte.risposta.map((item, index, risposte) => {
     return {
       testo: item._,
       value: item._,
       hash: item.$.hash,
       slot: index.toString(),
-      style: { 'margin-right': '10px', border: '1px solid' },
+      // style diverso per l'ultimo elemento
+      style: index < risposte.length - 1 ? { 'margin-right': '10px', border: '1px solid' } : { 'margin-right': '0px', border: '1px solid' },
       class: 'risposte',
     };
   })
@@ -83,6 +89,7 @@ const setRisposta = (risposta: string) => {
     );
     if (script.value.risposta2Server)
       script.value.risposta2Server.risposte = ''
+    script.value.logRisposta = { testo: null, value: null }
   }
   else {
     testoDomanda.value = ` ${script.value.testo.replace(
@@ -91,6 +98,10 @@ const setRisposta = (risposta: string) => {
     )} `;
     if (script.value.risposta2Server) {
       script.value.risposta2Server.risposte = opzioni.value.find((item) => item.testo == risposta)?.hash || ''
+    }
+    const rispostaData = opzioni.value.find((item) => item.testo == risposta)
+    script.value.logRisposta = {
+      testo: rispostaData?.testo || null, value: rispostaData?.hash || null
     }
   }
 };
@@ -118,4 +129,8 @@ const set_ascolti_video = (val: number) => {
   font-size: medium
   text-align: justify
   line-height: 85%
+
+.risposta:last-child
+  margin-right: 0px
+
 </style>

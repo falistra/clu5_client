@@ -1,13 +1,18 @@
 <template>
   <q-page class="column  senza-scroll">
     <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <img-wrap v-if="script.immagine" class="col q-my-sm q-mx-md" :src="script.immagine" size="100px" />
-    <audio-wrap v-if="script.audio" class="col-auto q-my-sm q-mx-md" :audio="script.audio"
-      @update="set_ascolti"></audio-wrap>
-    <video-wrap class="col q-mt-md" v-if="script.video" :video="script.video" @update="set_ascolti_video"></video-wrap>
+    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
+      <img-wrap :src="script.immagine" size="100px" />
+    </div>
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+    </div>
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+    </div>
 
     <div class="col q-my-sm q-mx-md ">
-      <q-scroll-area style="height: 200px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
+      <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
         <div class="text-subtitle q-mt-sm q-mb-xs q-ml-md">
           <span v-for="item in tokens" :key="item.index">
             <span v-if="!item.isSlot" v-html="item.content"></span>
@@ -71,6 +76,9 @@ watch(script.rispostaData, (rispostaData) => {
     script.risposta2Server.risposte = Object.fromEntries(Object.entries(rispostaData)
       .map(([k, o]) => [k, o.hash])
     );
+  script.logRisposta = Object.fromEntries(Object.entries(rispostaData)
+    .map(([k, o]) => [k, { testo: o._, value: o.hash }])
+  );
 })
 
 if (script.audio) setAudioPams(script.audio)

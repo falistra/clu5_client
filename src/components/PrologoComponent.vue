@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-left q-mt-md q-ml-sm">
+  <div class="row items-left q-mt-md q-mx-sm">
     <q-banner rounded dense class="shadow-3 bg-teal-4">
       <div class="text-subtitle2 prologo"
         v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`"></div>

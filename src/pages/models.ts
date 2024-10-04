@@ -1,3 +1,5 @@
+import { TLogRisposte } from 'stores/models';
+
 export interface IDomanda {
   autore: string;
   id: string;
@@ -49,6 +51,7 @@ export interface T_DomandaSceltaSingola {
   video?: Video;
   rispostaData?: string;
   risposta2Server?: T_DomandaSceltaSingola_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaSceltaMultipla_risposta2Server
@@ -69,6 +72,7 @@ export interface T_DomandaSceltaMultipla {
   };
   rispostaData?: Array<{ $: { hash: string }; _: string }>;
   risposta2Server?: T_DomandaSceltaMultipla_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaComprensioneTesto_risposta2Server
@@ -82,6 +86,7 @@ export interface T_DomandaComprensioneTesto {
   testo_comprensione: string;
   domande: { domandasceltasingola: Array<T_DomandaSceltaSingola> };
   risposta2Server?: T_DomandaComprensioneTesto_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaRiordino_risposta2Server extends I_risposta2Server {
@@ -111,6 +116,7 @@ export interface T_DomandaRiordino {
     }>;
   };
   risposta2Server?: T_DomandaRiordino_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaScritturaLibera_risposta2Server
@@ -127,6 +133,7 @@ export interface T_DomandaScritturaLibera {
   immagine?: Immagine;
   rispostaData: string;
   risposta2Server?: T_DomandaScritturaLibera_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaRiempimentoTesto_risposta2Server
@@ -146,6 +153,7 @@ export interface T_DomandaRiempimentoTesto {
   };
   rispostaData: { [Key: string]: { hash: string; _: string } };
   risposta2Server?: T_DomandaRiempimentoTesto_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaRiempimentoTestoLibero_risposta2Server
@@ -162,6 +170,7 @@ export interface T_DomandaRiempimentoTestoLibero {
   immagine?: Immagine;
   rispostaData: { [Key: string]: string };
   risposta2Server?: T_DomandaRiempimentoTestoLibero_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaRiempimentoLibero_risposta2Server
@@ -178,6 +187,7 @@ export interface T_DomandaRiempimentoLibero {
   immagine?: Immagine;
   rispostaData: { [Key: string]: string };
   risposta2Server?: T_DomandaRiempimentoLibero_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaOutputStudente_risposta2Server
@@ -194,6 +204,7 @@ export interface T_DomandaOutputStudente {
   risposte: { tipoCheck: string; risposta: Array<string> };
   rispostaData: string;
   risposta2Server?: T_DomandaOutputStudente_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaAbbinamentoMultiplo_risposta2Server
@@ -229,6 +240,7 @@ export interface T_DomandaAbbinamentoMultiplo {
     }>;
   };
   risposta2Server?: T_DomandaAbbinamentoMultiplo_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaAbbinamentoSingolo_risposta2Server
@@ -264,6 +276,7 @@ export interface T_DomandaAbbinamentoSingolo {
     }>;
   };
   risposta2Server?: T_DomandaAbbinamentoSingolo_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_DomandaWordPool_risposta2Server extends I_risposta2Server {
@@ -297,6 +310,7 @@ export interface T_DomandaWordPool {
     }>;
   };
   risposta2Server?: T_DomandaWordPool_risposta2Server;
+  logRisposta?: TLogRisposte;
 }
 
 export interface T_Token {
