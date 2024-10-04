@@ -15,7 +15,7 @@
     <div class="col q-mt-sm q-my-md">
       <div class="row items-center justify-center">
         <q-input class="col-7" v-model="script.rispostaData" autofocus outlined type="textarea" name="risposta"
-          @update:model-value="setRisposta" bg-color="teal-1" input-style="font-weight: medium">
+          @update:model-value="setRisposta" bg-color="teal-1" input-class="text-body1 text-weight-bold text-justify">
           <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px"> Numero parole : {{
             script.rispostaData.trim().split(/\s+/).length }}
           </q-badge>

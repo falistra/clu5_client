@@ -14,9 +14,9 @@
           </div>
           <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
             <div class="q-pa-sm">
-              <q-card class="zona-ricevente q-ma-sm" @dragover.prevent @dragenter.prevent @drop="onDrop($event, pool)"
-                v-for="pool in script.pools.pool" :key="pool.$.hash">
-                <q-badge class="q-ml-sm q-mt-sm text-subtitle1" color="primary" rounded>{{ pool._ }}</q-badge>
+              <q-card class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
+                @drop="onDrop($event, pool)" v-for="pool in script.pools.pool" :key="pool.$.hash">
+                <div class="q-ml-sm q-mt-sm text-h6 text-weight-bold" color="primary">{{ pool._ }}</div>
                 <div class="row">
                   <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
                     @dblclick="annulla(item, pool)">
@@ -35,14 +35,14 @@
 
         <q-card-section class="col-6">
           <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <q-list dense class="q-mr-md" bordered separator>
+            <q-list dense class="q-mr-lg" bordered>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
                   <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                     <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                       <strong>Trascina...</strong>
                     </q-tooltip>
-                    <span v-html="item.label" />
+                    <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="item.label" />
                   </p>
                 </q-item-section>
               </q-item>
@@ -226,7 +226,12 @@ const set_ascolti_video = (val: number) => {
   border: 2px solid
 
 .zona-ricevente
-  border: 2px solid black
+
+  border-right: 3px solid black
+  border-bottom: 3px solid black
+  border-left: 3px solid black
+
+  /* border: 2px solid black *?
   min-height: 100px
   min-width: 250px
   overflow: auto

@@ -32,7 +32,7 @@
           <div class="col-5"></div>
           <div class="col-2">
             <q-input input-class="text-subtitle1 text-weight-bold" v-model="script.rispostaData" name="risposta"
-              autofocus clearable rounded label="Risposta" @update:model-value="setRisposta" dense />
+              autofocus clearable rounded label="Risposta/Answer" @update:model-value="setRisposta" dense />
           </div>
           <div class="col-5"></div>
         </div>

@@ -28,7 +28,7 @@
                           </div>
                           <div v-else class="q-ma-sm item" v-html="partefissa.label"></div>
                         </div>
-                        <div class="col-6 bg-indigo-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                        <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                           @drop="onDrop($event, partefissa)">
                           <div class="row">
                             <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
@@ -53,15 +53,15 @@
 
         <q-card-section class="col-6">
           <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <q-list dense class="q-mr-md" bordered separator>
+            <q-list dense class="q-mr-lg" bordered>
               <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
                 <q-item-section side>
-                  <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
+                  <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                     <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                       <strong>Trascina...</strong>
                     </q-tooltip>
-                    {{ item._ }}
-                  </p>
+                    <div class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label"></div>
+                  </div>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -223,7 +223,8 @@ const set_ascolti_video = (val: number) => {
 <style lang="sass" scoped>
 
 .zona-ricevente
-  border: 2px solid black
+  border-top: 2px solid black
+  border-bottom: 2px solid black
   min-height: 100px
   min-width: 250px
   overflow: auto

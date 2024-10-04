@@ -22,7 +22,9 @@
       <template #positionSlider>
         <q-chip v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" dense color="primary"
           text-color="white">
-          Ascolti rimenenti : {{ audio.ascolti_rimanenti }}
+          Ascolto/Listening {{ parseInt(audio.$.nrMaxRipetizioni) - audio.ascolti_rimanenti + 1 }}&deg; di/of {{
+            audio.$.nrMaxRipetizioni
+          }}
         </q-chip>
       </template>
     </q-media-player>
