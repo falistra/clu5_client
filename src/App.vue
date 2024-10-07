@@ -15,7 +15,7 @@ defineOptions({
 import { ref } from 'vue';
 
 import xml2js from 'xml2js';
-import { api } from 'boot/axios';
+import { api_clu4 } from 'boot/axios';
 
 import { Test } from 'stores/Test';
 import { Loading } from 'quasar';
@@ -39,7 +39,7 @@ const options = ref([
   { label: 'test 818:  Abbinamento singolo', value: { idUser: 2, idSess: 194 } },
   { label: 'test 861:  Abbinamento multiplo', value: { idUser: 2, idSess: 203 } },
   { label: 'test 877:  SFP Proficiency Test', value: { idUser: 2, idSess: 241 } },
-  // { label: 'test 877:  Riempimento testo', value: { idUser: 2, idSess: 241 } },
+  { label: 'test 761:  Riempimento testo', value: { idUser: 2, idSess: 28 } },
   { label: 'test 847:  Word pool', value: { idUser: 2, idSess: 249 } },
   { label: 'test 827:  Output studente', value: { idUser: 2, idSess: 268 } },
   { label: 'test 815:  Scrittura libera', value: { idUser: 2, idSess: 261 } },
@@ -53,8 +53,8 @@ const vai_al_test = async (parms_test: { label: string, value: { idUser: number;
   Loading.show({
     message: 'Attendere, prego...'
   })
-  const script = await api
-    .get(`http://localhost/clu4/test/script/?idUser=${parms_test.value.idUser}&idSess=${parms_test.value.idSess}`)
+  const script = await api_clu4
+    .get(`/test/script/?idUser=${parms_test.value.idUser}&idSess=${parms_test.value.idSess}`)
     .then((response) => {
       // Notify.create({
       //   message: 'Dati ricevuti dal server',

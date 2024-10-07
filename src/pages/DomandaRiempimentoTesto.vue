@@ -12,8 +12,8 @@
     </div>
 
     <div class="col q-my-sm q-mx-md ">
-      <q-scroll-area style="height: 250px; width: 1000px" :thumb-style="thumbStyle" :bar-style="barStyle">
-        <div class="text-subtitle q-mt-sm q-mb-xs q-ml-md">
+      <q-scroll-area :visible="true" style="height: 200px;" :thumb-style="thumbStyle" :bar-style="barStyle">
+        <div class="text-subtitle q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
           <span v-for="item in tokens" :key="item.index">
             <span v-if="!item.isSlot" v-html="item.content"></span>
             <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
@@ -22,7 +22,7 @@
                 <strong>Doppio click per togliere</strong>
               </q-tooltip>
               {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
-                script.rispostaData[item.slotIndex]._ : '&nbsp;'.repeat(15) }}
+                script.rispostaData[item.slotIndex]._ : '_'.repeat(15) }}
             </span>
           </span>
         </div>
@@ -30,13 +30,19 @@
     </div>
 
     <div class="col q-my-sm q-mx-md ">
-      <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60px">
+      <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 100px">
+
         <div class="row">
-          <p v-for="risposta in lista_risposte_disponibili" class="col-auto q-ml-md q-pa-sm risposta" :key="risposta.id"
-            draggable="true" @dragstart="startDrag($event, risposta.testo)">
-            {{ risposta.testo }}
-          </p>
+          <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
+            <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, risposta.testo)">
+              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <strong>Trascina...</strong>
+              </q-tooltip>
+              <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="risposta.label"></span>
+            </p>
+          </div>
         </div>
+
       </q-scroll-area>
     </div>
   </q-page>
@@ -54,7 +60,8 @@ import PrologoComponent from 'src/components/PrologoComponent.vue';
 import AudioWrap from 'src/components/AudioWrap.vue';
 import ImgWrap from 'src/components/ImgWrap.vue';
 import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import { setAudioPams, setVideoPams } from 'pages/common';
+import { common_api } from 'src/boot/common-utils';
 
 import * as Common from 'pages/common';
 
@@ -91,6 +98,7 @@ const tokens = ref(
     const slotIndex = slot ? slot[2] : '';
     const isSlot = slot ? true : false;
     const risposta = (script.rispostaData && (slotIndex in script.rispostaData)) ? script.rispostaData[slotIndex]._ : '____________';
+    console.log(risposta)
     content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
     return { index, isSlot, slotIndex, content } as T_Token;
   })
@@ -154,6 +162,7 @@ interface IRisposta {
   id: string;
   testo: string;
   disponibile: boolean;
+  label: string;
 }
 const lista_risposte = ref(
   script.risposte.risposta.map(
@@ -162,6 +171,7 @@ const lista_risposte = ref(
         id: value.$.hash,
         testo: value._,
         disponibile: value?.disponibile || true,
+        label: common_api.sanitizeUnicode(value._)
       }
   )
 );
@@ -208,13 +218,18 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
   width: 100%
   border: 2px solid
 
-.risposta
-  cursor: grab
-  border: 1px solid black
-
 .drop-zone
   font-weight: 900
   width: 100px
   min-width: 100px
   /* border: 1px dotted black */
+
+.risposta
+  cursor: grab
+  font-size: small
+  font-weight: bold
+  text-align: justify
+  line-height: 85%
+  width: auto
+
 </style>
