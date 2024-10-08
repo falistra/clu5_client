@@ -1,49 +1,54 @@
 <template>
-  <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="100px" />
-    </div>
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
-    </div>
+  <q-page>
+    <div class="column" style="height: calc(95vh)">
+      <div class="col-auto scroll" style="max-height: 70px">
+        <PrologoComponent :prologo="script.prologo" />
+      </div>
 
-    <div class="col q-my-sm q-mx-md ">
-      <q-scroll-area :visible="true" style="height: 200px;" :thumb-style="thumbStyle" :bar-style="barStyle">
-        <div class="text-subtitle q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
-          <span v-for="item in tokens" :key="item.index">
-            <span v-if="!item.isSlot" v-html="item.content"></span>
-            <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
-              @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
-              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                <strong>Doppio click per togliere</strong>
-              </q-tooltip>
-              {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
-                script.rispostaData[item.slotIndex]._ : '_'.repeat(15) }}
+      <div v-if="script.immagine" class="col-auto q-my-sm q-mx-md">
+        <img-wrap :src="script.immagine" size="100px" />
+      </div>
+      <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+        <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+      </div>
+      <div v-if="script.video" class="col-auto q-mt-md">
+        <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+      </div>
+
+      <div class="col-auto q-my-sm q-mx-md ">
+        <q-scroll-area :visible="true" style="height: calc(55vh)" :thumb-style="thumbStyle" :bar-style="barStyle">
+          <div class="text-subtitle q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
+            <span v-for="item in tokens" :key="item.index">
+              <span v-if="!item.isSlot" v-html="item.content"></span>
+              <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
+                @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
+                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                  <strong>Doppio click per togliere</strong>
+                </q-tooltip>
+                {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
+                  script.rispostaData[item.slotIndex]._ : '_'.repeat(15) }}
+              </span>
             </span>
-          </span>
-        </div>
-      </q-scroll-area>
-    </div>
-
-    <div class="col q-my-sm q-mx-md ">
-      <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 100px">
-
-        <div class="row">
-          <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
-            <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, risposta.testo)">
-              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                <strong>Trascina...</strong>
-              </q-tooltip>
-              <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="risposta.label"></span>
-            </p>
           </div>
-        </div>
+        </q-scroll-area>
+      </div>
 
-      </q-scroll-area>
+      <div class="col-auto q-my-sm q-mx-md ">
+        <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(10vh)">
+
+          <div class="row">
+            <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
+              <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, risposta.testo)">
+                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                  <strong>Trascina...</strong>
+                </q-tooltip>
+                <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="risposta.label"></span>
+              </p>
+            </div>
+          </div>
+
+        </q-scroll-area>
+      </div>
     </div>
   </q-page>
 </template>

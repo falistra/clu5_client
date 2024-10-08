@@ -1,56 +1,63 @@
 <template>
-  <q-page class="column">
-    <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
-    <q-card class="col-12">
-      <q-card-section horizontal>
-        <q-card-section class="col-6">
-          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-            v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-          </div>
-          <div v-if="script.video" class="col q-mt-md">
-            <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
-          </div>
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <div class="q-pa-sm">
-              <q-card class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
-                @drop="onDrop($event, pool)" v-for="pool in script.pools.pool" :key="pool.$.hash">
-                <div class="q-ml-sm q-mt-sm text-h6 text-weight-bold" color="primary">{{ pool._ }}</div>
-                <div class="row">
-                  <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
-                    @dblclick="annulla(item, pool)">
-                    <div class="text-subtitle q-ma-sm item">
-                      <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                        <strong>Doppio click per togliere</strong>
-                      </q-tooltip>
-                      <span class="q-ma-md text-weight-medium" v-html="item.label" />
+  <q-page>
+    <div class="column" style="height: calc(90vh)">
+      <div class="col-auto scroll" style="max-height: 70px">
+        <PrologoComponent :prologo="script.prologo" />
+      </div>
+      <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
+        <div class="row" style="height: calc(75vh)">
+          <div class="col-6 ">
+            <div class="column">
+              <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+                v-html="common_api.sanitizeUnicode(script.testo)"></div>
+              <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+                <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+              </div>
+              <div v-if="script.video" class="col-auto q-mt-md">
+                <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+              </div>
+            </div>
+            <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+              :bar-style="barStyle">
+              <div class="q-pa-sm">
+                <q-card class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
+                  @drop="onDrop($event, pool)" v-for="pool in script.pools.pool" :key="pool.$.hash">
+                  <div class="q-ml-sm q-mt-sm text-h6 text-weight-bold" color="primary">{{ pool._ }}</div>
+                  <div class="row">
+                    <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
+                      @dblclick="annulla(item, pool)">
+                      <div class="text-subtitle q-ma-sm item">
+                        <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                          <strong>Doppio click per togliere</strong>
+                        </q-tooltip>
+                        <span class="q-ma-md text-weight-medium" v-html="item.label" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </q-card>
-            </div>
-          </q-scroll-area>
-        </q-card-section>
+                </q-card>
+              </div>
+            </q-scroll-area>
+          </div>
+          <div class="col-6 ">
+            <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+              <q-list dense class="q-mr-lg">
+                <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
+                  <q-item-section side>
+                    <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
+                      <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                        <strong>Trascina...</strong>
+                      </q-tooltip>
+                      <span class="bg-teal-2 text-subtitle1 q-pa-xs  text-bold" v-html="item.label" />
+                    </p>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-scroll-area>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <q-list dense class="q-mr-lg" bordered>
-              <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
-                <q-item-section side>
-                  <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
-                    <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                      <strong>Trascina...</strong>
-                    </q-tooltip>
-                    <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="item.label" />
-                  </p>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-scroll-area>
-        </q-card-section>
-      </q-card-section>
-    </q-card>
   </q-page>
 </template>
 
@@ -58,6 +65,7 @@
 defineOptions({
   name: 'DomandaWordPool',
 });
+
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaWordPool, IDomanda } from 'pages/models';
 import { ref, computed, watch } from 'vue';
@@ -84,17 +92,6 @@ if (typeof script.value.risposta2Server == 'undefined')
   }
 
 script.value.pools.pool.forEach((item) => { item.label = common_api.sanitizeUnicode(item._) })
-
-//   if (script.value.risposta2Server && item.rispostaData) {
-//     script.value.risposta2Server.risposte[item.$.hash] = item.rispostaData.map((r) => r.$.hash)
-
-//     watch(item.rispostaData, (risposta) => {
-//       if (script.value.risposta2Server)
-//         script.value.risposta2Server.risposte[item.$.hash] = risposta.map((r) => r.$.hash)
-//     })
-//   }
-// })
-
 
 watch(script.value.pools, (pools) => {
   script.value.logRisposta = []
@@ -156,11 +153,6 @@ const startDrag = (evt: DragEvent, item: Item) => {
   }
 };
 
-// const endDrag = () => { //(evt: DragEvent, item: Item) => {
-//   isDragging.value = false
-// }
-
-
 const lista_risposte_disponibili = computed(() =>
   script.value.words.word.filter((value) => value.disponibile)
 );
@@ -205,19 +197,6 @@ const set_ascolti_video = (val: number) => {
     script.value.video.ascolti_rimanenti = val
   }
 }
-
-// const myTweak = (offset: number) => { // offset: number
-//   // "offset" is a Number (pixels) that refers to the total
-//   // height of header + footer that occupies on screen,
-//   // based on the QLayout "view" prop configuration
-
-//   // this is actually what the default style-fn does in Quasar
-//   return {
-//     minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
-//     // height: `calc(100vh - ${offset}px)`
-//   }
-// }
-
 </script>
 
 <style lang="sass" scoped>

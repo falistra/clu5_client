@@ -1,6 +1,83 @@
 <template>
-  <q-page class="column">
-    <!-- :style-fn="myTweak"> -->
+  <q-page>
+    <div class="column" style="height: calc(90vh)">
+      <div class="col-auto scroll" style="max-height: 70px">
+        <PrologoComponent :prologo="script.prologo" />
+      </div>
+      <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
+        <div class="row" style="height: calc(75vh)">
+          <div class="col-6 ">
+            <div class="column">
+              <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+                v-html="common_api.sanitizeUnicode(script.testo)"></div>
+              <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+                <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+              </div>
+              <div v-if="script.video" class="col-auto q-mt-md">
+                <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+              </div>
+            </div>
+            <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+              :bar-style="barStyle">
+              <div class="q-pa-sm">
+                <q-list dense separator>
+                  <div class="column">
+                    <q-item class="col-auto" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
+                      <q-item-section>
+                        <div class="row q-my-xs">
+                          <div class="col-6 parte-fissa text-caption">
+                            <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
+                              <ImgWrap :src="{ $: { url: partefissa._ } }" size="100px" />
+                            </div>
+                            <div v-else class="q-ma-sm item" v-html="partefissa.label"></div>
+                          </div>
+                          <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                            @drop="onDrop($event, partefissa)">
+                            <div class="row">
+                              <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
+                                @dblclick="annulla(item, partefissa)">
+                                <div class="text-subtitle q-ma-xs item">
+                                  <span v-html="item.label"></span>
+                                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle"
+                                    :offset="[5, 5]">
+                                    <strong>Doppio click per togliere</strong>
+                                  </q-tooltip>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </q-item-section>
+                    </q-item>
+                  </div>
+                </q-list>
+              </div>
+            </q-scroll-area>
+          </div>
+          <div class="col-6 ">
+            <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+              <q-list dense class="q-mr-lg">
+                <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
+                  <q-item-section side>
+                    <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
+                      <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                        <strong>Trascina...</strong>
+                      </q-tooltip>
+                      <div class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label"></div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-scroll-area>
+          </div>
+        </div>
+      </div>
+    </div>
+  </q-page>
+
+
+  <!-- <q-page class="column">
     <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
     <q-card class="col-12">
       <q-card-section horizontal>
@@ -23,8 +100,6 @@
                         <div class="col-6 parte-fissa text-caption">
                           <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
                             <ImgWrap :src="{ $: { url: partefissa._ } }" size="100px" />
-                            <!-- <q-img :src="partefissa._" error-src="~assets/ImmagineNonDisponibile.jpeg" height="200px">
-                            </q-img> -->
                           </div>
                           <div v-else class="q-ma-sm item" v-html="partefissa.label"></div>
                         </div>
@@ -69,7 +144,7 @@
         </q-card-section>
       </q-card-section>
     </q-card>
-  </q-page>
+  </q-page> -->
 </template>
 
 <script setup lang="ts">

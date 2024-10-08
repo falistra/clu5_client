@@ -3,9 +3,9 @@
     <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
     <q-card flat>
       <q-card-section horizontal>
-        <q-card-section class="col-6">
+        <q-card-section class="col-6 container">
           <q-scroll-area class="col-auto text-caption q-my-sm q-mx-md " visible :thumb-style="my_thumbStyle"
-            :bar-style="my_barStyle" :style="textStyle">
+            :bar-style="my_barStyle" :style="HText">
             <div class="q-mr-md" v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
           </q-scroll-area>
           <!-- <div :style="textStyle" class="col-auto scroll text-caption q-my-sm q-mr-lg "
@@ -25,7 +25,7 @@
 
         </q-card-section>
         <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: 300px">
+          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" :style="{ height: `${H}px` }">
             <div class="domanda q-mr-md" v-for="domanda in domande" :key="domanda.testo">
               <div class="text-overline" v-html="domanda.prologo"></div>
               <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
@@ -104,11 +104,11 @@ if (primaDomanda) {
 const heightText = computed(() => {
   // console.log(window.innerHeight)
   let dim = Math.round(script.value.testo_comprensione.length * 0.3 + 50)
-  // console.log(dim)
+  console.log(dim)
   return dim
 }
 )
-const textStyle = ref({ maxHeight: '300px', height: `${heightText.value}px` })
+const HText = ref()
 
 watch(domande, (risposte) => {
   risposte.forEach((item, index) => {
@@ -152,7 +152,7 @@ const set_ascolti_video = (val: number) => {
 
 const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle)
 const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
-
+const H = ref()
 const myTweak = (offset: number) => {
   // "offset" is a Number (pixels) that refers to the total
   // height of header + footer that occupies on screen,
@@ -160,7 +160,11 @@ const myTweak = (offset: number) => {
 
   // this is actually what the default style-fn does in Quasar
   // window.innerHeight
-
+  H.value = Math.trunc(window.screen.availHeight * 0.50)
+  if (heightText.value < 200)
+    HText.value = { maxHeight: '300px', height: `${heightText.value}px` }
+  else
+    HText.value = { maxHeight: `${H.value}px`, height: `${H.value}px` }
   const style = { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
   return style
 }
