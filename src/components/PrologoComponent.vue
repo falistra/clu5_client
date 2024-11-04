@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-// 12436
-import { common_api } from 'src/boot/common-utils';
+
+import { common_api } from '../boot/common-utils';
 
 defineOptions({
   name: 'PrologoComponent',

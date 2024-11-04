@@ -66,15 +66,15 @@ defineOptions({
   name: 'DomandaWordPool',
 });
 
-import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaWordPool, IDomanda } from 'pages/models';
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaWordPool, IDomanda } from './models';
 import { ref, computed, watch } from 'vue';
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import { common_api } from 'src/boot/common-utils';
-import * as Common from 'pages/common';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import AudioWrap from 'src/components/AudioWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import PrologoComponent from '../components/PrologoComponent.vue';
+import { common_api } from '../boot/common-utils';
+import * as Common from './common';
+import VideoWrap from '../components/VideoWrap.vue';
+import AudioWrap from '../components/AudioWrap.vue';
+import { setAudioPams, setVideoPams } from './common'
 
 
 const sessione = useSessioneStore();

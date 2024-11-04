@@ -1,7 +1,7 @@
 import jsep from 'jsep';
 import xml2js from 'xml2js';
-import { api } from 'boot/axios';
-import { useSessioneStore } from 'stores/sessione';
+import { api } from '../boot/axios';
+import { useSessioneStore } from './sessione';
 import {
   Script_Stazione,
   Domanda,
@@ -9,16 +9,12 @@ import {
   punteggiDomandeStazione,
   IRisposta2Server,
   TLogRisposte,
-} from 'stores/models';
+} from './models';
 
-import { Test } from 'stores/Test';
-import { TRisposte, IDomande } from 'stores/models';
+import { Test } from './Test';
+import { TRisposte, IDomande } from './models';
 
-import {
-  // T_DomandaSceltaSingola,
-  IDomanda,
-  // T_DomandaSceltaSingola_risposta2Server,
-} from 'src/pages/models';
+import { IDomanda } from '../pages/models';
 
 import moment from 'moment';
 

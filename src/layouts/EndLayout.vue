@@ -43,7 +43,7 @@
 <script setup lang="ts">
 
 // import { useQuasar } from 'quasar'
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 
 const sessioneStore = useSessioneStore();
 

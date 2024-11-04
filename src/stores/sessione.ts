@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Test } from 'stores/Test';
+import { Test } from './Test';
 import { IRisposte, IDomande } from './models';
 
 export const useSessioneStore = defineStore('sessione', {

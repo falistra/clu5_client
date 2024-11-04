@@ -13,11 +13,11 @@ import '@dongivan/virtual-keyboard/default.css';
 
 import { ref } from 'vue';
 
-import { useI18nStore } from 'stores/i18n';
+import { useI18nStore } from '../stores/i18n';
 const i18n = ref(useI18nStore());
 
 
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
 
 defineOptions({

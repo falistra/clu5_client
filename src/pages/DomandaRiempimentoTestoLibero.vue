@@ -41,18 +41,18 @@ defineOptions({
 import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
 import '@dongivan/virtual-keyboard/default.css';
 
-import { useSessioneStore } from 'stores/sessione';
-import { useI18nStore } from 'stores/i18n';
-import { T_DomandaRiempimentoTestoLibero, T_Token, IDomanda } from 'pages/models';
+import { useSessioneStore } from '../stores/sessione';
+import { useI18nStore } from '../stores/i18n';
+import { T_DomandaRiempimentoTestoLibero, T_Token, IDomanda } from './models';
 import { ref, watch, onMounted } from 'vue';
 
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import AudioWrap from 'src/components/AudioWrap.vue';
-import ImgWrap from 'src/components/ImgWrap.vue';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import PrologoComponent from '../components/PrologoComponent.vue';
+import AudioWrap from '../components/AudioWrap.vue';
+import ImgWrap from '../components/ImgWrap.vue';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from './common'
 
-import * as Common from 'pages/common';
+import * as Common from './common';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaRiempimentoTestoLibero;

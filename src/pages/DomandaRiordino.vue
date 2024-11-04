@@ -32,16 +32,16 @@ defineOptions({
 });
 import draggable from 'vuedraggable';
 
-import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaRiordino, IDomanda } from 'pages/models';
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaRiordino, IDomanda } from './models';
 
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import AudioWrap from 'src/components/AudioWrap.vue';
-import { common_api } from 'src/boot/common-utils'
+import PrologoComponent from '../components/PrologoComponent.vue';
+import AudioWrap from '../components/AudioWrap.vue';
+import { common_api } from '../boot/common-utils'
 import { ref, watch } from 'vue';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
-import * as Common from 'pages/common';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from './common'
+import * as Common from './common';
 
 const sessione = useSessioneStore();
 

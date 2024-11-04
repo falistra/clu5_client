@@ -59,16 +59,16 @@ defineOptions({
 });
 import { ref, computed, watch } from 'vue';
 
-import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaRiempimentoTesto, T_Token, IDomanda } from 'pages/models';
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import AudioWrap from 'src/components/AudioWrap.vue';
-import ImgWrap from 'src/components/ImgWrap.vue';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common';
-import { common_api } from 'src/boot/common-utils';
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaRiempimentoTesto, T_Token, IDomanda } from './models';
+import PrologoComponent from '../components/PrologoComponent.vue';
+import AudioWrap from '../components/AudioWrap.vue';
+import ImgWrap from '../components/ImgWrap.vue';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from './common';
+import { common_api } from '../boot/common-utils';
 
-import * as Common from 'pages/common';
+import * as Common from './common';
 
 const sessione = useSessioneStore();
 

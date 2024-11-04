@@ -68,15 +68,7 @@ const sessioneStore = useSessioneStore();
 defineOptions({
   name: 'MainLayout',
 });
-import BarraNavigazione from 'src/components/BarraNavigazione.vue';
-
-// import { useRouter } from 'vue-router';
-// const router = useRouter();
-// const log = () => {
-//   router.push({
-//     name: 'log',
-//   });
-// }
+import BarraNavigazione from '../components/BarraNavigazione.vue';
 
 const { locale } = useI18n({ useScope: 'global' })
 const localeOptions = ref([

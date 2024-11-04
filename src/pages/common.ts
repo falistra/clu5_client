@@ -1,4 +1,4 @@
-import { Audio, Video } from 'pages/models';
+import { Audio, Video } from './models';
 
 export const thumbStyle = {
   right: '4px',

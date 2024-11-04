@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 import { useRouter } from 'vue-router';
 
 const sessioneStore = useSessioneStore();

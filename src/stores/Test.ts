@@ -1,7 +1,6 @@
-import { Script } from 'stores/models';
+import { Script } from './models';
 import moment from 'moment';
-
-import { Stazione } from 'stores/Stazione';
+import { Stazione } from './Stazione';
 
 export const Test = class {
   SCRIPT = '';

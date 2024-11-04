@@ -82,16 +82,16 @@
 defineOptions({
   name: 'DomandaAbbinamentoMultiplo',
 });
-import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaAbbinamentoMultiplo, IDomanda } from 'pages/models';
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaAbbinamentoMultiplo, IDomanda } from './models';
 import { ref, computed, watch } from 'vue';
-import * as Common from 'pages/common';
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import ImgWrap from 'src/components/ImgWrap.vue';
-import { common_api } from 'src/boot/common-utils';
-import AudioWrap from 'src/components/AudioWrap.vue';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams } from 'pages/common'
+import * as Common from './common';
+import PrologoComponent from '../components/PrologoComponent.vue';
+import ImgWrap from '../components/ImgWrap.vue';
+import { common_api } from '../boot/common-utils';
+import AudioWrap from '../components/AudioWrap.vue';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from './common'
 
 const sessione = useSessioneStore();
 const script = ref(

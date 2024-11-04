@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 import { useRouter } from 'vue-router';
 
 const sessioneStore = useSessioneStore();

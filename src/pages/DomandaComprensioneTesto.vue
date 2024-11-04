@@ -50,15 +50,15 @@ defineOptions({
   name: 'DomandaComprensioneTesto',
 });
 
-import { useSessioneStore } from 'stores/sessione';
-import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda } from 'pages/models';
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda } from './models';
 import { ref, watch, reactive, computed } from 'vue';
-import PrologoComponent from 'src/components/PrologoComponent.vue';
-import ImgWrap from 'src/components/ImgWrap.vue';
-import { common_api } from 'src/boot/common-utils'
-import AudioWrap from 'src/components/AudioWrap.vue';
-import VideoWrap from 'src/components/VideoWrap.vue';
-import { setAudioPams, setVideoPams, thumbStyle, barStyle } from 'pages/common'
+import PrologoComponent from '../components/PrologoComponent.vue';
+import ImgWrap from '../components/ImgWrap.vue';
+import { common_api } from '../boot/common-utils'
+import AudioWrap from '../components/AudioWrap.vue';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams, thumbStyle, barStyle } from './common'
 
 
 const sessione = useSessioneStore();

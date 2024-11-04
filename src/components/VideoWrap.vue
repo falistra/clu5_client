@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 
-import { Video } from 'pages/models';
+import { Video } from '../pages/models';
 import { ref, computed } from 'vue';
 import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 import '@quasar/quasar-ui-qmediaplayer/src/index.sass'

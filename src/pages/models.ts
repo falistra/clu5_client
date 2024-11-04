@@ -1,4 +1,4 @@
-import { TLogRisposte } from 'stores/models';
+import { TLogRisposte } from '../stores/models';
 
 export interface IDomanda {
   autore: string;

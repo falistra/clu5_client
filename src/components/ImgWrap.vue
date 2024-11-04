@@ -12,7 +12,7 @@ defineOptions({
   name: 'ImgWrap',
 });
 
-import { Immagine } from 'pages/models';
+import { Immagine } from '../pages/models';
 import { computed } from 'vue';
 
 interface Props {

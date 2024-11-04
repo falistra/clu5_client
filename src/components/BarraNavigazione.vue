@@ -33,12 +33,12 @@
 
 import { computed } from 'vue';
 // import { Todo, Meta } from './models';
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 import { useRouter } from 'vue-router';
 import { Loading, Dialog, Notify } from 'quasar';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import ConfermaChiusura from './ConfermaChiusura.vue';
-import { IDomanda } from 'pages/models';
+import { IDomanda } from '../pages/models';
 
 const sessioneStore = useSessioneStore();
 const router = useRouter();

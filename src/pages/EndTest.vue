@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { useSessioneStore } from 'stores/sessione';
+import { useSessioneStore } from '../stores/sessione';
 const sessioneStore = useSessioneStore();
 const jsonData = ref(sessioneStore.logTest)
 

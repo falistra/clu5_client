@@ -1,31 +1,31 @@
 import { RouteRecordRaw } from 'vue-router';
-import DomandaSceltaSingola from 'pages/DomandaSceltaSingola.vue';
-import DomandaRiordino from 'pages/DomandaRiordino.vue';
-import DomandaScritturaLibera from 'pages/DomandaScritturaLibera.vue';
-import DomandaComprensioneTesto from 'pages/DomandaComprensioneTesto.vue';
-import DomandaSceltaMultipla from 'pages/DomandaSceltaMultipla.vue';
-import DomandaRiempimentoLibero from 'pages/DomandaRiempimentoLibero.vue';
-import DomandaRiempimentoTesto from 'pages/DomandaRiempimentoTesto.vue';
-import DomandaRiempimentoTestoLibero from 'pages/DomandaRiempimentoTestoLibero.vue';
-import DomandaOutputStudente from 'pages/DomandaOutputStudente.vue';
-import DomandaAbbinamentoMultiplo from 'pages/DomandaAbbinamentoMultiplo.vue';
-import DomandaAbbinamentoSingolo from 'pages/DomandaAbbinamentoSingolo.vue';
-import DomandaWordPool from 'pages/DomandaWordPool.vue';
+import DomandaSceltaSingola from '../pages/DomandaSceltaSingola.vue';
+import DomandaRiordino from '../pages/DomandaRiordino.vue';
+import DomandaScritturaLibera from '../pages/DomandaScritturaLibera.vue';
+import DomandaComprensioneTesto from '../pages/DomandaComprensioneTesto.vue';
+import DomandaSceltaMultipla from '../pages/DomandaSceltaMultipla.vue';
+import DomandaRiempimentoLibero from '../pages/DomandaRiempimentoLibero.vue';
+import DomandaRiempimentoTesto from '../pages/DomandaRiempimentoTesto.vue';
+import DomandaRiempimentoTestoLibero from '../pages/DomandaRiempimentoTestoLibero.vue';
+import DomandaOutputStudente from '../pages/DomandaOutputStudente.vue';
+import DomandaAbbinamentoMultiplo from '../pages/DomandaAbbinamentoMultiplo.vue';
+import DomandaAbbinamentoSingolo from '../pages/DomandaAbbinamentoSingolo.vue';
+import DomandaWordPool from '../pages/DomandaWordPool.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/fineTest',
-    component: () => import('layouts/EndLayout.vue'),
+    component: () => import('../layouts/EndLayout.vue'),
     children: [
       {
         path: '',
-        component: () => import('pages/EndTest.vue'),
+        component: () => import('../pages/EndTest.vue'),
       },
     ],
   },
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('../layouts/MainLayout.vue'),
     children: [
       {
         path: 'domandasceltasingola/:id',
@@ -113,7 +113,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('../pages/ErrorNotFound.vue'),
   },
 ];
 

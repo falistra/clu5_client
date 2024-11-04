@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 
-import { Audio } from 'pages/models';
+import { Audio } from '../pages/models';
 import { ref, computed, onBeforeUnmount } from 'vue';
 import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 
