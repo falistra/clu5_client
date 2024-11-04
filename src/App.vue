@@ -15,7 +15,7 @@ defineOptions({
 import { ref } from 'vue';
 
 import xml2js from 'xml2js';
-import { api_clu4 } from 'boot/axios';
+import { api } from 'boot/axios';
 
 import { Test } from 'stores/Test';
 import { Loading } from 'quasar';
@@ -31,21 +31,32 @@ const parms = ref()
 
 
 const options = ref([
-  { label: 'test 756: 12 tecniche', value: { idUser: 2, idSess: 20 } },
-  { label: 'test 753: Scelta Singola', value: { idUser: 2, idSess: 19 } },
-  { label: 'test 760: Test Francese', value: { idUser: 2, idSess: 27 } },
-  { label: 'test 810:  Comprensione Testo', value: { idUser: 2, idSess: 93 } },
-  { label: 'test 897:  Riordino elementi', value: { idUser: 2, idSess: 349 } },
-  { label: 'test 818:  Abbinamento singolo', value: { idUser: 2, idSess: 194 } },
-  { label: 'test 861:  Abbinamento multiplo', value: { idUser: 2, idSess: 203 } },
-  { label: 'test 877:  SFP Proficiency Test', value: { idUser: 2, idSess: 241 } },
-  { label: 'test 761:  Riempimento testo', value: { idUser: 2, idSess: 28 } },
-  { label: 'test 847:  Word pool', value: { idUser: 2, idSess: 249 } },
-  { label: 'test 827:  Output studente', value: { idUser: 2, idSess: 268 } },
-  { label: 'test 815:  Scrittura libera', value: { idUser: 2, idSess: 261 } },
-  { label: 'test 794:  Riempimento libero', value: { idUser: 2, idSess: 324 } },
-  { label: 'test 894:  Riempimento libero auto', value: { idUser: 2, idSess: 340 } },
-  { label: 'test 893:  2 minuti ', value: { idUser: 2, idSess: 428 } },
+  // // { label: 'test 756: 12 tecniche', value: { idUser: 2, idSess: 20 } },
+  // { label: 'test 753: Scelta Singola', value: { idUser: 2, idSess: 19 } },
+  // { label: 'test 760: Test Francese', value: { idUser: 2, idSess: 27 } },
+  // // { label: 'test 810:  Comprensione Testo', value: { idUser: 2, idSess: 93 } },
+  // { label: 'test 897:  Riordino elementi', value: { idUser: 2, idSess: 349 } },
+  // { label: 'test 818:  Abbinamento singolo', value: { idUser: 2, idSess: 194 } },
+  // { label: 'test 861:  Abbinamento multiplo', value: { idUser: 2, idSess: 203 } },
+  // { label: 'test 877:  SFP Proficiency Test', value: { idUser: 2, idSess: 241 } },
+  // // { label: 'test 761:  Riempimento testo', value: { idUser: 2, idSess: 28 } },
+  // { label: 'test 847:  Word pool', value: { idUser: 2, idSess: 249 } },
+  // { label: 'test 827:  Output studente', value: { idUser: 2, idSess: 268 } },
+  // { label: 'test 815:  Scrittura libera', value: { idUser: 2, idSess: 261 } },
+  // { label: 'test 794:  Riempimento libero', value: { idUser: 2, idSess: 324 } },
+  // { label: 'test 894:  Riempimento libero auto', value: { idUser: 2, idSess: 340 } },
+  // { label: 'test 893:  2 minuti ', value: { idUser: 2, idSess: 428 } },
+
+  { label: 'test 1', value: { idUser: 2, idSess: 19 } },
+  { label: 'test 2', value: { idUser: 2, idSess: 27 } },
+  { label: 'test 3', value: { idUser: 2, idSess: 349 } },
+  { label: 'test 4', value: { idUser: 2, idSess: 194 } },
+  { label: 'test 5', value: { idUser: 2, idSess: 203 } },
+  { label: 'test 6', value: { idUser: 2, idSess: 241 } },
+  { label: 'test 7', value: { idUser: 2, idSess: 249 } },
+  { label: 'test 8', value: { idUser: 2, idSess: 268 } },
+  { label: 'test 9', value: { idUser: 2, idSess: 261 } },
+  { label: 'test 10', value: { idUser: 2, idSess: 324 } },
 ])
 
 const vai_al_test = async (parms_test: { label: string, value: { idUser: number; idSess: number } }) => {
@@ -53,7 +64,7 @@ const vai_al_test = async (parms_test: { label: string, value: { idUser: number;
   Loading.show({
     message: 'Attendere, prego...'
   })
-  const script = await api_clu4
+  const script = await api
     .get(`/test/script/?idUser=${parms_test.value.idUser}&idSess=${parms_test.value.idSess}`)
     .then((response) => {
       // Notify.create({

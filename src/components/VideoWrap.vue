@@ -69,7 +69,8 @@ let ascolti_rimanenti = props.video.ascolti_rimanenti
 
 const emit = defineEmits(['update'])
 // const mySource = ref('http://www.peach.themazzone.com/durian/movies/sintel-2048-surround.mp4')
-const mySource = ref('/video.mp4') // ref(props.video?.$.url) // props.video?.$.url
+
+const mySource = ref(`/media/${props.video?.$.url}`)
 
 const myVideo = ref()
 

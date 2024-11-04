@@ -22,13 +22,13 @@
               <div class="q-pa-sm">
                 <q-card class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
                   @drop="onDrop($event, pool)" v-for="pool in script.pools.pool" :key="pool.$.hash">
-                  <div class="q-ml-sm q-mt-sm text-h6 text-weight-bold" color="primary">{{ pool._ }}</div>
+                  <div class="q-ml-sm q-mt-sm text-subtitle1 text-weight-bold" color="primary">{{ pool._ }}</div>
                   <div class="row">
                     <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
                       @dblclick="annulla(item, pool)">
                       <div class="text-subtitle q-ma-sm item">
                         <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                          <strong>Doppio click per togliere</strong>
+                          <strong>{{ $t('Doppio_click') }}</strong>
                         </q-tooltip>
                         <span class="q-ma-md text-weight-medium" v-html="item.label" />
                       </div>
@@ -45,9 +45,9 @@
                   <q-item-section side>
                     <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                       <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                        <strong>Trascina...</strong>
+                        <strong>{{ $t('Trascina') }}</strong>
                       </q-tooltip>
-                      <span class="bg-teal-2 text-subtitle1 q-pa-xs  text-bold" v-html="item.label" />
+                      <span class="bg-teal-2 q-pa-xs  text-bold" v-html="item.label" />
                     </p>
                   </q-item-section>
                 </q-item>

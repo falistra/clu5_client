@@ -35,7 +35,7 @@
                             @drop="onDrop($event, item)" @dblclick="annulla(item)">
                             <div class="text-subtitle q-ma-sm item">
                               <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                                <strong>Doppio click per togliere</strong>
+                                <strong>{{ $t('Doppio_click') }}</strong>
                               </q-tooltip>
                               <span v-html="item.rispostaData?.label" />
                             </div>
@@ -55,7 +55,7 @@
                   <q-item-section side>
                     <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                       <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                        <strong>Trascina...</strong>
+                        <strong>{{ $t('Trascina') }}</strong>
                       </q-tooltip>
                       <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="item.label"></span>
                     </p>

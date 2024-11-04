@@ -8,8 +8,6 @@
             :bar-style="my_barStyle" :style="HText">
             <div class="q-mr-md" v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div>
           </q-scroll-area>
-          <!-- <div :style="textStyle" class="col-auto scroll text-caption q-my-sm q-mr-lg "
-            v-html="common_api.sanitizeUnicode(script.testo_comprensione)"></div> -->
 
           <div v-if="primaDomanda?.immagine" class="col">
             <img-wrap :src="primaDomanda.immagine" size="100px" />
@@ -104,7 +102,6 @@ if (primaDomanda) {
 const heightText = computed(() => {
   // console.log(window.innerHeight)
   let dim = Math.round(script.value.testo_comprensione.length * 0.3 + 50)
-  console.log(dim)
   return dim
 }
 )

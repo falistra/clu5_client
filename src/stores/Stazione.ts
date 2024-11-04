@@ -94,7 +94,7 @@ export const Stazione = class {
     };
 
     const domandeXML = await api
-      .post('http://localhost/clu4/test/domande/', new URLSearchParams(parms))
+      .post('/test/domande/', new URLSearchParams(parms))
       .then((response) => {
         return response.data;
       })
@@ -146,7 +146,7 @@ export const Stazione = class {
       });
   }
 
-  checkRisposte(): number[] {
+  checkRisposte(): { tipo: string; indice: number }[] {
     const checkRispostaNonData = (risposte: TRisposte): boolean => {
       if (typeof risposte === 'undefined') return false;
       if (
@@ -179,7 +179,7 @@ export const Stazione = class {
       else return !checkRispostaNonData(script.risposta2Server.risposte);
     });
 
-    return domandeSenzaRisposta.map((D) => D[3]);
+    return domandeSenzaRisposta.map((D) => ({ tipo: D[0], indice: D[3] }));
   }
 
   async richiediPunteggio() {
@@ -216,7 +216,7 @@ export const Stazione = class {
     };
 
     const punteggiDomandeServer = await api
-      .post('http://localhost/clu4/test/punteggio/', new URLSearchParams(parms))
+      .post('/test/punteggio/', new URLSearchParams(parms))
       .then((response) => {
         return response.data;
       })
@@ -370,10 +370,7 @@ export const Stazione = class {
       };
 
       await api
-        .post(
-          'http://localhost/clu4/test/stazione/',
-          new URLSearchParams(parms)
-        )
+        .post('/test/stazione/', new URLSearchParams(parms))
         .then((response) => {
           return response.data;
         })
@@ -427,7 +424,7 @@ export const Stazione = class {
     };
 
     await api
-      .post('http://localhost/clu4/test/test/', new URLSearchParams(parms))
+      .post('/test/test/', new URLSearchParams(parms))
       .then((response) => {
         sessioneStore.logTest = response.data;
         // return response.data;

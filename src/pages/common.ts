@@ -16,6 +16,8 @@ export const barStyle = {
   opacity: '0.2',
 };
 
+const NUMERO_MAX_RIPETIZIONI = 2;
+
 export const setAudioPams = (audio: Audio) => {
   if (!(typeof audio.$.nrmaxripetizioni == 'undefined')) {
     audio.$.nrMaxRipetizioni = audio.$.nrmaxripetizioni;
@@ -23,12 +25,12 @@ export const setAudioPams = (audio: Audio) => {
 
   if (typeof audio.ascolti_rimanenti == 'undefined') {
     if (typeof audio.$.nrMaxRipetizioni == 'undefined') {
-      audio.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
-      audio.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+      audio.$.nrMaxRipetizioni = NUMERO_MAX_RIPETIZIONI.toString();
+      audio.ascolti_rimanenti = NUMERO_MAX_RIPETIZIONI; // parseInt(primaDomanda.$.nrMaxRipetizioni)
     } else {
       if (isNaN(parseInt(audio.$.nrMaxRipetizioni))) {
-        audio.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
-        audio.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+        audio.$.nrMaxRipetizioni = NUMERO_MAX_RIPETIZIONI.toString();
+        audio.ascolti_rimanenti = NUMERO_MAX_RIPETIZIONI; // parseInt(primaDomanda.$.nrMaxRipetizioni)
       } else {
         audio.ascolti_rimanenti = parseInt(audio.$.nrMaxRipetizioni);
       }
@@ -43,12 +45,12 @@ export const setVideoPams = (video: Video) => {
 
   if (typeof video.ascolti_rimanenti == 'undefined') {
     if (typeof video.$.nrMaxRipetizioni == 'undefined') {
-      video.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
-      video.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+      video.$.nrMaxRipetizioni = NUMERO_MAX_RIPETIZIONI.toString();
+      video.ascolti_rimanenti = NUMERO_MAX_RIPETIZIONI; // parseInt(primaDomanda.$.nrMaxRipetizioni)
     } else {
       if (isNaN(parseInt(video.$.nrMaxRipetizioni))) {
-        video.$.nrMaxRipetizioni = Number.MAX_SAFE_INTEGER.toString();
-        video.ascolti_rimanenti = Number.MAX_SAFE_INTEGER; // parseInt(primaDomanda.$.nrMaxRipetizioni)
+        video.$.nrMaxRipetizioni = NUMERO_MAX_RIPETIZIONI.toString();
+        video.ascolti_rimanenti = NUMERO_MAX_RIPETIZIONI; // parseInt(primaDomanda.$.nrMaxRipetizioni)
       } else {
         video.ascolti_rimanenti = parseInt(video.$.nrMaxRipetizioni);
       }

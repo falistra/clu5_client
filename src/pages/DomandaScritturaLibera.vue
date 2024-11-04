@@ -16,7 +16,7 @@
       <div class="row items-center justify-center">
         <q-input class="col-7" v-model="script.rispostaData" autofocus outlined type="textarea" name="risposta"
           @update:model-value="setRisposta" bg-color="teal-1" input-class="text-body1 text-weight-bold text-justify">
-          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px"> Numero parole : {{
+          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px"> {{ $t('Numero_Parole') }} {{
             script.rispostaData.trim().split(/\s+/).length }}
           </q-badge>
         </q-input>

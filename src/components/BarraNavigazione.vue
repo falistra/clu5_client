@@ -1,11 +1,11 @@
 <template>
   <div class="row justify-between">
     <div>
-      <span class="text-subtitle1">Parte {{ sessioneStore.numero_stazione_corrente }} - </span>
+      <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span>
       <vue-countdown :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) * 60 * 1000"
         v-slot="{ minutes, seconds }" @end="gameover" @progress="versoLaFine">
-        <span class="text-subtitle1">Tempo rimanente: {{ minutes }} minut{{ minutes == 1 ? 'o' : 'i' }}, {{
-          seconds }} secondi.</span>
+        <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} : {{ minutes }} {{ minutes == 1 ? $t('minuto') :
+          $t('minuti') }}, {{ seconds }} {{ $t('secondi') }}</span>
       </vue-countdown>
     </div>
 
@@ -14,32 +14,43 @@
       <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" @click="precedente"
         size="sm" />
 
-      <q-btn disable class="overline" :label="stato" />
+      <q-btn disable class="overline" :label="stato">
+        <q-tooltip>
+          {{ idDomanda }}
+        </q-tooltip>
+      </q-btn>
 
       <q-btn push icon="chevron_right" color="teal-8" size="sm"
         :disable="sessioneStore.domande.length == sessioneStore.counter + 1" @click="successivo" />
     </q-btn-group>
 
     <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'" :disable="!ultimaDomanda"
-      :label="labelValutazione" @click="consegna(true)" />
+      :label="t('Consegna')" @click="consegna(true)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+
+import { computed } from 'vue';
 // import { Todo, Meta } from './models';
 import { useSessioneStore } from 'stores/sessione';
 import { useRouter } from 'vue-router';
 import { Loading, Dialog, Notify } from 'quasar';
 import VueCountdown from '@chenfengyuan/vue-countdown';
+import ConfermaChiusura from './ConfermaChiusura.vue';
+import { IDomanda } from 'pages/models';
 
 const sessioneStore = useSessioneStore();
 const router = useRouter();
 
-const labelValutazione = ref('Consegna esercizi (se visti tutti)');
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n()
+
+// const labelValutazione = ref(t('Consegna'));
+const idDomanda = (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id
 
 const stato = computed(() => {
-  return `Domanda ${sessioneStore.counter + 1} di ${sessioneStore.domande.length}`;
+  return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`;
 });
 
 let notUltimaDomanda = true
@@ -56,7 +67,7 @@ const ultimaDomanda = computed(() => {
 
 async function gameover() {
   Notify.create({
-    message: 'Tempo scaduto',
+    message: t('tempoScaduto'),
     color: 'negative',
     position: 'top'
   })
@@ -113,18 +124,31 @@ async function effettuaConsegna() {
 async function consegna(dialog = true) {
   const indiciDomandeSenzaRisposta = sessioneStore.test.stazione_corrente.checkRisposte()
   if (dialog) {
-    if (indiciDomandeSenzaRisposta.length > 0) {
+    if (indiciDomandeSenzaRisposta.length > 0) { // non ci sono tutte le risposte
       Dialog.create({
-        title: 'Consegnare comunque ?',
-        message: `${indiciDomandeSenzaRisposta.length} domand${indiciDomandeSenzaRisposta.length == 1 ? 'a' : 'e'
-          }  senza risposta : [${indiciDomandeSenzaRisposta}].`,
+        component: ConfermaChiusura,
+        // props forwarded to your custom component
+        componentProps: {
+          persistent: true,
+          indiciDomandeSenzaRisposta
+        }
+      }).onOk(() => {
+        effettuaConsegna()
+      }).onCancel(() => {
+        console.log('Cancel')
+      }).onDismiss(() => {
+        console.log('Called on OK or Cancel')
+      })
+    } else // ci sono tutte le risposte
+      Dialog.create({
+        title: t('confermaFine'),
         persistent: true,
         ok: {
-          label: 'Si',
+          label: t('si'),
           color: 'positive',
         },
         cancel: {
-          label: 'No',
+          label: t('no'),
           color: 'negative',
         },
       })
@@ -132,7 +156,6 @@ async function consegna(dialog = true) {
           effettuaConsegna()
         })
 
-    } else effettuaConsegna();
   } else effettuaConsegna();
 }
 

@@ -15,7 +15,7 @@
 
       <template #play>
         <div class="q-pa-sm">
-          <q-btn size="sm" round color="primary" :icon="playing ? 'pause' : 'play_arrow'" @click="vai"></q-btn>
+          <q-btn size="sm" round color="primary" icon="play_arrow" @click="vai"></q-btn>
         </div>
       </template>
 
@@ -67,7 +67,7 @@ let ascolti_rimanenti = props.audio.ascolti_rimanenti
 
 const emit = defineEmits(['update'])
 
-const mySource = ref('/media/esempio.ogg') // ref(props.audio?.$.url) // props.audio?.$.url
+const mySource = ref(`/media/${props.audio?.$.url}`)
 
 const myAudio = ref()
 const playing = ref(false)
@@ -75,7 +75,7 @@ const playing = ref(false)
 const vai = () => {
   if (myAudio.value) {
     if (!playing.value) myAudio.value.play()
-    else myAudio.value.pause()
+    // else myAudio.value.pause()
     playing.value = !playing.value
   }
 }

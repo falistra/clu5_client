@@ -40,7 +40,7 @@
                                   <span v-html="item.label"></span>
                                   <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle"
                                     :offset="[5, 5]">
-                                    <strong>Doppio click per togliere</strong>
+                                    <strong>{{ $t('Doppio_click') }} </strong>
                                   </q-tooltip>
                                 </div>
                               </div>
@@ -61,7 +61,7 @@
                   <q-item-section side>
                     <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                       <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                        <strong>Trascina...</strong>
+                        <strong>{{ $t('Trascina') }}</strong>
                       </q-tooltip>
                       <div class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label"></div>
                     </div>
@@ -76,75 +76,6 @@
     </div>
   </q-page>
 
-
-  <!-- <q-page class="column">
-    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
-    <q-card class="col-12">
-      <q-card-section horizontal>
-        <q-card-section class="col-6">
-          <div style="max-height: 50px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-            v-html="common_api.sanitizeUnicode(script.testo)"></div>
-          <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-            <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-          </div>
-          <div v-if="script.video" class="col q-mt-md">
-            <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
-          </div>
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <div class="q-pa-sm">
-              <q-list dense bordered separator>
-                <div class="column">
-                  <q-item class="col-auto" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
-                    <q-item-section>
-                      <div class="row q-my-xs">
-                        <div class="col-6 parte-fissa text-caption">
-                          <div class="q-ma-xs" v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'">
-                            <ImgWrap :src="{ $: { url: partefissa._ } }" size="100px" />
-                          </div>
-                          <div v-else class="q-ma-sm item" v-html="partefissa.label"></div>
-                        </div>
-                        <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
-                          @drop="onDrop($event, partefissa)">
-                          <div class="row">
-                            <div class="col-auto" v-for="item in partefissa.rispostaData" :key="item.$.hash"
-                              @dblclick="annulla(item, partefissa)">
-                              <div class="text-subtitle q-ma-xs item">
-                                <span v-html="item.label"></span>
-                                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                                  <strong>Doppio click per togliere</strong>
-                                </q-tooltip>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                </div>
-              </q-list>
-            </div>
-          </q-scroll-area>
-        </q-card-section>
-
-        <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px">
-            <q-list dense class="q-mr-lg" bordered>
-              <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
-                <q-item-section side>
-                  <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
-                    <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                      <strong>Trascina...</strong>
-                    </q-tooltip>
-                    <div class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label"></div>
-                  </div>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-scroll-area>
-        </q-card-section>
-      </q-card-section>
-    </q-card>
-  </q-page> -->
 </template>
 
 <script setup lang="ts">
@@ -280,18 +211,6 @@ const set_ascolti_video = (val: number) => {
     script.value.video.ascolti_rimanenti = val
   }
 }
-
-// const myTweak = (offset: number) => { // offset: number
-//   // "offset" is a Number (pixels) that refers to the total
-//   // height of header + footer that occupies on screen,
-//   // based on the QLayout "view" prop configuration
-
-//   // this is actually what the default style-fn does in Quasar
-//   return {
-//     minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
-//     // height: `calc(100vh - ${offset}px)`
-//   }
-// }
 
 </script>
 

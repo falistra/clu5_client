@@ -23,7 +23,7 @@
               <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
                 @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
                 <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                  <strong>Doppio click per togliere</strong>
+                  <strong>{{ $t('Doppio_click') }}</strong>
                 </q-tooltip>
                 {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
                   script.rispostaData[item.slotIndex]._ : '_'.repeat(15) }}
@@ -40,7 +40,7 @@
             <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
               <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, risposta.testo)">
                 <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                  <strong>Trascina...</strong>
+                  <strong>{{ $t('Trascina') }}</strong>
                 </q-tooltip>
                 <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="risposta.label"></span>
               </p>

@@ -2,15 +2,15 @@
 // so you can safely delete all default props below
 
 export default {
-  Parte: 'Part',
-  di: 'of',
-  Domanda: 'Question',
-  Tempo_rimanente: 'Time remaining',
-  failed: 'Action failed',
-  success: 'Action was successful',
-  secondi: 'seconds',
-  minuto: 'minute',
-  minuti: 'minutes',
+  Parte: 'Parte',
+  di: 'di',
+  Domanda: 'Domanda',
+  Tempo_rimanente: 'Tempo rimanente',
+  failed: 'Azione fallita!',
+  success: 'Azione compiuta con successo!',
+  secondi: 'secondi',
+  minuto: 'minuto',
+  minuti: 'minuti',
 
   si: 'Si',
   no: 'No',

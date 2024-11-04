@@ -4,41 +4,43 @@
     <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
       <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
     </div>
-    <div v-if="script.video" class="col q-mt-md">
+    <div v-if="script.video" class="col-auto q-mt-md">
       <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
     </div>
-    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 200px"
-      class="col-auto text-subtitle2 q-my-sm q-mx-md">
-      <div class="q-mb-sm q-mr-md testo-domanda">
-        <div class="column q-gutter-y-sm">
-          <div class="col" v-for="(riga, index) in righe" :key="index">
-            <div class="row">
-              <div class="col-5">
-                <div class="q-pr-sm  q-my-xs text-right testo">{{ riga[0] }}</div>
-              </div>
-              <div class="col-2"></div>
-              <div class="col-5">
-                <div class="q-pl-sm q-my-xs testo">{{ riga[1] }}</div>
+    <div class="col-auto">
+      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
+        class="text-subtitle2 q-my-sm q-mx-md">
+        <div class="q-mb-xs q-mr-md testo-domanda">
+          <div class="column justify-start">
+            <div class="col" v-for="(riga, index) in righe" :key="index">
+              <div class="row">
+                <div class="col-5">
+                  <div class="q-pr-sm  q-my-xs text-right testo">{{ riga[0] }}</div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-5">
+                  <div class="q-pl-sm q-my-xs testo">{{ riga[1] }}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </q-scroll-area>
+      </q-scroll-area>
+    </div>
 
-    <div class="col q-ma-md risposta">
+    <div class="col-auto q-mt-xs q-mb-sm risposta">
       <div class="column">
         <div class="row">
           <div class="col-5"></div>
           <div class="col-2">
             <q-input input-class="text-subtitle1 text-weight-bold" v-model="script.rispostaData" name="risposta"
-              autofocus clearable rounded label="Risposta/Answer" @update:model-value="setRisposta" dense />
+              autofocus clearable rounded :label="t('Risposta')" @update:model-value="setRisposta" dense />
           </div>
           <div class="col-5"></div>
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-auto q-ml-md">
       <VirtualKeyboard class="..." @key-pressed="carattere">
         <div class="...">
           <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
@@ -56,6 +58,8 @@ defineOptions({
 import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
 import '@dongivan/virtual-keyboard/default.css';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n()
 
 import { useSessioneStore } from 'stores/sessione';
 import { T_DomandaOutputStudente, IDomanda } from 'pages/models';
