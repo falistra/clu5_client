@@ -2,17 +2,17 @@
   <div class="row justify-between">
     <div>
       <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span>
-      <vue-countdown :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) * 60 * 1000"
-        v-slot="{ minutes, seconds }" @end="gameover" @progress="versoLaFine">
+      <vue-countdown v-slot="{ minutes, seconds }"
+        :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) * 60 * 1000" @end="gameover"
+        @progress="versoLaFine">
         <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} : {{ minutes }} {{ minutes == 1 ? $t('minuto') :
           $t('minuti') }}, {{ seconds }} {{ $t('secondi') }}</span>
       </vue-countdown>
     </div>
 
-
     <q-btn-group class="q-mr-lg q-mb-sm" push>
-      <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" @click="precedente"
-        size="sm" />
+      <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" size="sm"
+        @click="precedente" />
 
       <q-btn disable class="overline" :label="stato">
         <q-tooltip>
@@ -31,34 +31,36 @@
 
 <script setup lang="ts">
 
-import { computed } from 'vue';
+import { computed } from 'vue'
 // import { Todo, Meta } from './models';
-import { useSessioneStore } from '../stores/sessione';
-import { useRouter } from 'vue-router';
-import { Loading, Dialog, Notify } from 'quasar';
-import VueCountdown from '@chenfengyuan/vue-countdown';
-import ConfermaChiusura from './ConfermaChiusura.vue';
-import { IDomanda } from '../pages/models';
+import { useSessioneStore } from '../stores/sessione'
+import { useRouter } from 'vue-router'
+import { Loading, Dialog, Notify } from 'quasar'
+import VueCountdown from '@chenfengyuan/vue-countdown'
+import ConfermaChiusura from './ConfermaChiusura.vue'
+import { IDomanda } from '../pages/models'
 
-const sessioneStore = useSessioneStore();
-const router = useRouter();
+const sessioneStore = useSessioneStore()
+const router = useRouter()
 
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 // const labelValutazione = ref(t('Consegna'));
-const idDomanda = (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id
+const idDomanda = computed(() => {
+  return (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id
+})
 
 const stato = computed(() => {
-  return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`;
-});
+  return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
+})
 
 let notUltimaDomanda = true
 
 const ultimaDomanda = computed(() => {
   if (notUltimaDomanda) {
     if (sessioneStore.domande.length == sessioneStore.counter + 1) {
-      notUltimaDomanda = false;
+      notUltimaDomanda = false
       return true
     } else return false
   }
@@ -75,28 +77,29 @@ async function gameover() {
 }
 
 function versoLaFine(data: { hours: number, minutes: number, seconds: number }) {
-  if (data.hours == 0 && data.minutes == 1 && data.seconds == 0)
+  if (data.hours == 0 && data.minutes == 1 && data.seconds == 0) {
     Notify.create({
       message: 'Manca un minuto',
       color: 'info',
       position: 'top'
     })
+  }
 }
 
 function precedente() {
-  sessioneStore.decrement();
+  sessioneStore.decrement()
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
-  });
+    params: { id: sessioneStore.counter }
+  })
 }
 
 function successivo() {
-  sessioneStore.increment();
+  sessioneStore.increment()
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
-  });
+    params: { id: sessioneStore.counter }
+  })
 }
 
 async function effettuaConsegna() {
@@ -105,21 +108,24 @@ async function effettuaConsegna() {
   // le tre chiamate successive devono essere in await in quanto ciascuna modifica lo store
   // che viene presupposto dalle successive
   await sessioneStore.test.stazione_corrente.richiediPunteggio()
-  await sessioneStore.test.stazione_corrente.passaStazione();
+  await sessioneStore.test.stazione_corrente.passaStazione()
 
   if (sessioneStore.testCompletato) {
     router.push('/fineTest')
   } else {
-    await sessioneStore.test.stazione_corrente.richiediDomandeServer()
-    sessioneStore.counter = 0;
-    router.push({
-      name: sessioneStore.domande[sessioneStore.counter][0],
-      params: { id: sessioneStore.counter },
-    });
+    const esitoPositivo = await sessioneStore.test.stazione_corrente.richiediDomandeServer()
+    if (esitoPositivo) {
+      sessioneStore.counter = 0
+      router.push({
+        name: sessioneStore.domande[sessioneStore.counter][0],
+        params: { id: sessioneStore.counter }
+      })
+    } else {
+      router.push('/erroreServer')
+    }
   }
   Loading.hide()
 }
-
 
 async function consegna(dialog = true) {
   const indiciDomandeSenzaRisposta = sessioneStore.test.stazione_corrente.checkRisposte()
@@ -135,28 +141,29 @@ async function consegna(dialog = true) {
       }).onOk(() => {
         effettuaConsegna()
       }).onCancel(() => {
-        console.log('Cancel')
+        // console.log('Cancel')
       }).onDismiss(() => {
-        console.log('Called on OK or Cancel')
+        // console.log('Called on OK or Cancel')
       })
     } else // ci sono tutte le risposte
+    {
       Dialog.create({
         title: t('confermaFine'),
         persistent: true,
         ok: {
           label: t('si'),
-          color: 'positive',
+          color: 'positive'
         },
         cancel: {
           label: t('no'),
-          color: 'negative',
-        },
+          color: 'negative'
+        }
       })
         .onOk(() => {
           effettuaConsegna()
         })
-
-  } else effettuaConsegna();
+    }
+  } else effettuaConsegna()
 }
 
 </script>

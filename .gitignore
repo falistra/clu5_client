@@ -42,3 +42,4 @@ yarn-error.log*
 /public/*.mp4
 /public/*.ogv
 /public/*.ogg
+/public/media

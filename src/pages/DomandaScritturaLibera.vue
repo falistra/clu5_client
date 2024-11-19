@@ -1,23 +1,24 @@
 <template>
   <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
+    <PrologoComponent class="col-auto" :prologo="script.prologo" />
     <div style="max-height: 250px" class="col-auto scroll text-caption q-my-md q-mx-md"
-      v-html="common_api.sanitizeUnicode(script.testo)"></div>
+      v-html="common_api.sanitizeUnicode(script.testo)" />
     <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="100px" />
+      <img-wrap :src="script.immagine" size="200px" />
     </div>
     <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+      <audio-wrap :audio="script.audio" @update="set_ascolti" />
     </div>
     <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+      <video-wrap :video="script.video" @update="set_ascolti_video" />
     </div>
     <div class="col q-mt-sm q-my-md">
       <div class="row items-center justify-center">
-        <q-input class="col-7" v-model="script.rispostaData" autofocus outlined type="textarea" name="risposta"
-          @update:model-value="setRisposta" bg-color="teal-1" input-class="text-body1 text-weight-bold text-justify">
-          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px"> {{ $t('Numero_Parole') }} {{
-            script.rispostaData.trim().split(/\s+/).length }}
+        <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea" name="risposta"
+          bg-color="teal-1" input-class="text-body1 text-weight-bold text-justify" @update:model-value="setRisposta">
+          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px">
+            {{ $t('Numero_Parole') }} {{
+              script.rispostaData.trim().split(/\s+/).length }}
           </q-badge>
         </q-input>
       </div>
@@ -33,63 +34,62 @@
 </template>
 
 <script setup lang="ts">
-//str.trim().split(/\s+/).length;
+// str.trim().split(/\s+/).length;
 defineOptions({
-  name: 'DomandaScritturaLibera',
-});
+  name: 'DomandaScritturaLibera'
+})
 
-import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
-import '@dongivan/virtual-keyboard/default.css';
+import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard'
+import '@dongivan/virtual-keyboard/default.css'
 
-import { useSessioneStore } from '../stores/sessione';
-import { T_DomandaScritturaLibera, IDomanda } from './models';
+import { useSessioneStore } from '../stores/sessione'
+import { T_DomandaScritturaLibera, IDomanda } from './models'
 
-import { ref } from 'vue'; // , computed
-import PrologoComponent from '../components/PrologoComponent.vue';
-import AudioWrap from '../components/AudioWrap.vue';
-import ImgWrap from '../components/ImgWrap.vue';
+import { ref } from 'vue' // , computed
+import PrologoComponent from '../components/PrologoComponent.vue'
+import AudioWrap from '../components/AudioWrap.vue'
+import ImgWrap from '../components/ImgWrap.vue'
 import { common_api } from '../boot/common-utils'
-import VideoWrap from '../components/VideoWrap.vue';
+import VideoWrap from '../components/VideoWrap.vue'
 import { setAudioPams, setVideoPams } from './common'
 
-
-const sessione = useSessioneStore();
-const script = sessione.domande[sessione.counter][1] as T_DomandaScritturaLibera;
+const sessione = useSessioneStore()
+const script = sessione.domande[sessione.counter][1] as T_DomandaScritturaLibera
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
-if (typeof script.risposta2Server == 'undefined')
+if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {
     specie: parseInt(domanda.tecnica),
     peso: domanda.peso,
     risposte: ''
   }
+}
 
 if (script.audio) setAudioPams(script.audio)
 if (script.video) setVideoPams(script.video)
 
-import { useI18nStore } from 'stores/i18n';
-const i18n = ref(useI18nStore());
+import { useI18nStore } from '../stores/i18n'
+const i18n = ref(useI18nStore())
 
 const carattere = (key: string) => {
   const campi_input = document.getElementsByName('risposta')
   if (campi_input) {
     insertAtCaret(key, campi_input[0] as HTMLInputElement)
   }
-};
-
+}
 
 const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | null) {
   if (campo_input) {
-    var strPos = campo_input.selectionStart || 0;
-    const front = (campo_input.value).substring(0, strPos);
-    const back = (campo_input.value).substring(strPos, campo_input.value.length);
-    script.rispostaData = front + text + back;
-    campo_input.focus();
-    strPos = strPos + text.length;
-    const scrollPos = campo_input.scrollTop;
-    campo_input.selectionStart = strPos;
-    campo_input.selectionEnd = strPos;
-    campo_input.scrollTop = scrollPos;
+    let strPos = campo_input.selectionStart || 0
+    const front = (campo_input.value).substring(0, strPos)
+    const back = (campo_input.value).substring(strPos, campo_input.value.length)
+    script.rispostaData = front + text + back
+    campo_input.focus()
+    strPos = strPos + text.length
+    const scrollPos = campo_input.scrollTop
+    campo_input.selectionStart = strPos
+    campo_input.selectionEnd = strPos
+    campo_input.scrollTop = scrollPos
   }
 }
 

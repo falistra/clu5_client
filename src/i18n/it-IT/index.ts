@@ -16,6 +16,7 @@ export default {
   no: 'No',
   click2D: 'Click per andare alla domanda',
   domandeNoRisposta: 'Alcune domande non hanno ricevuto risposta',
+  domandeSenzaRisposta: 'Domande senza risposta',
   Conferma_Fine: 'Confermi di aver terminato di rispondere ?',
   Consegna: 'Consegna esercizi (se visti tutti)',
   tempoScaduto: 'Tempo scaduto',

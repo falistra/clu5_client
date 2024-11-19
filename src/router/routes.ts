@@ -24,6 +24,16 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/erroreServer',
+    component: () => import('../layouts/ErrorLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/ErroreServer.vue'),
+      },
+    ],
+  },
+  {
     path: '/',
     component: () => import('../layouts/MainLayout.vue'),
     children: [
@@ -105,6 +115,86 @@ const routes: RouteRecordRaw[] = [
         name: 'log',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/MostraLog.vue'),
+      },
+    ],
+  },
+
+  {
+    path: '/simulazione',
+    component: () => import('../layouts/SimulazioneLayout.vue'),
+    children: [
+      {
+        path: 'domandasceltasingola/:id',
+        name: 'simulazione_domandasceltasingola',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaSceltaSingola,
+      },
+      {
+        path: 'domandariordino/:id',
+        name: 'simulazione_domandariordino',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaRiordino,
+      },
+      {
+        path: 'domandascritturalibera/:id',
+        name: 'simulazione_domandascritturalibera',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaScritturaLibera,
+      },
+      {
+        path: 'domandacomprensionetesto/:id',
+        name: 'simulazione_domandacomprensionetesto',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaComprensioneTesto,
+      },
+      {
+        path: 'domandasceltamultipla/:id',
+        name: 'simulazione_domandasceltamultipla',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaSceltaMultipla,
+      },
+
+      {
+        path: 'domandariempimentotesto/:id',
+        name: 'simulazione_domandariempimentotesto',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaRiempimentoTesto,
+      },
+      {
+        path: 'domandariempimentotestolibero/:id',
+        name: 'simulazione_domandariempimentotestoLibero',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaRiempimentoTestoLibero,
+      },
+      {
+        path: 'domandaRiempimentoLibero/:id',
+        name: 'simulazione_domandaRiempimentoLibero',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaRiempimentoLibero,
+      },
+      {
+        path: 'domandaoutputstudente/:id',
+        name: 'simulazione_domandaoutputstudente',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaOutputStudente,
+      },
+      {
+        path: 'domandaabbinamentomultiplo/:id',
+        name: 'simulazione_domandaabbinamentomultiplo',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaAbbinamentoMultiplo,
+      },
+      {
+        path: 'domandaabbinamentosingolo/:id',
+        name: 'simulazione_domandaabbinamentosingolo',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaAbbinamentoSingolo,
+      },
+      {
+        path: 'domandawordpool/:id',
+        name: 'simulazione_domandawordpool',
+        meta: { keepAlive: true }, // use cache
+        component: DomandaWordPool,
       },
     ],
   },

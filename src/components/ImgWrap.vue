@@ -9,11 +9,11 @@
 <script setup lang="ts">
 
 defineOptions({
-  name: 'ImgWrap',
-});
+  name: 'ImgWrap'
+})
 
-import { Immagine } from '../pages/models';
-import { computed } from 'vue';
+import { Immagine } from '../pages/models'
+import { computed } from 'vue'
 
 interface Props {
   size: string;
@@ -22,6 +22,6 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const validImg = computed(() => !(typeof props.src.$.url == 'undefined' || props.src.$.url == '' || props.src.$.url == 'nessuno'))
+const validImg = computed(() => !(typeof props.src.$.url === 'undefined' || props.src.$.url == '' || props.src.$.url == 'nessuno' || props.src.$.url == 'null'))
 
 </script>

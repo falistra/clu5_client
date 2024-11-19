@@ -22,5 +22,5 @@ export default {
   Doppio_click: 'Doppio click per togliere',
   Trascina: 'Trascina',
   Risposta: 'Risposta',
-  Numero_Parole: 'Numero parole :',
-};
+  Numero_Parole: 'Numero parole :'
+}

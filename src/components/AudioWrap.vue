@@ -1,27 +1,51 @@
 <template>
-  <div class="shadow-10 q-my-md  q-ml-md" style="max-height: 60; max-width: 350px;"
-    v-if="audio && validAudio && audio.$.url && fileEsiste && audio.ascolti_rimanenti">
+  <div
+    v-if="audio && validAudio && audio.$.url && fileEsiste && audio.ascolti_rimanenti"
+    class="shadow-10 q-my-md  q-ml-md"
+    style="max-height: 60; max-width: 350px;"
+  >
     <!-- <q-badge v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange"
         text-color="black" :label="`Ascolti rimanenti: ${audio.ascolti_rimanenti}`" /> -->
 
-    <q-media-player type="audio" :source="mySource" disabled-seek @ended="onEnded" @error="onError" ref="myAudio">
-
+    <q-media-player
+      ref="myAudio"
+      type="audio"
+      :source="mySource"
+      disabled-seek
+      @ended="onEnded"
+      @error="onError"
+    >
       <template #volume>
         <div class="q-pa-sm">
-          <q-btn size="sm" round color="primary" :icon="audioOnOff ? 'volume_up' : 'volume_off'" @click="setAudioOnOff">
-          </q-btn>
+          <q-btn
+            size="sm"
+            round
+            color="primary"
+            :icon="audioOnOff ? 'volume_up' : 'volume_off'"
+            @click="setAudioOnOff"
+          />
         </div>
       </template>
 
       <template #play>
         <div class="q-pa-sm">
-          <q-btn size="sm" round color="primary" icon="play_arrow" @click="vai"></q-btn>
+          <q-btn
+            size="sm"
+            round
+            color="primary"
+            icon="play_arrow"
+            @click="vai"
+          />
         </div>
       </template>
 
       <template #positionSlider>
-        <q-chip v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" dense color="primary"
-          text-color="white">
+        <q-chip
+          v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())"
+          dense
+          color="primary"
+          text-color="white"
+        >
           Ascolto/Listening {{ parseInt(audio.$.nrMaxRipetizioni) - audio.ascolti_rimanenti + 1 }}&deg; di/of {{
             audio.$.nrMaxRipetizioni
           }}
@@ -30,19 +54,37 @@
     </q-media-player>
   </div>
 
-  <div class="q-mt-md" v-if="audio && audio.$.url && audio.$.url != 'nessuno' && !fileEsiste">
-    <q-banner inline-actions class=" text-white bg-red">
-      <template v-slot:avatar>
-        <q-icon name="volume_off" color="white" />
+  <div
+    v-if="audio && audio.$.url && audio.$.url != 'nessuno' && !fileEsiste"
+    class="q-mt-md"
+  >
+    <q-banner
+      inline-actions
+      class=" text-white bg-red"
+    >
+      <template #avatar>
+        <q-icon
+          name="volume_off"
+          color="white"
+        />
       </template>
       Audio {{ audio.$.url }} non disponibile
     </q-banner>
   </div>
 
-  <div class="q-mt-md" v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0">
-    <q-banner inline-actions class="text-white bg-red">
-      <template v-slot:avatar>
-        <q-icon name="volume_off" color="white" />
+  <div
+    v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0"
+    class="q-mt-md"
+  >
+    <q-banner
+      inline-actions
+      class="text-white bg-red"
+    >
+      <template #avatar>
+        <q-icon
+          name="volume_off"
+          color="white"
+        />
       </template>
       Raggiunto il numero massimo di ascolti permessi.
     </q-banner>
@@ -51,16 +93,15 @@
 
 <script setup lang="ts">
 
-import { Audio } from '../pages/models';
-import { ref, computed, onBeforeUnmount } from 'vue';
+import { Audio } from '../pages/models'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import { QMediaPlayer } from '@quasar/quasar-ui-qmediaplayer'
 
-
-defineOptions({ name: 'AudioWrap' });
+defineOptions({ name: 'AudioWrap' })
 
 const props = defineProps<{ audio: Audio; }>()
 
-const validAudio = computed(() => !(typeof props.audio.$.url == 'undefined' || props.audio.$.url == '' || props.audio.$.url == 'nessuno'))
+const validAudio = computed(() => !(typeof props.audio.$.url === 'undefined' || props.audio.$.url == '' || props.audio.$.url == 'nessuno'))
 
 const fileEsiste = ref(true)
 let ascolti_rimanenti = props.audio.ascolti_rimanenti
@@ -86,7 +127,6 @@ const setAudioOnOff = () => {
   if (myAudio.value) { myAudio.value.toggleMuted() }
   audioOnOff.value = !audioOnOff.value
 }
-
 
 const onEnded = () => {
   if (ascolti_rimanenti) {

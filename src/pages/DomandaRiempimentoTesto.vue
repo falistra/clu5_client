@@ -6,7 +6,7 @@
       </div>
 
       <div v-if="script.immagine" class="col-auto q-my-sm q-mx-md">
-        <img-wrap :src="script.immagine" size="100px" />
+        <img-wrap :src="script.immagine" size="200px" />
       </div>
       <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
         <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
@@ -103,7 +103,6 @@ const tokens = ref(
     const slotIndex = slot ? slot[2] : '';
     const isSlot = slot ? true : false;
     const risposta = (script.rispostaData && (slotIndex in script.rispostaData)) ? script.rispostaData[slotIndex]._ : '____________';
-    console.log(risposta)
     content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
     return { index, isSlot, slotIndex, content } as T_Token;
   })

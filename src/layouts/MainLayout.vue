@@ -17,23 +17,22 @@
         <q-toolbar-title class="col-6 text-subtitle1">
           <div class="row justify-end">
             {{ sessioneStore.test.script.test.$.descrizione }}
-            <q-btn class="q-ml-lg" color="secondary" @click="$q.fullscreen.toggle()" size="xs"
-              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" />
+            <q-btn class="q-ml-lg" color="secondary" size="xs"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />
             <!-- <q-select class="q-ml-md" v-model="locale" :options="localeOptions" dense borderless emit-value map-options
               options-dense style="min-width: 150px" /> -->
 
-            <q-btn-toggle class="q-ml-lg" v-model="locale" push toggle-color="primary" :options="localeOptions">
-              <template v-slot:en>
-                <span class="q-ml-sm fi fi-gb"></span>
+            <q-btn-toggle v-model="locale" class="q-ml-lg" push toggle-color="primary" :options="localeOptions">
+              <template #en>
+                <span class="q-ml-sm fi fi-gb" />
               </template>
-              <template v-slot:it>
-                <span class="q-ml-sm fi fi-it"></span>
+              <template #it>
+                <span class="q-ml-sm fi fi-it" />
               </template>
             </q-btn-toggle>
           </div>
         </q-toolbar-title>
       </q-toolbar>
-
     </q-header>
 
     <q-page-container>
@@ -58,17 +57,22 @@
 </template>
 
 <script setup lang="ts">
-import '/node_modules/flag-icons/css/flag-icons.min.css';
-import { useSessioneStore } from 'stores/sessione';
-import { useI18n } from 'vue-i18n'
-import { ref } from 'vue';
 
-const sessioneStore = useSessioneStore();
+import { useQuasar } from 'quasar'
+const $q = useQuasar()
+
+import '/node_modules/flag-icons/css/flag-icons.min.css'
+
+import { useSessioneStore } from '../stores/sessione'
+import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
+
+const sessioneStore = useSessioneStore()
 
 defineOptions({
-  name: 'MainLayout',
-});
-import BarraNavigazione from '../components/BarraNavigazione.vue';
+  name: 'MainLayout'
+})
+import BarraNavigazione from '../components/BarraNavigazione.vue'
 
 const { locale } = useI18n({ useScope: 'global' })
 const localeOptions = ref([

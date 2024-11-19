@@ -9,10 +9,11 @@ import {
   punteggiDomandeStazione,
   IRisposta2Server,
   TLogRisposte,
+  TRisposte,
+  IDomande,
 } from './models';
 
 import { Test } from './Test';
-import { TRisposte, IDomande } from './models';
 
 import { IDomanda } from '../pages/models';
 
@@ -89,6 +90,14 @@ export const Stazione = class {
       domande_gia_poste: JSON.stringify(this.test.DOMANDE_GIA_POSTE),
     };
 
+    // <insiemi_domande><domande><sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+    // FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+    // WHERE domande.attiva = 1 AND domande.lingua = '1' AND (domande.id NOT IN (2883, 6681, 8299)) AND domande.specie = 2 AND domande.livello = 4 AND domande.tipo = 1 AND domande.specializzazione = 40 ORDER BY rand()
+    //  LIMIT 2</sql></domande><errore><msg>NON CI SONO SUFFICIENTI DOMANDE CHE SODDISFANO LA RICHIESTA : RICHIESTE 2 - FORNITE 0. CONTATTARE IL SUPERVISORE</msg><sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
+    // FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
+    // WHERE domande.attiva = 1 AND domande.lingua = '1' AND (domande.id NOT IN (2883, 6681, 8299)) AND domande.specie = 2 AND domande.livello = 4 AND domande.tipo = 1 AND domande.specializzazione = 40 ORDER BY rand()
+    //  LIMIT 2</sql><parametri>{"peso": "5", "quantita": "2", "parms": {"tecnica": {"type": "Literal", "value": 2, "raw": "2"}, "livello": {"type": "Literal", "value": 4, "raw": "4"},
+
     const domandeXML = await api
       .post('/test/domande/', new URLSearchParams(parms))
       .then((response) => {
@@ -104,6 +113,8 @@ export const Stazione = class {
         // });
       });
 
+    const sessioneStore = useSessioneStore();
+
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
         explicitArray: false,
@@ -115,31 +126,36 @@ export const Stazione = class {
       .catch(function (err) {
         console.error(err);
       });
-    const sessioneStore = useSessioneStore();
 
-    const domande: Array<object> = Array.isArray(
-      jsonDomande.insiemi_domande.domande
-    )
-      ? jsonDomande.insiemi_domande.domande
-      : [jsonDomande.insiemi_domande.domande];
+    if ('errore' in jsonDomande.insiemi_domande) {
+      sessioneStore.errore = jsonDomande.insiemi_domande.errore;
+      return false;
+    } else {
+      const domande: Array<object> = Array.isArray(
+        jsonDomande.insiemi_domande.domande
+      )
+        ? jsonDomande.insiemi_domande.domande
+        : [jsonDomande.insiemi_domande.domande];
 
-    sessioneStore.domande = (domande as Array<object>)
-      .map((value) => {
-        const domande = (value as { sql: string; domanda: object }).domanda;
-        return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
-      })
-      .reduce((accumulator, value) => accumulator.concat(value), []) // flat
-      .map((domanda, index) => {
-        const d = Object.entries(domanda);
-        const tipo = d[1][0];
-        const script = domanda[tipo] as object;
-        return [tipo as string, script as object, d[0][1], index + 1] as [
-          string,
-          object,
-          object,
-          number
-        ];
-      });
+      sessioneStore.domande = (domande as Array<object>)
+        .map((value) => {
+          const domande = (value as { sql: string; domanda: object }).domanda;
+          return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
+        })
+        .reduce((accumulator, value) => accumulator.concat(value), []) // flat
+        .map((domanda, index) => {
+          const d = Object.entries(domanda);
+          const tipo = d[1][0];
+          const script = domanda[tipo] as object;
+          return [tipo as string, script as object, d[0][1], index + 1] as [
+            string,
+            object,
+            object,
+            number
+          ];
+        });
+      return true;
+    }
   }
 
   checkRisposte(): { tipo: string; indice: number }[] {
@@ -149,8 +165,9 @@ export const Stazione = class {
         typeof risposte === 'object' &&
         !Array.isArray(risposte) &&
         risposte !== null
-      )
+      ) {
         return Object.keys(risposte).length > 0;
+      }
       return risposte.length > 0;
     };
 
@@ -159,7 +176,7 @@ export const Stazione = class {
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
         const script = D[1] as IRisposta2Server;
-        if (!(typeof script.risposta2Server == 'undefined')) {
+        if (!(typeof script.risposta2Server === 'undefined')) {
           Map[domanda.id] = checkRispostaNonData(
             script.risposta2Server.risposte
           )
@@ -171,7 +188,7 @@ export const Stazione = class {
 
     const domandeSenzaRisposta = sessioneStore.domande.filter((D) => {
       const script = D[1] as IRisposta2Server;
-      if (typeof script.risposta2Server == 'undefined') return true;
+      if (typeof script.risposta2Server === 'undefined') return true;
       else return !checkRispostaNonData(script.risposta2Server.risposte);
     });
 
@@ -243,8 +260,9 @@ export const Stazione = class {
     this.test.STORIA.push(
       `${this.test.ServerTime()} = Passaggio a nuova stazione`
     );
-    if (this.script.caso && !Array.isArray(this.script.caso))
+    if (this.script.caso && !Array.isArray(this.script.caso)) {
       this.script.caso = [this.script.caso];
+    }
     this.test.STORIA.push(`${this.test.ServerTime()} = Valutazione casi`);
 
     const caso = this.script.caso?.find((caso) => {
@@ -413,7 +431,7 @@ export const Stazione = class {
         STORIA: test.STORIA,
         RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
         fineTest: fineTest.format(),
-        testTime: testTime,
+        testTime,
         esito_acquisito: test.LIVELLO_ACQUISITO,
         statoUscita: test.STATO_ACQUISITO,
       }),

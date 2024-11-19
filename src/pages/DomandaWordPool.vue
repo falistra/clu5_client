@@ -9,22 +9,25 @@
           <div class="col-6 ">
             <div class="column">
               <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-                v-html="common_api.sanitizeUnicode(script.testo)"></div>
+                v-html="common_api.sanitizeUnicode(script.testo)" />
               <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-                <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
+                <audio-wrap :audio="script.audio" @update="set_ascolti" />
               </div>
               <div v-if="script.video" class="col-auto q-mt-md">
-                <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
+                <video-wrap :video="script.video" @update="set_ascolti_video" />
               </div>
             </div>
             <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
               :bar-style="barStyle">
               <div class="q-pa-sm">
-                <q-card class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
-                  @drop="onDrop($event, pool)" v-for="pool in script.pools.pool" :key="pool.$.hash">
-                  <div class="q-ml-sm q-mt-sm text-subtitle1 text-weight-bold" color="primary">{{ pool._ }}</div>
+                <q-card v-for="pool in script.pools.pool" :key="pool.$.hash"
+                  class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
+                  @drop="onDrop($event, pool)">
+                  <div class="q-ml-sm q-mt-sm text-subtitle1 text-weight-bold" color="primary">
+                    <span v-html="common_api.sanitizeUnicode(pool._)" />
+                  </div>
                   <div class="row">
-                    <div class="col-auto" v-for="item in pool.rispostaData" :key="item.$.hash"
+                    <div v-for="item in pool.rispostaData" :key="item.$.hash" class="col-auto"
                       @dblclick="annulla(item, pool)">
                       <div class="text-subtitle q-ma-sm item">
                         <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
@@ -41,7 +44,7 @@
           <div class="col-6 ">
             <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
               <q-list dense class="q-mr-lg">
-                <q-item class="q-my-sm" v-for="item in lista_risposte_disponibili" :key="item.$.hash">
+                <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash" class="q-my-sm">
                   <q-item-section side>
                     <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                       <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
@@ -57,49 +60,54 @@
         </div>
       </div>
     </div>
-
   </q-page>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: 'DomandaWordPool',
-});
+  name: 'DomandaWordPool'
+})
 
-import { useSessioneStore } from '../stores/sessione';
-import { T_DomandaWordPool, IDomanda } from './models';
-import { ref, computed, watch } from 'vue';
-import PrologoComponent from '../components/PrologoComponent.vue';
-import { common_api } from '../boot/common-utils';
-import * as Common from './common';
-import VideoWrap from '../components/VideoWrap.vue';
-import AudioWrap from '../components/AudioWrap.vue';
+import { useSessioneStore } from '../stores/sessione'
+import { T_DomandaWordPool, IDomanda } from './models'
+import { ref, computed, watch } from 'vue'
+import PrologoComponent from '../components/PrologoComponent.vue'
+import { common_api } from '../boot/common-utils'
+import * as Common from './common'
+import VideoWrap from '../components/VideoWrap.vue'
+import AudioWrap from '../components/AudioWrap.vue'
 import { setAudioPams, setVideoPams } from './common'
 
-
-const sessione = useSessioneStore();
+const sessione = useSessioneStore()
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaWordPool
-);
+)
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
-if (typeof script.value.risposta2Server == 'undefined')
+if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {
     specie: parseInt(domanda.tecnica),
     peso: domanda.peso,
     risposte: {}
   }
+}
 
-script.value.pools.pool.forEach((item) => { item.label = common_api.sanitizeUnicode(item._) })
+script.value.pools.pool.forEach((item) => {
+  item.label = common_api.sanitizeUnicode(item._)
+  if (script.value.risposta2Server) {
+    script.value.risposta2Server.risposte[item.$.hash] = []
+  }
+})
 
 watch(script.value.pools, (pools) => {
   script.value.logRisposta = []
   pools.pool.forEach((item) => {
-    if (script.value.risposta2Server)
+    if (script.value.risposta2Server) {
       if (item.rispostaData) {
         script.value.risposta2Server.risposte[item.$.hash] = item.rispostaData.map((r) => r.$.hash)
       }
+    }
   })
   script.value.logRisposta = pools.pool.map((item) => {
     const rispostaData = item.rispostaData || []
@@ -120,13 +128,12 @@ script.value.words.word.forEach((item) => {
     (value) => {
       if (value.rispostaData) {
         const risposta_presente_ = value.rispostaData.find((risposta) => risposta.$.hash == item.$.hash)
-        return risposta_presente_ ? true : false
-      }
-      else return false
+        return !!risposta_presente_
+      } else return false
     }
-  );
-  item.disponibile = risposta_presente ? false : true;
-});
+  )
+  item.disponibile = !risposta_presente
+})
 
 interface Item {
   $: { hash: string };
@@ -142,50 +149,47 @@ interface Pool {
 const isDragging = ref(false)
 
 const startDrag = (evt: DragEvent, item: Item) => {
-  if (evt)
-    (((evt as Event).target) as Element).classList.add('dragging')
+  if (evt) { (((evt as Event).target) as Element).classList.add('dragging') }
   if (evt.dataTransfer) {
     isDragging.value = true
-    evt.dataTransfer.dropEffect = 'move';
-    evt.dataTransfer.effectAllowed = 'move';
+    evt.dataTransfer.dropEffect = 'move'
+    evt.dataTransfer.effectAllowed = 'move'
     evt.dataTransfer.clearData()
-    evt.dataTransfer.setData('risposta', item.$.hash);
+    evt.dataTransfer.setData('risposta', item.$.hash)
   }
-};
+}
 
 const lista_risposte_disponibili = computed(() =>
   script.value.words.word.filter((value) => value.disponibile)
-);
+)
 
 const onDrop = function (evt: DragEvent, pool: Pool) {
   if (evt.dataTransfer) {
-    const risposta_data_hash = evt.dataTransfer.getData('risposta');
+    const risposta_data_hash = evt.dataTransfer.getData('risposta')
     const risposta_data = lista_risposte_disponibili.value?.find(
       (value) => value.$.hash == risposta_data_hash
-    );
+    )
 
     if (risposta_data) {
       if (!pool.rispostaData) pool.rispostaData = []
-      risposta_data.disponibile = false;
-      pool.rispostaData?.push(risposta_data);
+      risposta_data.disponibile = false
+      pool.rispostaData?.push(risposta_data)
     }
   }
-};
+}
 
 const annulla = (item: Item, pool: Pool) => {
   const item_ = script.value.words.word.find(
     (value) => value.$.hash == item.$.hash
-  );
+  )
   if (item_) {
-    item_.disponibile = true;
-    pool.rispostaData = pool.rispostaData?.filter(function (el) { return el.$.hash != item_.$.hash });
+    item_.disponibile = true
+    pool.rispostaData = pool.rispostaData?.filter(function (el) { return el.$.hash != item_.$.hash })
   }
-};
-
+}
 
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
-
 
 const set_ascolti = (val: number) => {
   if (script.value.audio) {
@@ -227,7 +231,6 @@ const set_ascolti_video = (val: number) => {
   text-align: justify
   line-height: 85%
   width: auto
-
 
 .dragging
   background-color : $indigo-2
