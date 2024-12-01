@@ -24,14 +24,14 @@
         :disable="sessioneStore.domande.length == sessioneStore.counter + 1" @click="successivo" />
     </q-btn-group>
 
-    <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'" :disable="!ultimaDomanda"
-      :label="t('Consegna')" @click="consegna(true)" />
+    <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
+      :disable="!ultimaDomanda || quasiTimeout" :label="t('Consegna')" @click="consegna(true)" />
   </div>
 </template>
 
 <script setup lang="ts">
 
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 // import { Todo, Meta } from './models';
 import { useSessioneStore } from '../stores/sessione'
 import { useRouter } from 'vue-router'
@@ -76,7 +76,12 @@ async function gameover() {
   await consegna(false)
 }
 
+const quasiTimeout = ref(false)
+
 function versoLaFine(data: { hours: number, minutes: number, seconds: number }) {
+  if (data.hours == 0 && data.minutes == 0 && data.seconds == 20) {
+    quasiTimeout.value = true
+  }
   if (data.hours == 0 && data.minutes == 1 && data.seconds == 0) {
     Notify.create({
       message: 'Manca un minuto',
@@ -104,6 +109,7 @@ function successivo() {
 
 async function effettuaConsegna() {
   notUltimaDomanda = true
+  quasiTimeout.value = false
   Loading.show()
   // le tre chiamate successive devono essere in await in quanto ciascuna modifica lo store
   // che viene presupposto dalle successive
@@ -111,7 +117,10 @@ async function effettuaConsegna() {
   await sessioneStore.test.stazione_corrente.passaStazione()
 
   if (sessioneStore.testCompletato) {
-    router.push('/fineTest')
+    // sessioneStore.$reset()
+    // const baseURL = (process.env.DEV ? 'http://localhost' : '') + ''
+    // window.open(`${baseURL}`, '_self')?.focus()
+    router.push('/fineTestFuori')
   } else {
     const esitoPositivo = await sessioneStore.test.stazione_corrente.richiediDomandeServer()
     if (esitoPositivo) {

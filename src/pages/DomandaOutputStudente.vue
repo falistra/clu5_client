@@ -1,43 +1,18 @@
 <template>
   <q-page class="column  senza-scroll">
-    <PrologoComponent
-      class="col-auto"
-      style="max-height: 60px"
-      :prologo="script.prologo"
-    />
-    <div
-      v-if="script.audio"
-      class="col-auto q-my-sm q-mx-md"
-    >
-      <audio-wrap
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
+    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti" />
     </div>
-    <div
-      v-if="script.video"
-      class="col-auto q-mt-md"
-    >
-      <video-wrap
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+    <div v-if="script.video" class="col-auto q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video" />
     </div>
     <div class="col-auto">
-      <q-scroll-area
-        visible
-        :thumb-style="thumbStyle"
-        :bar-style="barStyle"
-        style="height: calc(50vh)"
-        class="text-subtitle2 q-my-sm q-mx-md"
-      >
+      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
+        class="text-subtitle2 q-my-sm q-mx-md">
         <div class="q-mb-xs q-mr-md testo-domanda">
           <div class="column justify-start">
-            <div
-              v-for="(riga, index) in righe"
-              :key="index"
-              class="col"
-            >
+            <div v-for="(riga, index) in righe" :key="index" class="col">
               <div class="row">
                 <div class="col-5">
                   <div class="q-pr-sm  q-my-xs text-right testo">
@@ -62,33 +37,17 @@
         <div class="row">
           <div class="col-5" />
           <div class="col-2">
-            <q-input
-              v-model="script.rispostaData"
-              input-class="text-subtitle1 text-weight-bold"
-              name="risposta"
-              autofocus
-              clearable
-              rounded
-              :label="t('Risposta')"
-              dense
-              @update:model-value="setRisposta"
-            />
+            <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold" name="risposta"
+              autofocus clearable rounded :label="t('Risposta')" dense @update:model-value="setRisposta" />
           </div>
           <div class="col-5" />
         </div>
       </div>
     </div>
     <div class="col-auto q-ml-md">
-      <VirtualKeyboard
-        class="..."
-        @key-pressed="carattere"
-      >
+      <VirtualKeyboard class="..." @key-pressed="carattere">
         <div class="...">
-          <KeyButton
-            v-for="v of i18n.caratteri[sessione.lingua].split('')"
-            :key="`key-${v}`"
-            :value="v"
-          />
+          <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
         </div>
       </VirtualKeyboard>
     </div>
@@ -182,12 +141,9 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 </script>
 
 <style lang="sass" scoped>
-.my-card
-  width: 98%
-  border: 2px solid
 
 .testo-domanda
-  .column > .col > .row > div
+  .column > .col > .row
     border: 1px solid black
 
 .testo

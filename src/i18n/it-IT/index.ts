@@ -17,7 +17,7 @@ export default {
   click2D: 'Click per andare alla domanda',
   domandeNoRisposta: 'Alcune domande non hanno ricevuto risposta',
   domandeSenzaRisposta: 'Domande senza risposta',
-  Conferma_Fine: 'Confermi di aver terminato di rispondere ?',
+  confermaFine: 'Sei sicuro di voler consegnare?',
   Consegna: 'Consegna esercizi (se visti tutti)',
   tempoScaduto: 'Tempo scaduto',
   Doppio_click: 'Doppio click per togliere',

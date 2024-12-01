@@ -15,7 +15,7 @@
     <div class="col q-mt-sm q-my-md">
       <div class="row items-center justify-center">
         <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea" name="risposta"
-          bg-color="teal-1" input-class="text-body1 text-weight-bold text-justify" @update:model-value="setRisposta">
+          bg-color="teal-1" input-class="text-body1 text-justify" @update:model-value="setRisposta">
           <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px">
             {{ $t('Numero_Parole') }} {{
               script.rispostaData.trim().split(/\s+/).length }}

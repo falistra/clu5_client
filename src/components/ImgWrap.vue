@@ -1,9 +1,11 @@
 <template>
-  <div class="row justify-center">
-    <q-avatar v-if="src && validImg" :size="size">
+  <q-img class="self-center" v-if="src && validImg" no-native-menu
+    style="max-height: calc(30vh); max-width: calc(40vh);" :src="`/media/${src.$.url}`"
+    error-src="~assets/ImmagineNonDisponibile.jpeg" />
+  <!-- <q-avatar  :size="size">
       <q-img :src="`/media/${src.$.url}`" error-src="~assets/ImmagineNonDisponibile.jpeg" />
-    </q-avatar>
-  </div>
+    </q-avatar> -->
+
 </template>
 
 <script setup lang="ts">
@@ -16,11 +18,13 @@ import { Immagine } from '../pages/models'
 import { computed } from 'vue'
 
 interface Props {
-  size: string;
+  size?: string;
   src: Immagine;
 };
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  size: '150px'
+})
 
 const validImg = computed(() => !(typeof props.src.$.url === 'undefined' || props.src.$.url == '' || props.src.$.url == 'nessuno' || props.src.$.url == 'null'))
 

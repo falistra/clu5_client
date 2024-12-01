@@ -1,10 +1,8 @@
 <template>
-  <div class="row items-left q-mt-md q-mx-sm" style="max-height: 150px; overflow: scroll;">
-    <q-banner rounded dense class="shadow-3 bg-teal-4">
-      <div class="text-subtitle2 prologo"
-        v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`" />
-    </q-banner>
-  </div>
+  <q-banner style="max-height: calc(10wh); overflow: scroll;" rounded dense class="shadow-3 bg-teal-4">
+    <div class="text-subtitle2 prologo"
+      v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`" />
+  </q-banner>
 </template>
 
 <script setup lang="ts">

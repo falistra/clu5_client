@@ -1,28 +1,24 @@
 <template>
-  <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
-      v-html="common_api.sanitizeUnicode(testoDomanda)" />
-    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="200px" />
-    </div>
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
-    <div class="col q-my-sm q-mx-md ">
-      <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense push toggle-color="primary"
-        :options="opzioni" clearable @update:model-value="setRisposta">
-        <template v-for="button in opzioni" :key="button.value" #[button.slot]>
-          <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'" class="risposta"
-            v-html="`${common_api.sanitizeUnicode(button.testo)}`" />
-          <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
-            <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
-          </div>
-        </template>
-      </q-btn-toggle>
+  <q-page>
+    <div class="column" style="height: calc(100vh)">
+      <PrologoComponent class="col-auto self-start q-mt-md q-mx-sm" :prologo="script.prologo" />
+      <div style="max-height: calc(30vh); overflow:auto" class="col-auto scroll text-subtitle1 q-my-md q-mx-md"
+        v-html="common_api.sanitizeUnicode(testoDomanda)" />
+      <img-wrap v-if="script.immagine" class="col q-my-md q-mx-md" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" class="col q-my-md q-mx-md" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video" @update="set_ascolti_video" />
+      <div class="col-auto q-my-md q-mx-md ">
+        <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense push toggle-color="primary"
+          :options="opzioni" clearable @update:model-value="setRisposta">
+          <template v-for="button in opzioni" :key="button.value" #[button.slot]>
+            <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'" class="risposta"
+              v-html="`${common_api.sanitizeUnicode(button.testo)}`" />
+            <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
+              <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
+            </div>
+          </template>
+        </q-btn-toggle>
+      </div>
     </div>
   </q-page>
 </template>

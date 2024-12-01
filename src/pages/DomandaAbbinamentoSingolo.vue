@@ -1,50 +1,37 @@
 <template>
   <q-page>
     <div class="column" style="height: calc(90vh)">
-      <div class="col-auto scroll" style="max-height: 70px">
-        <PrologoComponent :prologo="script.prologo" />
-      </div>
-      <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
+      <PrologoComponent class="col-auto self-start q-mt-md q-mx-sm" :prologo="script.prologo" />
+      <div class="col q-mt-sm q-mx-sm q-shadow-10">
         <div class="row" style="height: calc(75vh)">
           <div class="col-6 ">
             <div class="column">
               <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
                 v-html="common_api.sanitizeUnicode(script.testo)" />
-              <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-                <audio-wrap :audio="script.audio" @update="set_ascolti" />
-              </div>
-              <div v-if="script.video" class="col-auto q-mt-md">
-                <video-wrap :video="script.video" @update="set_ascolti_video" />
-              </div>
+              <audio-wrap v-if="script.audio" class="col q-my-md q-mx-md" :audio="script.audio" @update="set_ascolti" />
+              <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
+                @update="set_ascolti_video" />
             </div>
-            <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+            <q-scroll-area class="col" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
               :bar-style="barStyle">
               <div class="q-pa-sm">
-                <q-list dense separator>
-                  <div class="column">
-                    <q-item v-for="item in script.partiFisse.item" :key="item.$.hash" class="col-auto">
-                      <q-item-section>
-                        <div class="row">
-                          <div class="col-6 parte-fissa text-caption">
-                            <div v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" class="q-ma-xs">
-                              <ImgWrap :src="{ $: { url: item._ } }" size="200px" />
-                            </div>
-                            <div v-else class="q-ma-sm item" v-html="item.label" />
-                          </div>
-                          <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
-                            @drop="onDrop($event, item)" @dblclick="annulla(item)">
-                            <div class="text-subtitle q-ma-sm item">
-                              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                                <strong>{{ $t('Doppio_click') }}</strong>
-                              </q-tooltip>
-                              <span v-html="item.rispostaData?.label" />
-                            </div>
-                          </div>
-                        </div>
-                      </q-item-section>
-                    </q-item>
+                <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
+                  <div class="col parte-fissa ">
+                    <div>
+                      <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: item._ } }" />
+                      <div v-else class="q-ma-sm " v-html="item.label" style="overflow: auto; max-height: 200px" />
+                    </div>
                   </div>
-                </q-list>
+                  <div class="col bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                    @drop="onDrop($event, item)" @dblclick="annulla(item)">
+                    <div class="text-subtitle q-ma-sm item text-justify">
+                      <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                        <strong>{{ $t('Doppio_click') }}</strong>
+                      </q-tooltip>
+                      <span v-html="item.rispostaData?.label" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </q-scroll-area>
           </div>
@@ -210,6 +197,7 @@ const set_ascolti_video = (val: number) => {
   border-bottom: 2px solid black
   min-height: 20px
   min-width: 150px
+  text-wrap: wrap
 
 .parte-fissa
   border: 2px solid black

@@ -1,60 +1,25 @@
 <template>
   <q-page class="column">
-    <PrologoComponent
-      class="col-auto"
-      style="max-height: 100px"
-      :prologo="script.prologo"
-    />
-    <div
-      style="max-height: 250px"
-      class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
-      v-html="common_api.sanitizeUnicode(script.testo)"
-    />
+    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
+    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
+      v-html="common_api.sanitizeUnicode(script.testo)" />
 
-    <div
-      v-if="script.audio"
-      class="col-auto q-my-sm q-mx-md"
-    >
-      <audio-wrap
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
+    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+      <audio-wrap :audio="script.audio" @update="set_ascolti" />
     </div>
-    <div
-      v-if="script.video"
-      class="col q-mt-md"
-    >
-      <video-wrap
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+    <div v-if="script.video" class="col q-mt-md">
+      <video-wrap :video="script.video" @update="set_ascolti_video" />
     </div>
 
-    <q-scroll-area
-      visible
-      :thumb-style="thumbStyle"
-      :bar-style="barStyle"
-      style="height: 300px"
-      class="col-auto text-subtitle2 q-my-sm q-mx-md"
-    >
-      <draggable
-        v-if="script.rispostaData"
-        :list="script.rispostaData.risposta"
-        :disabled="!enabled"
-        item-key="_"
-        class="q-mr-md list-group"
-        ghost-class="ghost"
-        :move="checkMove"
-        draggable=".not-draggable"
-        @start="dragging = true"
-        @end="dragging = false"
-      >
+    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(70vh)"
+      class="col-auto text-subtitle2 q-my-sm q-mx-md">
+      <draggable v-if="script.rispostaData" :list="script.rispostaData.risposta" :disabled="!enabled" item-key="_"
+        class="q-mr-md list-group" ghost-class="ghost" :move="checkMove" draggable=".not-draggable"
+        @start="dragging = true" @end="dragging = false">
         <template #item="{ element }">
-          <div
-            class="q-my-xs q-pa-sm list-group-item"
+          <div class="q-my-xs q-pa-sm list-group-item"
             :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
-            v-html="element.label"
-          />
+            v-html="element.label" />
         </template>
       </draggable>
     </q-scroll-area>
@@ -132,8 +97,6 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
 
 </script>
 <style lang="sass" scoped>
-.senza-scroll
-  height: calc(90vh)
 
 .ghost
     opacity: 0.5

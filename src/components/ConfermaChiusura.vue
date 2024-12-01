@@ -9,7 +9,7 @@
 
       <q-card-section>
         <q-btn-dropdown color="primary" :label="t('domandeSenzaRisposta')">
-          <q-list>
+          <q-list dense bordered>
             <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[1, 1]">
               <strong>{{ $t('click2D') }}</strong>
             </q-tooltip>
@@ -24,7 +24,7 @@
 
       <q-card-section>
         <div class="text-subtitle2">
-          {{ $t('Conferma_Fine') }}
+          {{ $t('confermaFine') }}
         </div>
       </q-card-section>
 

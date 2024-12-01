@@ -1,14 +1,7 @@
 <template>
-  <VirtualKeyboard
-    class="..."
-    @key-pressed="carattere"
-  >
+  <VirtualKeyboard class="..." @key-pressed="carattere">
     <div class="...">
-      <KeyButton
-        v-for="v of i18n.caratteri[sessione.lingua].split('')"
-        :key="`key-${v}`"
-        :value="v"
-      />
+      <KeyButton v-for="v of i18n.caratteri[sessione.lingua || 2].split('')" :key="`key-${v}`" :value="v" />
     </div>
   </VirtualKeyboard>
 </template>

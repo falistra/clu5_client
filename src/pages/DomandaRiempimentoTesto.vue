@@ -16,7 +16,7 @@
       </div>
 
       <div class="col-auto q-my-sm q-mx-md ">
-        <q-scroll-area :visible="true" style="height: calc(55vh)" :thumb-style="thumbStyle" :bar-style="barStyle">
+        <q-scroll-area :visible="true" style="height: calc(50vh)" :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="text-subtitle q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
             <span v-for="item in tokens" :key="item.index">
               <span v-if="!item.isSlot" v-html="item.content"></span>
@@ -34,7 +34,7 @@
       </div>
 
       <div class="col-auto q-my-sm q-mx-md ">
-        <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(10vh)">
+        <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(20vh)">
 
           <div class="row">
             <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">

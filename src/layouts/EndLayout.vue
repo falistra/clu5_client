@@ -1,10 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header
-      elevated
-      class="bg-primary text-white"
-      height-hint="98"
-    >
+    <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar class="row flex-center">
         <q-toolbar-title class=" col text-subtitle1">
           <div class="row flex-center">
@@ -29,10 +25,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer
-      elevated
-      class="bg-grey-8 text-white"
-    >
+    <q-footer elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
@@ -47,9 +40,12 @@
 <script setup lang="ts">
 
 // import { useQuasar } from 'quasar'
+import { onUnmounted } from 'vue';
 import { useSessioneStore } from '../stores/sessione'
 
 const sessioneStore = useSessioneStore()
+
+onUnmounted(() => { sessioneStore.$reset() })
 
 </script>
 

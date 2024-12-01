@@ -160,6 +160,7 @@ export const Stazione = class {
 
   checkRisposte(): { tipo: string; indice: number }[] {
     const checkRispostaNonData = (risposte: TRisposte): boolean => {
+      if (risposte === null) return false;
       if (typeof risposte === 'undefined') return false;
       if (
         typeof risposte === 'object' &&

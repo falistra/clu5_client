@@ -2,10 +2,10 @@
   <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
-        <q-toolbar-title class="col-6 text-subtitle1">
+        <q-toolbar-title class="col-4 text-subtitle2">
           <div class="row flex-center">
-            {{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
-              sessioneStore.test.script?.test.studente.$.nome }}
+            {{ sessioneStore.test?.script?.test.studente.$.cognome + ' ' +
+              sessioneStore.test?.script?.test.studente.$.nome }}
           </div>
         </q-toolbar-title>
         <!-- <q-toolbar-title class="col-5 text-subtitle1">
@@ -14,9 +14,9 @@
               sessioneStore.test.script.test.stazioni.stazione.length }}
           </div>
         </q-toolbar-title> -->
-        <q-toolbar-title class="col-6 text-subtitle1">
+        <q-toolbar-title class="col-8 text-subtitle2">
           <div class="row justify-end">
-            {{ sessioneStore.test.script.test.$.descrizione }}
+            {{ sessioneStore.test?.script.test.$.descrizione }}
             <q-btn class="q-ml-lg" color="secondary" size="xs"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />
             <!-- <q-select class="q-ml-md" v-model="locale" :options="localeOptions" dense borderless emit-value map-options
@@ -31,6 +31,9 @@
               </template>
             </q-btn-toggle>
           </div>
+          <q-badge color="red" floating>
+            versione {{ version }}
+          </q-badge>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -73,6 +76,7 @@ defineOptions({
   name: 'MainLayout'
 })
 import BarraNavigazione from '../components/BarraNavigazione.vue'
+import { version } from '../../package.json'
 
 const { locale } = useI18n({ useScope: 'global' })
 const localeOptions = ref([

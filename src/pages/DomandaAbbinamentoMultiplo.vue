@@ -20,37 +20,26 @@
             <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
               :bar-style="barStyle">
               <div class="q-pa-sm">
-                <q-list dense separator>
-                  <div class="column">
-                    <q-item v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash" class="col-auto">
-                      <q-item-section>
-                        <div class="row q-my-xs">
-                          <div class="col-6 parte-fissa text-caption">
-                            <div v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" class="q-ma-xs">
-                              <ImgWrap :src="{ $: { url: partefissa._ } }" size="200px" />
-                            </div>
-                            <div v-else class="q-ma-sm item" v-html="partefissa.label" />
-                          </div>
-                          <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
-                            @drop="onDrop($event, partefissa)">
-                            <div class="row">
-                              <div v-for="item in partefissa.rispostaData" :key="item.$.hash" class="col-auto"
-                                @dblclick="annulla(item, partefissa)">
-                                <div class="text-subtitle q-ma-xs item">
-                                  <span v-html="item.label" />
-                                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle"
-                                    :offset="[5, 5]">
-                                    <strong>{{ $t('Doppio_click') }} </strong>
-                                  </q-tooltip>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </q-item-section>
-                    </q-item>
+                <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
+                  <div class="col-6 parte-fissa">
+                    <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: partefissa._ } }" />
+                    <div v-else class="q-ma-sm" v-html="partefissa.label" style="overflow: auto; max-height: 200px" />
                   </div>
-                </q-list>
+                  <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                    @drop="onDrop($event, partefissa)">
+                    <div class="row">
+                      <div v-for="item in partefissa.rispostaData" :key="item.$.hash" class="col-auto"
+                        @dblclick="annulla(item, partefissa)">
+                        <div class="text-subtitle q-ma-xs item">
+                          <span v-html="item.label" />
+                          <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                            <strong>{{ $t('Doppio_click') }} </strong>
+                          </q-tooltip>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </q-scroll-area>
           </div>

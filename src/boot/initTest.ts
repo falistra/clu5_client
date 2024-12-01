@@ -83,6 +83,8 @@ export default boot(async (/* { router } */) => {
     );
 
     sessioneStore.test = test;
+    sessioneStore.lingua = test.LINGUA;
+
     await test.stazione_corrente.richiediDomandeServer();
     Loading.hide();
   } else {
@@ -116,6 +118,7 @@ export default boot(async (/* { router } */) => {
       });
 
     const sessioneStore = useSessioneStore();
+    console.log(jsonDomanda);
 
     const domande = [jsonDomanda];
 

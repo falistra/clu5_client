@@ -10,7 +10,7 @@
     <div v-if="script.video" class="col q-mt-md">
       <video-wrap :video="script.video" @update="set_ascolti_video" />
     </div>
-    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 250px"
+    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(60vh)"
       class="col-auto text-subtitle2 q-my-sm q-mx-md">
       <div class="text-subtitle q-mr-lg">
         <span v-for="item in tokens" :key="item.index">
