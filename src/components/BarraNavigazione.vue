@@ -14,7 +14,7 @@
       <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" size="sm"
         @click="precedente" />
 
-      <q-btn disable class="overline" :label="stato">
+      <q-btn disable class="font-sans hover:font-serif" :label="stato">
         <q-tooltip>
           {{ idDomanda }}
         </q-tooltip>
@@ -117,10 +117,12 @@ async function effettuaConsegna() {
   await sessioneStore.test.stazione_corrente.passaStazione()
 
   if (sessioneStore.testCompletato) {
+    if (process.env.DEV) {
+      router.push('/fineTestFuori')
+    } else {
+      window.open('/test-GOODBYE.php')?.focus()
+    }
     // sessioneStore.$reset()
-    // const baseURL = (process.env.DEV ? 'http://localhost' : '') + ''
-    // window.open(`${baseURL}`, '_self')?.focus()
-    router.push('/fineTestFuori')
   } else {
     const esitoPositivo = await sessioneStore.test.stazione_corrente.richiediDomandeServer()
     if (esitoPositivo) {

@@ -1,27 +1,37 @@
 <template>
-  <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
-      v-html="common_api.sanitizeUnicode(script.testo)" />
-    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="200px" />
-    </div>
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
-    <div class="col q-my-sm q-mx-md ">
-      <q-option-group v-model="script.rispostaData" inline left-label :options="opzioni" type="checkbox"
-        @update:model-value="setRispostaData">
-        <template #label="opt">
-          <div class="flex flex-left q-mt-sm">
-            <span class="q-ml-md text-weight-bold text-left" v-html="opt.label" />
+  <q-page>
+    <div class="flex flex-col h-100">
+      <PrologoComponent style="max-height: calc(40vh)"
+        class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
+      <div
+        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        v-html="common_api.sanitizeUnicode(script.testo)" />
+      <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+
+      <q-badge color="red" class="ml-2 w-40">
+        <q-icon name="warning" color="white" class="q-ml-xs" />
+        Risposte corrette: {{ script.$.risposteCorrette }}
+      </q-badge>
+      <div style="max-height: calc(40vh)">
+        <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(40vh)"
+          class="mr-5">
+          <div class="mt-3 mx-3 grid p-2 place-content-center">
+            <q-option-group v-model="script.rispostaData" :options="opzioni" dense type="checkbox"
+              @update:model-value="setRispostaData">
+              <template #label="opt">
+                <div class="flex flex-left q-mt-sm">
+                  <span class="q-ml-md text-weight-bold text-left" v-html="opt.label" />
+                </div>
+              </template>
+            </q-option-group>
           </div>
-        </template>
-      </q-option-group>
+        </q-scroll-area>
+      </div>
     </div>
+
   </q-page>
 </template>
 
@@ -37,8 +47,7 @@ import AudioWrap from '../components/AudioWrap.vue'
 import ImgWrap from '../components/ImgWrap.vue'
 import { common_api } from '../boot/common-utils'
 import VideoWrap from '../components/VideoWrap.vue'
-import { setAudioPams, setVideoPams } from './common'
-
+import { setAudioPams, setVideoPams, thumbStyle, barStyle } from './common'
 const sessione = useSessioneStore()
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla)
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
@@ -49,6 +58,10 @@ if (typeof script.value.risposta2Server === 'undefined') {
     peso: domanda.peso,
     risposte: []
   }
+}
+
+if (typeof script.value.logRisposta === 'undefined') {
+  script.value.logRisposta = null
 }
 
 if (script.value.audio) setAudioPams(script.value.audio)
@@ -92,6 +105,9 @@ const set_ascolti_video = (val: number) => {
     script.value.video.ascolti_rimanenti = val
   }
 }
+
+const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle)
+const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
 
 </script>
 

@@ -3,9 +3,9 @@
     <q-header elevated class="bg-negative text-white" height-hint="98">
       <q-toolbar class="row flex-center">
         <q-toolbar-title class=" col text-subtitle1">
-          <div class="row flex-center">
-            {{ sessioneStore.test.script?.test.studente.$.cognome + ' ' +
-              sessioneStore.test.script?.test.studente.$.nome }}
+          <div class="row flex-center" v-if="sessioneStore.test">
+            {{ sessioneStore.test?.script?.test.studente.$.cognome + ' ' +
+              sessioneStore.test?.script?.test.studente.$.nome }}
           </div>
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
@@ -14,8 +14,8 @@
           </div>
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
-          <div class="row flex-center">
-            {{ sessioneStore.test.script.test.$.descrizione }}
+          <div class="row flex-center" v-if="sessioneStore.test">
+            {{ sessioneStore.test?.script.test.$.descrizione }}
           </div>
         </q-toolbar-title>
       </q-toolbar>

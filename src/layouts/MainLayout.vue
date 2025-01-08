@@ -8,14 +8,8 @@
               sessioneStore.test?.script?.test.studente.$.nome }}
           </div>
         </q-toolbar-title>
-        <!-- <q-toolbar-title class="col-5 text-subtitle1">
-          <div class="row flex-center">
-            Parte {{ sessioneStore.numero_stazione_corrente }} di {{
-              sessioneStore.test.script.test.stazioni.stazione.length }}
-          </div>
-        </q-toolbar-title> -->
         <q-toolbar-title class="col-8 text-subtitle2">
-          <div class="row justify-end">
+          <div class="row flex-center">
             {{ sessioneStore.test?.script.test.$.descrizione }}
             <q-btn class="q-ml-lg" color="secondary" size="xs"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />

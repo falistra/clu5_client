@@ -1,26 +1,32 @@
 <template>
-  <q-page class="column"> <!--:style-fn="myTweak"-->
-    <PrologoComponent class="col-auto" style="max-height: 70px" :prologo="script.prologo" />
+  <q-page class="column">
+    <PrologoComponent
+      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      :prologo="script.prologo" />
     <q-card flat>
       <q-card-section horizontal>
         <q-card-section class="col-6 container">
-          <q-scroll-area class="col-auto text-caption q-my-sm q-mx-md " visible :thumb-style="my_thumbStyle"
-            :bar-style="my_barStyle" style="height: calc(70vh)"> <!--:style="HText"-->
-            <div class="q-mr-md" v-html="common_api.sanitizeUnicode(script.testo_comprensione)" />
-          </q-scroll-area>
-
-          <div v-if="primaDomanda?.immagine" class="col">
-            <img-wrap :src="primaDomanda.immagine" size="200px" />
-          </div>
-          <div v-if="primaDomanda?.audio" class="col q-mt-md">
-            <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
-          </div>
-          <div v-if="primaDomanda?.video" class="col q-mt-md">
-            <video-wrap :video="primaDomanda.video" @update="set_ascolti_video" />
+          <div class="flex flex-col">
+            <q-scroll-area visible style="height: calc(70vh); max-height: calc(70vh)" :thumb-style="my_thumbStyle"
+              :bar-style="my_barStyle">
+              <div v-if="common_api.sanitizeUnicode(script.testo_comprensione) !== ''" style="max-height: calc(60vh)"
+                class="text-prose my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+                v-html="common_api.sanitizeUnicode(script.testo_comprensione)" />
+              <div v-if="primaDomanda?.immagine" class="col">
+                <img-wrap :src="primaDomanda.immagine" size="200px" />
+              </div>
+              <div v-if="primaDomanda?.audio" class="col q-mt-md">
+                <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
+              </div>
+              <div v-if="primaDomanda?.video" class="col q-mt-md">
+                <video-wrap :video="primaDomanda.video" width="350" height="280" @update="set_ascolti_video" />
+              </div>
+              <!-- </div> -->
+            </q-scroll-area>
           </div>
         </q-card-section>
         <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(70vh)">
+          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(60vh)">
             <!--:style="{ height: `${H}px` }" -->
             <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md">
               <div class="text-overline" v-html="domanda.prologo" />
@@ -46,7 +52,7 @@ defineOptions({
 })
 
 import { useSessioneStore } from '../stores/sessione'
-import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda } from './models'
+import { T_DomandaComprensioneTesto, T_DomandaSceltaSingola, IDomanda, Audio } from './models'
 import { ref, watch, reactive /*, computed */ } from 'vue'
 import PrologoComponent from '../components/PrologoComponent.vue'
 import ImgWrap from '../components/ImgWrap.vue'
@@ -59,6 +65,14 @@ const sessione = useSessioneStore()
 const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
 )
+
+const testoMalformato = script.value.domande.domandasceltasingola[0].testo
+if (testoMalformato.toString() === '[object Object]') {
+  const patch = (testoMalformato as unknown as { _: string, audio: Audio })
+  script.value.domande.domandasceltasingola[0].audio = patch.audio
+  script.value.domande.domandasceltasingola[0].testo = patch._
+} // else { console.log('REGOLARE!') }
+
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
 const domande = reactive(
@@ -82,12 +96,23 @@ if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {
     specie: parseInt(domanda.tecnica),
     peso: domanda.peso,
-    risposte: domande.reduce((a, v) => ({ ...a, [v.hash]: null }), {})
+    risposte: domande.reduce((a, v) => ({ ...a, [v.hash]: '' }), {})
   }
 }
 
+if (typeof script.value.logRisposta === 'undefined') {
+  script.value.logRisposta = script.value.domande.domandasceltasingola.map((d) => {
+    return {
+      testo: d.testo,
+      risposta: { testo: null, value: null }
+    }
+  })
+}
+
 const primaDomanda: T_DomandaSceltaSingola | undefined = script.value.domande.domandasceltasingola.find(
-  (domanda) => domanda.audio && domanda.audio.$.url && domanda.audio.$.url != '')
+  (domanda) => domanda.audio && domanda.audio.$.url && domanda.audio.$.url != '') ||
+  script.value.domande.domandasceltasingola.find(
+    (domanda) => domanda.video && domanda.video.$.url && domanda.video.$.url != '')
 
 if (primaDomanda) {
   if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
@@ -140,26 +165,9 @@ const set_ascolti_video = (val: number) => {
 
 const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle)
 const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle)
-// const H = ref()
-// const myTweak = (offset: number) => {
-//   // "offset" is a Number (pixels) that refers to the total
-//   // height of header + footer that occupies on screen,
-//   // based on the QLayout "view" prop configuration
-
-//   // this is actually what the default style-fn does in Quasar
-//   // window.innerHeight
-//   H.value = Math.trunc(window.screen.availHeight * 0.50)
-//   if (heightText.value < 200) { HText.value = { maxHeight: '360px', height: `${heightText.value}px` } } else { HText.value = { maxHeight: `${H.value}px`, height: `${H.value}px` } }
-//   const style = { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-//   return style
-// }
-
 </script>
 
 <style lang="sass" scoped>
-.senza-scroll
-  height: calc(75vh)
-
 .risposta
   font-size: small
   text-align: justify

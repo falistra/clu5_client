@@ -1,8 +1,12 @@
 <template>
-  <q-banner style="max-height: calc(10wh); overflow: scroll;" rounded dense class="shadow-3 bg-teal-4">
+  <div v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`" />
+
+  <!-- <q-banner style="max-height: calc(10wh); overflow: scroll;" rounded dense class="shadow-3 bg-teal-4">
     <div class="text-subtitle2 prologo"
       v-html="`${common_api.sanitizeUnicode(common_api.sanitazeBR(props.prologo))}`" />
-  </q-banner>
+  </q-banner> -->
+
+
 </template>
 
 <script setup lang="ts">

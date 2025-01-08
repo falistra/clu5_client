@@ -1,22 +1,19 @@
 <template>
   <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" :prologo="script.prologo" />
-    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="200px" />
-    </div>
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
-    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(60vh)"
+    <PrologoComponent
+      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      :prologo="script.prologo" />
+    <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
+    <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+    <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
       class="col-auto text-subtitle2 q-my-sm q-mx-md">
-      <div class="text-subtitle q-mr-lg">
+      <div class="mx-5">
         <span v-for="item in tokens" :key="item.index">
           <span v-if="!item.isSlot" v-html="item.content" />
           <span v-else-if="item.isSlot">
-            <input :id="`campo_input_${item.index}`" v-model="script.rispostaData[item.slotIndex]"
+            <input class="m-2 px-2 rounded hover:rounded-lg bg-slate-200 border-solid hover:border-dotted"
+              :id="`campo_input_${item.index}`" v-model="script.rispostaData[item.slotIndex]"
               :name="`slot_${item.slotIndex}`" @focus="() => { currentSlot = item.slotIndex }">
           </span>
         </span>
@@ -25,7 +22,7 @@
     <div class="col">
       <VirtualKeyboard class="..." @key-pressed="carattere">
         <div class="...">
-          <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
+          <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
         </div>
       </VirtualKeyboard>
     </div>
@@ -42,7 +39,7 @@ import '@dongivan/virtual-keyboard/default.css'
 import { useSessioneStore } from '../stores/sessione'
 import { useI18nStore } from '../stores/i18n'
 import { T_DomandaRiempimentoTestoLibero, T_Token, IDomanda } from './models'
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 import PrologoComponent from '../components/PrologoComponent.vue'
 import AudioWrap from '../components/AudioWrap.vue'
@@ -65,8 +62,13 @@ if (typeof script.risposta2Server === 'undefined') {
   }
 }
 
+if (typeof script.logRisposta === 'undefined') {
+  script.logRisposta = {}
+}
+
 if (script.audio) setAudioPams(script.audio)
 if (script.video) setVideoPams(script.video)
+const linguaDomanda = computed(() => domanda.lingua || sessione.lingua)
 
 watch(script.rispostaData, (rispostaData) => {
   if (script.risposta2Server) {

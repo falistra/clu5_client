@@ -1,8 +1,18 @@
 import { boot } from 'quasar/wrappers';
 
 const common_api = {
-  sanitizeUnicode: (testo: string) =>
-    testo.replace(/\%u(\d+)/g, '&#x$1;').replace('[object Object]', ''),
+  sanitizeUnicode: (testo: string) => {
+    try {
+      return (
+        testo
+          .replace(/\%u([a-zA-Z0-9]{4})/g, '&#x$1;')
+          //      .replace(/\%u(\d+)/g, '&#x$1;')
+          .replace('[object Object]', '')
+      );
+    } catch {
+      return '';
+    }
+  },
   sanitazeBR: (testo: string) => testo.replace(/\&lt;br\&gt;/g, ''),
   thumbStyle: {
     right: '4px',

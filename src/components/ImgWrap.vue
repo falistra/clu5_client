@@ -1,11 +1,6 @@
 <template>
-  <q-img class="self-center" v-if="src && validImg" no-native-menu
-    style="max-height: calc(30vh); max-width: calc(40vh);" :src="`/media/${src.$.url}`"
-    error-src="~assets/ImmagineNonDisponibile.jpeg" />
-  <!-- <q-avatar  :size="size">
-      <q-img :src="`/media/${src.$.url}`" error-src="~assets/ImmagineNonDisponibile.jpeg" />
-    </q-avatar> -->
-
+  <q-img class="self-center" v-if="src && validImg" no-native-menu fit="scale-down" :src="`/media/${src.$.url}`"
+    size="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px" error-src="~assets/ImmagineNonDisponibile.jpeg" />
 </template>
 
 <script setup lang="ts">

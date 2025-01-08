@@ -14,6 +14,8 @@
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
           <div class="row flex-center">
+            <q-btn class="q-ml-lg" color="secondary" size="xs"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />
           </div>
         </q-toolbar-title>
       </q-toolbar>
@@ -21,9 +23,12 @@
 
     <q-page-container>
       <router-view />
+      <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
+        <q-btn fab icon="keyboard_arrow_up" color="accent" />
+      </q-page-scroller>
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white">
+    <q-footer reveal elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>

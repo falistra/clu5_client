@@ -1,9 +1,9 @@
 <template>
   <q-page>
     <div class="column" style="height: calc(95vh)">
-      <div class="col-auto scroll" style="max-height: 70px">
-        <PrologoComponent :prologo="script.prologo" />
-      </div>
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
       <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
         <div class="row" style="height: calc(70vh)">
           <div class="col-6">
@@ -23,15 +23,16 @@
                 <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
                   <div class="col-6 parte-fissa">
                     <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: partefissa._ } }" />
-                    <div v-else class="q-ma-sm" v-html="partefissa.label" style="overflow: auto; max-height: 200px" />
+                    <div v-else class="q-ma-sm text-wrap overflow-auto" v-html="partefissa.label"
+                      style="max-height: 200px" />
                   </div>
                   <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                     @drop="onDrop($event, partefissa)">
-                    <div class="row">
+                    <div class="column">
                       <div v-for="item in partefissa.rispostaData" :key="item.$.hash" class="col-auto"
                         @dblclick="annulla(item, partefissa)">
-                        <div class="text-subtitle q-ma-xs item">
-                          <span v-html="item.label" />
+                        <div class="col text-subtitle q-ma-xs item">
+                          <div v-html="item.label" />
                           <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                             <strong>{{ $t('Doppio_click') }} </strong>
                           </q-tooltip>

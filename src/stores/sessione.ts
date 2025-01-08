@@ -5,7 +5,7 @@ import { IRisposte, IDomande } from './models';
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
     counter: 0,
-    domande: <[string, unknown, unknown, number][]>[],
+    domande: <[string, unknown, unknown, number, string][]>[],
     errore: {},
     lingua: <string>'2',
     numero_stazione_corrente: 1,

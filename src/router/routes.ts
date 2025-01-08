@@ -79,6 +79,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DomandaRiempimentoTesto.vue'),
       },
       {
+        path: 'domandariempimentotestolibero/:id',
+        name: 'domandariempimentotestolibero',
+        meta: { keepAlive: true }, // use cache
+        component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
+      },
+      {
         path: 'domandariempimentotestoLibero/:id',
         name: 'domandariempimentotestoLibero',
         meta: { keepAlive: true }, // use cache
@@ -87,6 +93,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'domandariempimentolibero/:id',
         name: 'domandariempimentolibero',
+        meta: { keepAlive: true }, // use cache
+        component: () => import('pages/DomandaRiempimentoLibero.vue'),
+      },
+      {
+        path: 'domandaRiempimentoLibero/:id',
+        name: 'domandaRiempimentoLibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
@@ -164,10 +176,22 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DomandaRiempimentoTesto.vue'),
       },
       {
+        path: 'domandariempimentotestolibero/:id',
+        name: 'simulazione_domandariempimentotestolibero',
+        meta: { keepAlive: true }, // use cache
+        component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
+      },
+      {
         path: 'domandariempimentotestoLibero/:id',
         name: 'simulazione_domandariempimentotestoLibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
+      },
+      {
+        path: 'domandaRiempimentoLibero/:id',
+        name: 'simulazione_domandaRiempimentoLibero',
+        meta: { keepAlive: true }, // use cache
+        component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {
         path: 'domandaRiempimentolibero/:id',

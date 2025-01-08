@@ -1,34 +1,33 @@
 <template>
-  <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" :prologo="script.prologo" />
-    <div style="max-height: 250px" class="col-auto scroll text-caption q-my-md q-mx-md"
-      v-html="common_api.sanitizeUnicode(script.testo)" />
-    <div v-if="script.immagine" class="col q-my-sm q-mx-md">
-      <img-wrap :src="script.immagine" size="200px" />
-    </div>
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
-    <div class="col q-mt-sm q-my-md">
-      <div class="row items-center justify-center">
-        <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea" name="risposta"
-          bg-color="teal-1" input-class="text-body1 text-justify" @update:model-value="setRisposta">
-          <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px">
-            {{ $t('Numero_Parole') }} {{
-              script.rispostaData.trim().split(/\s+/).length }}
-          </q-badge>
-        </q-input>
-      </div>
-    </div>
-    <div class="col">
-      <VirtualKeyboard class="..." @key-pressed="carattere">
-        <div class="...">
-          <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
+  <q-page>
+    <div class="flex flex-col h-100">
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
+      <div
+        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        v-html="common_api.sanitizeUnicode(script.testo)" />
+      <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+      <div class="col q-mt-sm q-my-md">
+        <div class="row items-center justify-center">
+          <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea" name="risposta"
+            bg-color="teal-1" input-class="text-body1 text-justify" @update:model-value="setRisposta">
+            <q-badge v-if="script.rispostaData" color="primary" floating style="top : 4px">
+              {{ $t('Numero_Parole') }} {{
+                script.rispostaData.trim().split(/\s+/).length }}
+            </q-badge>
+          </q-input>
         </div>
-      </VirtualKeyboard>
+      </div>
+      <div class="col">
+        <VirtualKeyboard class="..." @key-pressed="carattere">
+          <div class="...">
+            <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
+          </div>
+        </VirtualKeyboard>
+      </div>
     </div>
   </q-page>
 </template>
@@ -45,7 +44,7 @@ import '@dongivan/virtual-keyboard/default.css'
 import { useSessioneStore } from '../stores/sessione'
 import { T_DomandaScritturaLibera, IDomanda } from './models'
 
-import { ref } from 'vue' // , computed
+import { ref, computed } from 'vue' // , computed
 import PrologoComponent from '../components/PrologoComponent.vue'
 import AudioWrap from '../components/AudioWrap.vue'
 import ImgWrap from '../components/ImgWrap.vue'
@@ -65,8 +64,13 @@ if (typeof script.risposta2Server === 'undefined') {
   }
 }
 
+if (typeof script.logRisposta === 'undefined') {
+  script.logRisposta = null
+}
+
 if (script.audio) setAudioPams(script.audio)
 if (script.video) setVideoPams(script.video)
+const linguaDomanda = computed(() => domanda.lingua || sessione.lingua)
 
 import { useI18nStore } from '../stores/i18n'
 const i18n = ref(useI18nStore())

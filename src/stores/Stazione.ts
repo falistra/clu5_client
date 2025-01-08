@@ -1,7 +1,9 @@
 import jsep from 'jsep';
 import xml2js from 'xml2js';
+// import { parseFromString } from 'dom-parser';
 import { api } from '../boot/axios';
 import { useSessioneStore } from './sessione';
+
 import {
   Script_Stazione,
   Domanda,
@@ -41,11 +43,13 @@ export const Stazione = class {
     };
 
     sessioneStore.log_STAZIONI[this.script.$.ID] = {
-      inizio: this.test.ServerTime().format(),
+      inizio: this.test.ServerTime().format('HH:mm:SS'),
     };
 
     this.test.STORIA.push(
-      `${this.test.ServerTime()} = Inizio stazione ${this.script.$.ID}`
+      `${this.test.ServerTime().format('HH:mm:SS')} = Inizio stazione ${
+        this.script.$.ID
+      }`
     );
 
     this.set_query = (Array.isArray(domande) ? domande : [domande]).map(
@@ -79,7 +83,7 @@ export const Stazione = class {
     return query;
   }
 
-  async richiediDomandeServer() {
+  async richiediDomandeServer(): Promise<boolean> {
     const parms = {
       idUser: this.test.script.test.$.idUser,
       idSession: this.test.script.test.$.sessionId,
@@ -90,31 +94,23 @@ export const Stazione = class {
       domande_gia_poste: JSON.stringify(this.test.DOMANDE_GIA_POSTE),
     };
 
-    // <insiemi_domande><domande><sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-    // FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-    // WHERE domande.attiva = 1 AND domande.lingua = '1' AND (domande.id NOT IN (2883, 6681, 8299)) AND domande.specie = 2 AND domande.livello = 4 AND domande.tipo = 1 AND domande.specializzazione = 40 ORDER BY rand()
-    //  LIMIT 2</sql></domande><errore><msg>NON CI SONO SUFFICIENTI DOMANDE CHE SODDISFANO LA RICHIESTA : RICHIESTE 2 - FORNITE 0. CONTATTARE IL SUPERVISORE</msg><sql>SELECT domande.id, domande.specie, domande.data, "tipiDomanda".descrizione AS tipo, autori.descrizione AS autore, livelli.descrizione AS livello
-    // FROM domande JOIN "tipiDomanda" ON domande.tipo = "tipiDomanda".id JOIN autori ON domande.autore = autori.id JOIN livelli ON domande.livello = livelli.id
-    // WHERE domande.attiva = 1 AND domande.lingua = '1' AND (domande.id NOT IN (2883, 6681, 8299)) AND domande.specie = 2 AND domande.livello = 4 AND domande.tipo = 1 AND domande.specializzazione = 40 ORDER BY rand()
-    //  LIMIT 2</sql><parametri>{"peso": "5", "quantita": "2", "parms": {"tecnica": {"type": "Literal", "value": 2, "raw": "2"}, "livello": {"type": "Literal", "value": 4, "raw": "4"},
-
     const domandeXML = await api
       .post('/test/domande/', new URLSearchParams(parms))
       .then((response) => {
         return response.data;
       })
       .catch((errore) => {
-        console.log(errore);
-        // $q.notify({
-        //   color: 'negative',
-        //   position: 'top',
-        //   message: 'Loading failed',
-        //   icon: 'report_problem',
-        // });
+        sessioneStore.errore = errore;
+        return false;
       });
 
     const sessioneStore = useSessioneStore();
-
+    // const xmlDoc = parseFromString(domandeXML);
+    // const xmlDomande_ = xmlDoc.getElementsByTagName('domanda');
+    // const xmlDomande: { [id: string]: string } = xmlDomande_.reduce(
+    //   (a, d) => ({ ...a, [d.getAttribute('id')]: d.innerHTML }),
+    //   {}
+    // );
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
         explicitArray: false,
@@ -128,7 +124,10 @@ export const Stazione = class {
       });
 
     if ('errore' in jsonDomande.insiemi_domande) {
-      sessioneStore.errore = jsonDomande.insiemi_domande.errore;
+      sessioneStore.errore = {
+        idTest: this.test.script.test.$.id,
+        ...jsonDomande.insiemi_domande.errore,
+      };
       return false;
     } else {
       const domande: Array<object> = Array.isArray(
@@ -147,19 +146,33 @@ export const Stazione = class {
           const d = Object.entries(domanda);
           const tipo = d[1][0];
           const script = domanda[tipo] as object;
-          return [tipo as string, script as object, d[0][1], index + 1] as [
-            string,
-            object,
-            object,
-            number
-          ];
+          // const id: string = (d[0][1] as IDomanda).id;
+          return [
+            tipo as string,
+            script as object,
+            d[0][1],
+            index + 1,
+            'XML', //xmlDomande[id],
+          ] as [string, object, object, number, string];
         });
       return true;
     }
   }
 
   checkRisposte(): { tipo: string; indice: number }[] {
-    const checkRispostaNonData = (risposte: TRisposte): boolean => {
+    const checkRispostaNonData = (
+      domanda: IDomanda,
+      risposte: TRisposte
+    ): boolean => {
+      if (domanda.tecnica === '2') {
+        // comprensione testo
+        const risposto = Object.entries(risposte).find((r) => r[1] !== '');
+        if (risposto) {
+          return true;
+        }
+        return false;
+      }
+
       if (risposte === null) return false;
       if (typeof risposte === 'undefined') return false;
       if (
@@ -179,6 +192,7 @@ export const Stazione = class {
         const script = D[1] as IRisposta2Server;
         if (!(typeof script.risposta2Server === 'undefined')) {
           Map[domanda.id] = checkRispostaNonData(
+            domanda,
             script.risposta2Server.risposte
           )
             ? 'Risposto'
@@ -188,9 +202,11 @@ export const Stazione = class {
       }, {} as { [Key: string]: string });
 
     const domandeSenzaRisposta = sessioneStore.domande.filter((D) => {
+      const domanda = D[2] as IDomanda;
       const script = D[1] as IRisposta2Server;
       if (typeof script.risposta2Server === 'undefined') return true;
-      else return !checkRispostaNonData(script.risposta2Server.risposte);
+      else
+        return !checkRispostaNonData(domanda, script.risposta2Server.risposte);
     });
 
     return domandeSenzaRisposta.map((D) => ({ tipo: D[0], indice: D[3] }));
@@ -236,12 +252,7 @@ export const Stazione = class {
       })
       .catch((errore) => {
         console.log(errore);
-        // $q.notify({
-        //   color: 'negative',
-        //   position: 'top',
-        //   message: 'Loading failed',
-        //   icon: 'report_problem',
-        // });
+        sessioneStore.errore = errore;
       });
 
     this.punteggioStazione = (
@@ -251,7 +262,9 @@ export const Stazione = class {
       punteggiDomandeServer as punteggiDomandeStazione
     ).punteggiDomande;
     this.test.STORIA.push(
-      `${this.test.ServerTime()} = Ricevuto+dal+server+punteggio ${
+      `${this.test
+        .ServerTime()
+        .format('HH:mm:SS')} = Ricevuto+dal+server+punteggio ${
         this.punteggioStazione
       }`
     );
@@ -259,12 +272,16 @@ export const Stazione = class {
 
   async passaStazione() {
     this.test.STORIA.push(
-      `${this.test.ServerTime()} = Passaggio a nuova stazione`
+      `${this.test
+        .ServerTime()
+        .format('HH:mm:SS')} = Passaggio a nuova stazione`
     );
     if (this.script.caso && !Array.isArray(this.script.caso)) {
       this.script.caso = [this.script.caso];
     }
-    this.test.STORIA.push(`${this.test.ServerTime()} = Valutazione casi`);
+    this.test.STORIA.push(
+      `${this.test.ServerTime().format('HH:mm:SS')} = Valutazione casi`
+    );
 
     const caso = this.script.caso?.find((caso) => {
       let condizione = caso.$.condizione;
@@ -283,7 +300,9 @@ export const Stazione = class {
         }
         condizione = `( ${arrayCondizioni.join(' && ')} )`;
         this.test.STORIA.push(
-          `${this.test.ServerTime()} = Valutazione+caso : ${condizione}`
+          `${this.test
+            .ServerTime()
+            .format('HH:mm:SS')} = Valutazione+caso : ${condizione}`
         );
 
         return eval(condizione);
@@ -298,8 +317,8 @@ export const Stazione = class {
       // }
     });
     const azione = caso ? caso.azione : this.script.altrimenti?.azione;
-    this.test.LIVELLO_ACQUISITO = azione?.$.stato_acquisito || ' ';
-    this.test.STATO_ACQUISITO = azione?.$.esito_acuisito || '';
+    this.test.LIVELLO_ACQUISITO = azione?.$.esito_acquisito || ' ';
+    this.test.STATO_ACQUISITO = azione?.$.stato_acquisito || '';
     const sessioneStore = useSessioneStore();
 
     const test = sessioneStore.test;
@@ -312,22 +331,6 @@ export const Stazione = class {
       })
     );
 
-    sessioneStore.punteggiStazioni[id_stazione] = this.punteggioStazione;
-    sessioneStore.log_stazioni[id_stazione].risposte = sessioneStore.risposte;
-    const fine = moment();
-    const durata = moment
-      .duration(fine.diff(sessioneStore.log_stazioni[id_stazione].inizio))
-      .asSeconds();
-    sessioneStore.log_stazioni[id_stazione].durata = durata;
-    sessioneStore.log_stazioni[id_stazione].fine = fine.format();
-    sessioneStore.log_stazioni[id_stazione].punteggioStazione =
-      this.punteggioStazione;
-
-    sessioneStore.log_STAZIONI[id_stazione].durata = durata;
-    sessioneStore.log_STAZIONI[id_stazione].fine = fine.format();
-    sessioneStore.log_STAZIONI[id_stazione].punteggioStazione =
-      this.punteggioStazione;
-
     sessioneStore.log_STAZIONI[id_stazione].domandeOrdine =
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
@@ -335,9 +338,21 @@ export const Stazione = class {
         return Map;
       }, {} as { [Key: string]: number });
 
+    sessioneStore.punteggiStazioni[id_stazione] = this.punteggioStazione;
+    sessioneStore.log_stazioni[id_stazione].risposte = sessioneStore.risposte;
+    const fine = moment();
+    const durata = moment
+      .duration(fine.diff(sessioneStore.log_stazioni[id_stazione].inizio))
+      .asSeconds();
+
+    // console.log(this.punteggiDomande);
     sessioneStore.log_STAZIONI[id_stazione].domande =
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
+        // const xml = this.punteggiDomande
+        //   ? domanda.id in this.punteggiDomande
+        //   ? this.punteggiDomande[domanda.id].domanda
+        //   : '' : ''; // D[4];
         const script_domanda = D[1] as {
           testo: string;
           logRisposta?: TLogRisposte;
@@ -346,7 +361,11 @@ export const Stazione = class {
         Map[domanda.id] = {
           tecnica: parseInt(domanda.tecnica),
           peso: domanda.peso,
-          testo: script_domanda.testo,
+          testo: this.punteggiDomande
+            ? domanda.id in this.punteggiDomande
+              ? this.punteggiDomande[domanda.id].domanda
+              : ''
+            : '', // script_domanda.testo,
           RISPOSTE: script_domanda.logRisposta,
           punteggioOttenuto: this.punteggiDomande
             ? domanda.id in this.punteggiDomande
@@ -357,9 +376,21 @@ export const Stazione = class {
         return Map;
       }, {} as IDomande);
 
+    sessioneStore.log_stazioni[id_stazione].punteggioStazione =
+      this.punteggioStazione;
+    sessioneStore.log_stazioni[id_stazione].fine = fine.format('HH:mm:SS');
+    sessioneStore.log_stazioni[id_stazione].durata = durata;
+
+    sessioneStore.log_STAZIONI[id_stazione].punteggioStazione =
+      this.punteggioStazione;
+    sessioneStore.log_STAZIONI[id_stazione].fine = fine.format('HH:mm:SS');
+    sessioneStore.log_STAZIONI[id_stazione].durata = durata;
+
     if (azione?.$.vai_a == 'uscita') {
       this.test.STORIA.push(
-        `${this.test.ServerTime()} = Raggiunta+condizione+di+uscita`
+        `${this.test
+          .ServerTime()
+          .format('HH:mm:SS')} = Raggiunta+condizione+di+uscita`
       );
       await this.uscita();
       sessioneStore.testCompletato = true;
@@ -370,7 +401,9 @@ export const Stazione = class {
         );
 
       this.test.STORIA.push(
-        `${this.test.ServerTime()} = Passaggio a nuova stazione ${
+        `${this.test
+          .ServerTime()
+          .format('HH:mm:SS')} = Passaggio a nuova stazione ${
           script_nuova_stazione_corrente?.$.ID
         }`
       );
@@ -406,9 +439,11 @@ export const Stazione = class {
   async uscita() {
     const sessioneStore = useSessioneStore();
     const test = sessioneStore.test;
+    // test.LIVELLO_ACQUISITO = azione?.$.esito_acquisito || ' ';
+    // test.STATO_ACQUISITO = azione?.$.stato_acquisito || '';
     const fineTest = moment();
     const testTime = moment
-      .duration(fineTest.diff(test.inizioTest))
+      .duration(test.inizioTest.diff(fineTest))
       .asSeconds();
 
     const parms = {
@@ -420,9 +455,9 @@ export const Stazione = class {
       esitoUscita: test.STATO_ACQUISITO || '_',
       testTime: testTime.toString(),
       log: JSON.stringify({
-        inizioTest: test.inizioTest.format(),
-        serverTime: test.serverTime.format(),
-        clientTime: test.clientTime.format(),
+        inizioTest: test.inizioTest.format('ddd D MMM YYYY HH:mm'),
+        serverTime: test.serverTime.format('YYYY-MM-DTHH:mm.ss.SSS') + 'Z',
+        clientTime: test.clientTime.format('YYYY-MM-DTHH:mm.ss.SSS') + 'Z',
         ID_TEST: test.ID_TEST,
         ID_SESSION: test.ID_SESSION,
         ID_SIGNED_USER: test.script.test.$.signed_userId,
@@ -430,11 +465,11 @@ export const Stazione = class {
         LINGUA: test.LINGUA,
         SCRIPT: test.SCRIPT,
         STORIA: test.STORIA,
-        RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
-        fineTest: fineTest.format(),
+        fineTest: fineTest.format('ddd D MMM YYYY HH:mm'),
         testTime,
         esito_acquisito: test.LIVELLO_ACQUISITO,
         statoUscita: test.STATO_ACQUISITO,
+        RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
       }),
     };
 
@@ -442,11 +477,14 @@ export const Stazione = class {
       .post('/test/test/', new URLSearchParams(parms))
       .then((response) => {
         sessioneStore.logTest = response.data;
+        console.log(sessioneStore.logTest);
         // return response.data;
       })
       .catch((errore) => {
         console.log(errore);
       });
-    this.test.STORIA.push(`${this.test.ServerTime()} = Invio test completo`);
+    this.test.STORIA.push(
+      `${this.test.ServerTime().format('HH:mm:SS')} = Invio test completo`
+    );
   }
 };

@@ -1,19 +1,13 @@
 <template>
   <q-page>
-    <div class="column" style="height: calc(95vh)">
-      <div class="col-auto scroll" style="max-height: 70px">
-        <PrologoComponent :prologo="script.prologo" />
-      </div>
+    <div class="column">
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
 
-      <div v-if="script.immagine" class="col-auto q-my-sm q-mx-md">
-        <img-wrap :src="script.immagine" size="200px" />
-      </div>
-      <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-        <audio-wrap :audio="script.audio" @update="set_ascolti"></audio-wrap>
-      </div>
-      <div v-if="script.video" class="col-auto q-mt-md">
-        <video-wrap :video="script.video" @update="set_ascolti_video"></video-wrap>
-      </div>
+      <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
       <div class="col-auto q-my-sm q-mx-md ">
         <q-scroll-area :visible="true" style="height: calc(50vh)" :thumb-style="thumbStyle" :bar-style="barStyle">
@@ -42,7 +36,9 @@
                 <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                   <strong>{{ $t('Trascina') }}</strong>
                 </q-tooltip>
-                <span class="bg-teal-1 q-pa-xs  text-weight-medium" v-html="risposta.label"></span>
+                <span
+                  class="bg-teal-1 q-pa-xs rounded border-solid hover:border-dotted border-2 border-indigo-600 text-weight-medium"
+                  v-html="risposta.label"></span>
               </p>
             </div>
           </div>

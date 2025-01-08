@@ -1,28 +1,38 @@
 <template>
   <q-page class="column">
-    <PrologoComponent class="col-auto" style="max-height: 100px" :prologo="script.prologo" />
-    <div style="max-height: 250px" class="col-auto scroll text-subtitle1 q-my-sm q-mx-md"
-      v-html="common_api.sanitizeUnicode(script.testo)" />
 
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
+    <div class="flex flex-col h-100">
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
+      <div
+        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        v-html="common_api.sanitizeUnicode(script.testo)" />
 
-    <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(70vh)"
-      class="col-auto text-subtitle2 q-my-sm q-mx-md">
-      <draggable v-if="script.rispostaData" :list="script.rispostaData.risposta" :disabled="!enabled" item-key="_"
-        class="q-mr-md list-group" ghost-class="ghost" :move="checkMove" draggable=".not-draggable"
-        @start="dragging = true" @end="dragging = false">
-        <template #item="{ element }">
-          <div class="q-my-xs q-pa-sm list-group-item"
-            :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
-            v-html="element.label" />
-        </template>
-      </draggable>
-    </q-scroll-area>
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+
+
+      <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+        <audio-wrap :audio="script.audio" @update="set_ascolti" />
+      </div>
+      <div v-if="script.video" class="col q-mt-md">
+        <video-wrap :video="script.video" @update="set_ascolti_video" />
+      </div>
+
+      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(60vh)"
+        class="col-auto text-subtitle2 q-my-sm q-mx-md">
+        <draggable v-if="script.rispostaData" :list="script.rispostaData.risposta" :disabled="!enabled" item-key="_"
+          class="q-mr-md list-group" ghost-class="ghost" :move="checkMove" draggable=".not-draggable"
+          @start="dragging = true" @end="dragging = false">
+          <template #item="{ element }">
+            <div class=" q-my-md q-pa-sm list-group-item border-dotted border-2"
+              :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
+              v-html="element.label" />
+          </template>
+        </draggable>
+      </q-scroll-area>
+    </div>
   </q-page>
 </template>
 
@@ -55,6 +65,10 @@ if (typeof script.rispostaData === 'undefined') {
     peso: domanda.peso,
     risposte: script.rispostaData?.risposta.map((el) => el.$.hash) || []
   }
+}
+
+if (typeof script.logRisposta === 'undefined') {
+  script.logRisposta = []
 }
 
 if (script.audio) setAudioPams(script.audio)

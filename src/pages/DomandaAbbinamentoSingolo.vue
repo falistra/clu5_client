@@ -1,7 +1,9 @@
 <template>
   <q-page>
     <div class="column" style="height: calc(90vh)">
-      <PrologoComponent class="col-auto self-start q-mt-md q-mx-sm" :prologo="script.prologo" />
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
       <div class="col q-mt-sm q-mx-sm q-shadow-10">
         <div class="row" style="height: calc(75vh)">
           <div class="col-6 ">

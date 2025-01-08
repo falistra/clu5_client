@@ -27,7 +27,7 @@ export type Script_Stazione = {
     azione: {
       $: {
         stato_acquisito: string;
-        esito_acuisito?: string;
+        esito_acquisito?: string;
         vai_a: string;
       };
     };
@@ -40,7 +40,7 @@ export type Script_Stazione = {
     azione: {
       $: {
         stato_acquisito: string;
-        esito_acuisito?: string;
+        esito_acquisito?: string;
         vai_a: string;
       };
     };
@@ -99,6 +99,7 @@ export type TLogRisposte =
     }[] // Comprensione testo
   | { testo: string; value: string }[] // Riordino
   | { testo: string; value: string }[] // Scelta Multipla
+  | null
   | {
       fisso: { testo: string; value: string };
       mobile: { testo: string | undefined; value: string | undefined };

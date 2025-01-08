@@ -15,18 +15,26 @@ import { Cookies } from 'quasar';
 const sessioneStore = useSessioneStore()
 const router = useRouter()
 
-if (!Cookies.has('simulazione')) {
-  router.push({
-    name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
-  });
+if (sessioneStore.domande.length > 0) {
 
+  if (!Cookies.has('simulazione')) {
+    if (sessioneStore.domande.length > 0) {
+      router.push({
+        name: sessioneStore.domande[sessioneStore.counter][0],
+        params: { id: sessioneStore.counter },
+      });
+    }
+  } else {
+    if (sessioneStore.domande.length > 0) {
+      router.push({
+        name: `simulazione_${sessioneStore.domande[sessioneStore.counter][0]}`,
+        params: { id: sessioneStore.counter }
+      })
+    }
+    Cookies.set('simulazione', '', { expires: -1 }) // cancella cookie
+  }
 } else {
-  router.push({
-    name: `simulazione_${sessioneStore.domande[sessioneStore.counter][0]}`,
-    params: { id: sessioneStore.counter }
-  })
-  Cookies.set('simulazione', '', { expires: -1 }) // cancella cookie
+  router.push('/erroreServer')
 }
 
 </script>

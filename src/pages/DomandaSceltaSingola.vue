@@ -1,18 +1,22 @@
 <template>
   <q-page>
-    <div class="column" style="height: calc(100vh)">
-      <PrologoComponent class="col-auto self-start q-mt-md q-mx-sm" :prologo="script.prologo" />
-      <div style="max-height: calc(30vh); overflow:auto" class="col-auto scroll text-subtitle1 q-my-md q-mx-md"
+    <div class="flex flex-col h-100">
+      <PrologoComponent
+        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
+      <div
+        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(testoDomanda)" />
-      <img-wrap v-if="script.immagine" class="col q-my-md q-mx-md" :src="script.immagine" />
-      <audio-wrap v-if="script.audio" class="col q-my-md q-mx-md" :audio="script.audio" @update="set_ascolti" />
-      <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video" @update="set_ascolti_video" />
-      <div class="col-auto q-my-md q-mx-md ">
+      <img-wrap style="max-height : calc(65vh)" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+
+      <div class="grid mt-2 p-2 place-content-center">
         <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense push toggle-color="primary"
           :options="opzioni" clearable @update:model-value="setRisposta">
           <template v-for="button in opzioni" :key="button.value" #[button.slot]>
             <div v-if="script.risposte.$ == undefined || script.risposte.$?.tipoopzioni == 'TESTO'" class="risposta"
-              v-html="`${common_api.sanitizeUnicode(button.testo)}`" />
+              v-html="`${common_api.sanitizeUnicode(button.testo)}`"></div>
             <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
               <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
             </div>
@@ -38,6 +42,7 @@ import { common_api } from '../boot/common-utils'
 import VideoWrap from '../components/VideoWrap.vue'
 import { setAudioPams, setVideoPams, sanitazeScript } from './common'
 
+
 const sessione = useSessioneStore()
 const script = ref(sessione.domande[sessione.counter][1] as T_DomandaSceltaSingola)
 sanitazeScript(script.value)
@@ -49,6 +54,11 @@ if (typeof script.value.risposta2Server === 'undefined') {
     peso: domanda.peso,
     risposte: ''
   }
+
+}
+
+if (typeof script.value.logRisposta === 'undefined') {
+  script.value.logRisposta = { testo: null, value: null }
 }
 
 if (script.value.audio) setAudioPams(script.value.audio)

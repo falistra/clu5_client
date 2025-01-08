@@ -1,55 +1,55 @@
 <template>
-  <q-page class="column  senza-scroll">
-    <PrologoComponent class="col-auto" style="max-height: 60px" :prologo="script.prologo" />
-    <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-      <audio-wrap :audio="script.audio" @update="set_ascolti" />
-    </div>
-    <div v-if="script.video" class="col-auto q-mt-md">
-      <video-wrap :video="script.video" @update="set_ascolti_video" />
-    </div>
-    <div class="col-auto">
-      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
-        class="text-subtitle2 q-my-sm q-mx-md">
-        <div class="q-mb-xs q-mr-md testo-domanda">
-          <div class="column justify-start">
-            <div v-for="(riga, index) in righe" :key="index" class="col">
-              <div class="row">
-                <div class="col-5">
-                  <div class="q-pr-sm  q-my-xs text-right testo">
-                    {{ riga[0] }}
+  <q-page>
+    <div class="flex flex-col h-100">
+      <PrologoComponent
+        class="max-h-10 my-1 mx-5 p-1 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        :prologo="script.prologo" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+      <div class="col-auto">
+        <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
+          class="text-subtitle2 q-my-sm q-mx-md">
+          <div class="q-mb-xs q-mr-md testo-domanda">
+            <div class="column justify-start">
+              <div v-for="(riga, index) in righe" :key="index" class="col">
+                <div class="row">
+                  <div class="col-5">
+                    <div class="q-pr-sm  q-my-xs text-right testo">
+                      {{ riga[0] }}
+                    </div>
                   </div>
-                </div>
-                <div class="col-2" />
-                <div class="col-5">
-                  <div class="q-pl-sm q-my-xs testo">
-                    {{ riga[1] }}
+                  <div class="col-2" />
+                  <div class="col-5">
+                    <div class="q-pl-sm q-my-xs testo">
+                      {{ riga[1] }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </q-scroll-area>
-    </div>
+        </q-scroll-area>
+      </div>
 
-    <div class="col-auto q-mt-xs q-mb-sm risposta">
-      <div class="column">
-        <div class="row">
-          <div class="col-5" />
-          <div class="col-2">
-            <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold" name="risposta"
-              autofocus clearable rounded :label="t('Risposta')" dense @update:model-value="setRisposta" />
+      <div class="col-auto q-mt-xs q-mb-sm risposta">
+        <div class="column">
+          <div class="row">
+            <div class="col-5" />
+            <div class="col-2">
+              <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold" name="risposta"
+                autofocus clearable rounded :label="t('Risposta')" dense @update:model-value="setRisposta" />
+            </div>
+            <div class="col-5" />
           </div>
-          <div class="col-5" />
         </div>
       </div>
-    </div>
-    <div class="col-auto q-ml-md">
-      <VirtualKeyboard class="..." @key-pressed="carattere">
-        <div class="...">
-          <KeyButton v-for="v of i18n.caratteri[sessione.lingua].split('')" :key="`key-${v}`" :value="v" />
-        </div>
-      </VirtualKeyboard>
+      <div class="col-auto q-ml-md">
+        <VirtualKeyboard class="..." @key-pressed="carattere">
+          <div class="...">
+            <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
+          </div>
+        </VirtualKeyboard>
+      </div>
     </div>
   </q-page>
 </template>
@@ -67,7 +67,7 @@ const { t } = useI18n()
 
 import { useSessioneStore } from '../stores/sessione'
 import { T_DomandaOutputStudente, IDomanda } from './models'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import PrologoComponent from '../components/PrologoComponent.vue'
 import * as Common from './common'
 import VideoWrap from '../components/VideoWrap.vue'
@@ -79,6 +79,7 @@ const script = sessione.domande[sessione.counter][1] as T_DomandaOutputStudente
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
 
+
 if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {
     specie: parseInt(domanda.tecnica),
@@ -87,8 +88,14 @@ if (typeof script.risposta2Server === 'undefined') {
   }
 }
 
+if (typeof script.logRisposta === 'undefined') {
+  script.logRisposta = null
+}
+
 if (script.audio) setAudioPams(script.audio)
 if (script.video) setVideoPams(script.video)
+
+const linguaDomanda = computed(() => domanda.lingua || sessione.lingua)
 
 const righe = ref(script.testo
   .replace(/&nbsp;/g, '').split('<br>')
