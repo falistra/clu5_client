@@ -42,6 +42,7 @@ import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard'
 import '@dongivan/virtual-keyboard/default.css'
 
 import { useSessioneStore } from '../stores/sessione'
+import { useLogStore } from '../stores/log'
 import { T_DomandaScritturaLibera, IDomanda } from './models'
 
 import { ref, computed } from 'vue' // , computed
@@ -53,8 +54,16 @@ import VideoWrap from '../components/VideoWrap.vue'
 import { setAudioPams, setVideoPams } from './common'
 
 const sessione = useSessioneStore()
+const log = useLogStore()
 const script = sessione.domande[sessione.counter][1] as T_DomandaScritturaLibera
 const domanda = sessione.domande[sessione.counter][2] as IDomanda
+
+// prova a recuperare dal log
+const user = sessione.test?.ID_USER || 'Simulazione'
+if (!script.rispostaData) {
+  if (user in log.testiScritturaLibera)
+    script.rispostaData = log.testiScritturaLibera[user][domanda.id] || ''
+}
 
 if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {
@@ -98,6 +107,8 @@ const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | n
 }
 
 const setRisposta = () => {
+  if (!(user in log.testiScritturaLibera)) log.testiScritturaLibera[user] = {}
+  log.testiScritturaLibera[user][domanda.id] = script.rispostaData
   if (script.risposta2Server) {
     script.risposta2Server.risposte = script.rispostaData
     script.logRisposta = script.rispostaData

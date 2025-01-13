@@ -59,7 +59,7 @@ import ImgWrap from '../components/ImgWrap.vue'
 import { common_api } from '../boot/common-utils'
 import AudioWrap from '../components/AudioWrap.vue'
 import VideoWrap from '../components/VideoWrap.vue'
-import { setAudioPams, setVideoPams, thumbStyle, barStyle } from './common'
+import { setAudioPams, setVideoPams, sanitazeScript, thumbStyle, barStyle } from './common'
 
 const sessione = useSessioneStore()
 const script = ref(
@@ -115,6 +115,7 @@ const primaDomanda: T_DomandaSceltaSingola | undefined = script.value.domande.do
     (domanda) => domanda.video && domanda.video.$.url && domanda.video.$.url != '')
 
 if (primaDomanda) {
+  sanitazeScript(primaDomanda)
   if (primaDomanda.audio) setAudioPams(primaDomanda.audio)
   if (primaDomanda.video) setVideoPams(primaDomanda.video)
 }

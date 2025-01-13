@@ -1,7 +1,10 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useLogStore = defineStore('log', {
   state: () => ({
-    domande: {} as { [key: string]: string | number }
-  })
-})
+    testiScritturaLibera: {} as {
+      [signed_user: string]: { [idDomanda: string]: string };
+    },
+  }),
+  persist: true,
+});

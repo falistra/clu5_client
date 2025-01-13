@@ -19,7 +19,7 @@
             </div>
             <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
               :bar-style="barStyle">
-              <div class="q-pa-sm">
+              <div class="q-pa-sm mr-3">
                 <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
                   <div class="col-6 parte-fissa">
                     <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: partefissa._ } }" />
@@ -33,7 +33,8 @@
                         @dblclick="annulla(item, partefissa)">
                         <div class="col text-subtitle q-ma-xs item">
                           <div v-html="item.label" />
-                          <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                          <q-tooltip v-if="item.label" class="bg-indigo" anchor="top middle" self="bottom middle"
+                            :offset="[5, 5]">
                             <strong>{{ $t('Doppio_click') }} </strong>
                           </q-tooltip>
                         </div>

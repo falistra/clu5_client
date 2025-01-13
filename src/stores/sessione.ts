@@ -39,6 +39,7 @@ export const useSessioneStore = defineStore('sessione', {
     testCompletato: false,
     logTest: {},
   }),
+  // persist: { pick: ['counter'] },
   actions: {
     increment() {
       if (this.domande.length > this.counter) this.counter++;

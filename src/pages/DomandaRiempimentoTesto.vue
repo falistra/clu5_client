@@ -2,7 +2,7 @@
   <q-page>
     <div class="column">
       <PrologoComponent
-        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
 
       <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
@@ -16,7 +16,8 @@
               <span v-if="!item.isSlot" v-html="item.content"></span>
               <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
                 @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
-                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <q-tooltip v-if="(script.rispostaData && (item.slotIndex in script.rispostaData))" class="bg-indigo"
+                  anchor="top middle" self="bottom middle" :offset="[5, 5]">
                   <strong>{{ $t('Doppio_click') }}</strong>
                 </q-tooltip>
                 {{ (script.rispostaData && (item.slotIndex in script.rispostaData)) ?
@@ -223,13 +224,5 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
   width: 100px
   min-width: 100px
   /* border: 1px dotted black */
-
-.risposta
-  cursor: grab
-  font-size: small
-  font-weight: bold
-  text-align: justify
-  line-height: 85%
-  width: auto
 
 </style>

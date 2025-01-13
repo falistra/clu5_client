@@ -1,6 +1,6 @@
 <template>
   <q-img class="self-center" v-if="src && validImg" no-native-menu fit="scale-down" :src="`/media/${src.$.url}`"
-    size="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+    error-src="~assets/ImmagineNonDisponibile.jpeg" />
 </template>
 
 <script setup lang="ts">
@@ -8,7 +8,7 @@
 defineOptions({
   name: 'ImgWrap'
 })
-
+// (max-width: 320px) 280px, (max-width: 480px) 440px, 800px style="height: 400px; max-width: 300px"
 import { Immagine } from '../pages/models'
 import { computed } from 'vue'
 

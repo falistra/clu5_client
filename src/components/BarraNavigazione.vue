@@ -120,7 +120,7 @@ async function effettuaConsegna() {
     if (process.env.DEV) {
       router.push('/fineTestFuori')
     } else {
-      window.open('/test-GOODBYE.php')?.focus()
+      window.open('/test-GOODBYE.php', '_self')?.focus()
     }
     // sessioneStore.$reset()
   } else {
