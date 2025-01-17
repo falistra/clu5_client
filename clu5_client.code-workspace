@@ -2,6 +2,12 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "../clu4/client/test"
+    },
+    {
+      "path": "../clu5_server_py3.13/server/test"
     }
   ],
   "settings": {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { Test } from './Test';
-import { IRisposte, IDomande } from './models';
+import { IRisposte, Ilog_STAZIONI } from './models';
 
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
@@ -9,6 +9,7 @@ export const useSessioneStore = defineStore('sessione', {
     errore: {},
     lingua: <string>'2',
     numero_stazione_corrente: 1,
+    id_stazione_corrente: '',
     test: null as unknown as InstanceType<typeof Test>,
     risposte: <IRisposte>{},
     punteggiStazioni: <{ [Key: string]: number | undefined }>{},
@@ -23,21 +24,11 @@ export const useSessioneStore = defineStore('sessione', {
         };
       }
     >{},
-    log_STAZIONI: <
-      {
-        [Key: string]: {
-          inizio?: string;
-          domandeStato?: { [Key: string]: string };
-          domandeOrdine?: { [Key: string]: number };
-          domande?: IDomande;
-          fine?: string;
-          durata?: number;
-          punteggioStazione?: number;
-        };
-      }
-    >{},
+    log_STAZIONI: <Ilog_STAZIONI>{},
     testCompletato: false,
     logTest: {},
+    DOMANDE_GIA_POSTE: <number[]>[],
+    sessioneInterrotta: false,
   }),
   // persist: { pick: ['counter'] },
   actions: {

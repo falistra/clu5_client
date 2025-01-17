@@ -1,7 +1,8 @@
 <template>
   <div class="row justify-between">
+
     <div>
-      <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span>
+      <!-- <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span> -->
       <vue-countdown v-slot="{ minutes, seconds }"
         :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) * 60 * 1000" @end="gameover"
         @progress="versoLaFine">
@@ -52,7 +53,8 @@ const idDomanda = computed(() => {
 })
 
 const stato = computed(() => {
-  return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
+  return `${t('Parte')} ${sessioneStore.id_stazione_corrente} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
+  // return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
 })
 
 let notUltimaDomanda = true

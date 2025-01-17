@@ -77,6 +77,12 @@ export type Script = {
     stazioni: {
       stazione: Script_Stazione[];
     };
+    situazionePrecedente?: {
+      $: {
+        risposteDateFinora: string;
+        stazioneProssima: string;
+      };
+    };
   };
 };
 
@@ -148,4 +154,16 @@ export interface IDomande {
         punteggioOttenuto?: number;
       }
     | undefined;
+}
+
+export interface Ilog_STAZIONI {
+  [Key: string]: {
+    inizio?: string;
+    domandeStato?: { [Key: string]: string };
+    domandeOrdine?: { [Key: string]: number };
+    domande?: IDomande;
+    fine?: string;
+    durata?: number;
+    punteggioStazione?: number;
+  };
 }

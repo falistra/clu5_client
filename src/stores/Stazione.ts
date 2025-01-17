@@ -84,6 +84,7 @@ export const Stazione = class {
   }
 
   async richiediDomandeServer(): Promise<boolean> {
+    const sessioneStore = useSessioneStore();
     const parms = {
       idUser: this.test.script.test.$.idUser,
       idSession: this.test.script.test.$.sessionId,
@@ -91,7 +92,7 @@ export const Stazione = class {
       idStazione: this.script.$.ID,
       lingua: this.test.script.test.prologo.$.lingua,
       set_query: JSON.stringify(this.set_query),
-      domande_gia_poste: JSON.stringify(this.test.DOMANDE_GIA_POSTE),
+      domande_gia_poste: JSON.stringify(sessioneStore.DOMANDE_GIA_POSTE),
     };
 
     const domandeXML = await api
@@ -104,13 +105,6 @@ export const Stazione = class {
         return false;
       });
 
-    const sessioneStore = useSessioneStore();
-    // const xmlDoc = parseFromString(domandeXML);
-    // const xmlDomande_ = xmlDoc.getElementsByTagName('domanda');
-    // const xmlDomande: { [id: string]: string } = xmlDomande_.reduce(
-    //   (a, d) => ({ ...a, [d.getAttribute('id')]: d.innerHTML }),
-    //   {}
-    // );
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
         explicitArray: false,
@@ -122,6 +116,12 @@ export const Stazione = class {
       .catch(function (err) {
         console.error(err);
       });
+
+    if (!jsonDomande) {
+      sessioneStore.errore = {
+        idTest: this.test.script.test.$.id,
+      };
+    }
 
     if ('errore' in jsonDomande.insiemi_domande) {
       sessioneStore.errore = {
@@ -242,7 +242,7 @@ export const Stazione = class {
       idStazione: this.script.$.ID,
       lingua: test.prologo.$.lingua,
       risposte: JSON.stringify(sessioneStore.risposte),
-      risposteComplessive: JSON.stringify(sessioneStore.risposte),
+      risposteComplessive: JSON.stringify(sessioneStore.log_STAZIONI),
     };
 
     const punteggiDomandeServer = await api
@@ -324,7 +324,7 @@ export const Stazione = class {
     const test = sessioneStore.test;
     const id_stazione = this.script.$.ID;
     const domande = sessioneStore.domande;
-    test.DOMANDE_GIA_POSTE = test.DOMANDE_GIA_POSTE.concat(
+    sessioneStore.DOMANDE_GIA_POSTE = sessioneStore.DOMANDE_GIA_POSTE.concat(
       domande.map((D) => {
         const domanda = D[2] as IDomanda;
         return parseInt(domanda.id);
@@ -349,10 +349,6 @@ export const Stazione = class {
     sessioneStore.log_STAZIONI[id_stazione].domande =
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
-        // const xml = this.punteggiDomande
-        //   ? domanda.id in this.punteggiDomande
-        //   ? this.punteggiDomande[domanda.id].domanda
-        //   : '' : ''; // D[4];
         const script_domanda = D[1] as {
           testo: string;
           logRisposta?: TLogRisposte;
@@ -407,13 +403,18 @@ export const Stazione = class {
           script_nuova_stazione_corrente?.$.ID
         }`
       );
-
+      // const risposteComplessive = { ... sessioneStore.log_STAZIONI }
+      // risposteComplessive.STORIA = this.test.STORIA
       const parms = {
         idUser: test.ID_USER,
         idSession: test.ID_SESSION,
         idTest: test.ID_TEST,
         stazioneProssima: script_nuova_stazione_corrente?.$.ID || '',
-        risposteComplessive: JSON.stringify(sessioneStore.log_stazioni),
+        // risposteComplessive: JSON.stringify(sessioneStore.log_STAZIONI),
+        risposteComplessive: JSON.stringify({
+          log_STAZIONI: sessioneStore.log_STAZIONI,
+          storia: this.test.STORIA,
+        }),
         punteggiStazioni: JSON.stringify(sessioneStore.punteggiStazioni),
       };
 
@@ -432,6 +433,8 @@ export const Stazione = class {
           this.test
         );
         sessioneStore.numero_stazione_corrente += 1;
+        sessioneStore.id_stazione_corrente =
+          script_nuova_stazione_corrente?.$.ID || '';
       }
     }
   }
@@ -472,12 +475,10 @@ export const Stazione = class {
         RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
       }),
     };
-
     await api
       .post('/test/test/', new URLSearchParams(parms))
       .then((response) => {
         sessioneStore.logTest = response.data;
-        console.log(sessioneStore.logTest);
         // return response.data;
       })
       .catch((errore) => {

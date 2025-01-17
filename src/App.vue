@@ -7,12 +7,16 @@ defineOptions({
   name: 'App'
 })
 
-
+// import moment from 'moment';
 import { useSessioneStore } from 'stores/sessione'
+// import { useLogStore } from 'stores/log'
 import { useRouter } from 'vue-router'
 import { Cookies } from 'quasar';
 
 const sessioneStore = useSessioneStore()
+// const log = useLogStore()
+
+
 const router = useRouter()
 
 if (sessioneStore.domande.length > 0) {

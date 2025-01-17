@@ -38,6 +38,7 @@ defineOptions({
   name: 'DomandaScritturaLibera'
 })
 
+import moment from 'moment';
 import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard'
 import '@dongivan/virtual-keyboard/default.css'
 
@@ -62,7 +63,7 @@ const domanda = sessione.domande[sessione.counter][2] as IDomanda
 const user = sessione.test?.ID_USER || 'Simulazione'
 if (!script.rispostaData) {
   if (user in log.testiScritturaLibera)
-    script.rispostaData = log.testiScritturaLibera[user][domanda.id] || ''
+    script.rispostaData = log.testiScritturaLibera[user][domanda.id].value || ''
 }
 
 if (typeof script.risposta2Server === 'undefined') {
@@ -108,7 +109,9 @@ const insertAtCaret = function (text: string, campo_input?: HTMLInputElement | n
 
 const setRisposta = () => {
   if (!(user in log.testiScritturaLibera)) log.testiScritturaLibera[user] = {}
-  log.testiScritturaLibera[user][domanda.id] = script.rispostaData
+  if (!(domanda.id in log.testiScritturaLibera[user])) log.testiScritturaLibera[user][domanda.id] = {}
+  log.testiScritturaLibera[user][domanda.id].value = script.rispostaData as string
+  log.testiScritturaLibera[user][domanda.id].date = moment()
   if (script.risposta2Server) {
     script.risposta2Server.risposte = script.rispostaData
     script.logRisposta = script.rispostaData

@@ -42,6 +42,10 @@
     </q-page-container>
 
     <q-footer bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
+      <!-- <q-badge class="text-xs/[3px]" floating v-if="sessioneStore.sessioneInterrotta" color="red"
+        label="Test precedentemente interrotto; ora ripreso.">
+        <q-icon name="warning" color="white" />
+      </q-badge> -->
       <div class="row items-center justify-between">
         <q-toolbar class="col-12">
           <q-toolbar-title>

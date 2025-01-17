@@ -3,11 +3,15 @@ import { Cookies } from 'quasar';
 
 import xml2js from 'xml2js';
 import { api } from 'boot/axios';
+import moment from 'moment';
 
 import { Test } from 'stores/Test';
-import { Loading /*, Notify */ } from 'quasar';
+import { Loading, Notify } from 'quasar';
 
 import { useSessioneStore } from 'stores/sessione';
+import { useLogStore } from 'stores/log';
+import { Script, Ilog_STAZIONI } from 'stores/models';
+
 // import { parseFromString } from 'dom-parser';
 // import { useRouter } from 'vue-router';
 
@@ -17,6 +21,26 @@ export default boot(async ({ router }) => {
   let allCookies = Cookies.getAll();
 
   const sessioneStore = useSessioneStore();
+  const log = useLogStore();
+
+  const testiScritturaLibera: {
+    [signed_user: string]: {
+      [idDomanda: string]: { value?: string; date?: moment.Moment };
+    };
+  } = {};
+  const ieri = moment().add(-1, 'days');
+  Object.entries(log.testiScritturaLibera).forEach(([signed_user, domande]) => {
+    const domandeFiltrate: {
+      [idDomanda: string]: { value?: string; date?: moment.Moment };
+    } = {};
+    Object.entries(domande).forEach(([idDomanda, { value, date }]) => {
+      const date_obj = moment(date);
+      if (date_obj > ieri) domandeFiltrate[idDomanda] = { value, date };
+    });
+    if (domandeFiltrate) testiScritturaLibera[signed_user] = domandeFiltrate;
+  });
+  log.testiScritturaLibera = testiScritturaLibera;
+
   Loading.show({
     message: 'Attendere, prego...',
   });
@@ -37,7 +61,7 @@ export default boot(async ({ router }) => {
             { label: 'test 3', value: { idUser: 1, idSess: 3 } },
             { label: 'test 4', value: { idUser: 1, idSess: 6 } },
           ];
-      const el = options[Math.floor(Math.random() * options.length)]; // options[2];
+      const el = options[3]; // options[Math.floor(Math.random() * options.length)]; // options[2];
       Cookies.set('idUtente', el.value.idUser.toString());
       Cookies.set('idSessione', el.value.idSess.toString());
     }
@@ -85,7 +109,41 @@ export default boot(async ({ router }) => {
           };
         });
       if (scriptJSON) {
-        const test = new Test(scriptJSON, script);
+        let storia_precedente: string[] = [];
+        if ((scriptJSON as Script).test.situazionePrecedente) {
+          sessioneStore.sessioneInterrotta = true;
+          const stazioniPrecedenti: {
+            log_STAZIONI: Ilog_STAZIONI;
+            storia: string[];
+          } = JSON.parse(
+            (scriptJSON as Script).test.situazionePrecedente?.$
+              .risposteDateFinora || ''
+          );
+          // sessioneStore.log_stazioni = stazioniPrecedenti;
+          sessioneStore.log_STAZIONI = stazioniPrecedenti.log_STAZIONI;
+          storia_precedente = stazioniPrecedenti.storia;
+          Object.entries(sessioneStore.log_stazioni).forEach(
+            ([id_stazione, stazione]) => {
+              sessioneStore.punteggiStazioni[id_stazione] =
+                stazione.punteggioStazione;
+              sessioneStore.DOMANDE_GIA_POSTE =
+                sessioneStore.DOMANDE_GIA_POSTE.concat(
+                  Array.from(
+                    Object.keys(stazione.risposte || []).map((idDomanda) =>
+                      parseInt(idDomanda)
+                    )
+                  )
+                );
+            }
+          );
+          Notify.create({
+            message: 'Test precedentemente interrotto; ora ripreso.',
+            color: 'negative',
+            position: 'bottom',
+          });
+        }
+
+        const test = new Test(scriptJSON, script, storia_precedente);
 
         sessioneStore.test = test;
         sessioneStore.lingua = test.LINGUA;
