@@ -10,10 +10,21 @@
       <q-card-section>
         <q-btn-dropdown color="primary" :label="t('domandeSenzaRisposta')">
           <q-list dense bordered>
-            <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[1, 1]">
+            <q-tooltip
+              class="bg-indigo"
+              anchor="top middle"
+              self="bottom middle"
+              :offset="[1, 1]"
+            >
               <strong>{{ $t('click2D') }}</strong>
             </q-tooltip>
-            <q-item clickable v-close-popup @click="vai(D)" v-for="D in indiciDomandeSenzaRisposta" :key="D.indice">
+            <q-item
+              clickable
+              v-close-popup
+              @click="vai(D)"
+              v-for="D in indiciDomandeSenzaRisposta"
+              :key="D.indice"
+            >
               <q-item-section>
                 <q-item-label>{{ `${t('Domanda')} ${D.indice}` }}</q-item-label>
               </q-item-section>
@@ -37,43 +48,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useDialogPluginComponent } from 'quasar'
-import { useSessioneStore } from '../stores/sessione'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useDialogPluginComponent } from 'quasar';
+import { useSessioneStore } from '../stores/sessione';
+import { useRouter } from 'vue-router';
 
-const sessioneStore = useSessioneStore()
-const router = useRouter()
+const sessioneStore = useSessioneStore();
+const router = useRouter();
 
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
-const show = ref(true)
+const show = ref(true);
 
 interface Props {
-  persistent: boolean,
-  indiciDomandeSenzaRisposta: { tipo: string; indice: number; }[]
-};
+  persistent: boolean;
+  indiciDomandeSenzaRisposta: { tipo: string; indice: number }[];
+}
 
-defineProps<Props>()
+defineProps<Props>();
 
 defineEmits([
   // REQUIRED; need to specify some events that your
   // component will emit through useDialogPluginComponent()
-  ...useDialogPluginComponent.emits
-])
+  ...useDialogPluginComponent.emits,
+]);
 
 const vai = (D: { tipo: string; indice: number }) => {
-  show.value = false
+  show.value = false;
 
-  sessioneStore.counter = D.indice - 1
+  sessioneStore.counter = D.indice - 1;
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter }
-  })
-}
+    params: { id: sessioneStore.counter },
+  });
+};
 
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+  useDialogPluginComponent();
 // dialogRef      - Vue ref to be applied to QDialog
 // onDialogHide   - Function to be used as handler for @hide on QDialog
 // onDialogOK     - Function to call to settle dialog with "ok" outcome
@@ -85,7 +97,7 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginC
 function onOKClick() {
   // on OK, it is REQUIRED to
   // call onDialogOK (with optional payload)
-  onDialogOK()
+  onDialogOK();
   // or with payload: onDialogOK({ ... })
   // ...and it will also hide the dialog automatically
 }

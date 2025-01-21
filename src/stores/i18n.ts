@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 // import { IDomanda } from 'pages/models';
 
 // const caratteriSpecialiLingue = {
@@ -248,11 +248,11 @@ const caratteri: { [Key: string]: string } = {
   4: '¿¡ÑñÜüÉéÁáÍíÓóÚú',
   5: 'ÀÈÙÓî',
   6: '',
-  666: ''
-}
+  666: '',
+};
 
 export const useI18nStore = defineStore('i18n', {
   state: () => ({
-    caratteri
-  })
-})
+    caratteri,
+  }),
+});

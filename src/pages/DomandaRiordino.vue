@@ -1,17 +1,25 @@
 <template>
   <q-page class="column">
-
     <div class="flex flex-col h-100">
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo" />
+        :prologo="script.prologo"
+      />
       <div
         class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(script.testo)" />
+        v-html="common_api.sanitizeUnicode(script.testo)"
+      />
 
-      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
-      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
-
+      <audio-wrap
+        v-if="script.audio"
+        :audio="script.audio"
+        @update="set_ascolti"
+      />
+      <video-wrap
+        v-if="script.video"
+        :video="script.video"
+        @update="set_ascolti_video"
+      />
 
       <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
         <audio-wrap :audio="script.audio" @update="set_ascolti" />
@@ -20,15 +28,34 @@
         <video-wrap :video="script.video" @update="set_ascolti_video" />
       </div>
 
-      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(60vh)"
-        class="col-auto text-subtitle2 q-my-sm q-mx-md">
-        <draggable v-if="script.rispostaData" :list="script.rispostaData.risposta" :disabled="!enabled" item-key="_"
-          class="q-mr-md list-group" ghost-class="ghost" :move="checkMove" draggable=".not-draggable"
-          @start="dragging = true" @end="dragging = false">
+      <q-scroll-area
+        visible
+        :thumb-style="thumbStyle"
+        :bar-style="barStyle"
+        style="height: calc(60vh)"
+        class="col-auto text-subtitle2 q-my-sm q-mx-md"
+      >
+        <draggable
+          v-if="script.rispostaData"
+          :list="script.rispostaData.risposta"
+          :disabled="!enabled"
+          item-key="_"
+          class="q-mr-md list-group"
+          ghost-class="ghost"
+          :move="checkMove"
+          draggable=".not-draggable"
+          @start="dragging = true"
+          @end="dragging = false"
+        >
           <template #item="{ element }">
-            <div class=" q-my-md q-pa-sm list-group-item border-dotted border-2"
-              :class="{ 'not-draggable': check_primoItem(element.ordine), 'primo-Item': !check_primoItem(element.ordine) }"
-              v-html="element.label" />
+            <div
+              class="q-my-md q-pa-sm list-group-item border-dotted border-2"
+              :class="{
+                'not-draggable': check_primoItem(element.ordine),
+                'primo-Item': !check_primoItem(element.ordine),
+              }"
+              v-html="element.label"
+            />
           </template>
         </draggable>
       </q-scroll-area>
@@ -38,77 +65,76 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'DomandaRiordino'
-})
-import draggable from 'vuedraggable'
+  name: 'DomandaRiordino',
+});
+import draggable from 'vuedraggable';
 
-import { useSessioneStore } from '../stores/sessione'
-import { T_DomandaRiordino, IDomanda } from './models'
+import { useSessioneStore } from '../stores/sessione';
+import { T_DomandaRiordino, IDomanda } from './models';
 
-import PrologoComponent from '../components/PrologoComponent.vue'
-import AudioWrap from '../components/AudioWrap.vue'
-import { common_api } from '../boot/common-utils'
-import { ref, watch } from 'vue'
-import VideoWrap from '../components/VideoWrap.vue'
-import { setAudioPams, setVideoPams } from './common'
-import * as Common from './common'
+import PrologoComponent from '../components/PrologoComponent.vue';
+import AudioWrap from '../components/AudioWrap.vue';
+import { common_api } from '../boot/common-utils';
+import { ref, watch } from 'vue';
+import VideoWrap from '../components/VideoWrap.vue';
+import { setAudioPams, setVideoPams } from './common';
+import * as Common from './common';
 
-const sessione = useSessioneStore()
+const sessione = useSessioneStore();
 
-const script = sessione.domande[sessione.counter][1] as T_DomandaRiordino
-const domanda = sessione.domande[sessione.counter][2] as IDomanda
+const script = sessione.domande[sessione.counter][1] as T_DomandaRiordino;
+const domanda = sessione.domande[sessione.counter][2] as IDomanda;
 
 if (typeof script.rispostaData === 'undefined') {
-  script.rispostaData = JSON.parse(JSON.stringify(script.risposte))
+  script.rispostaData = JSON.parse(JSON.stringify(script.risposte));
   script.risposta2Server = {
     specie: parseInt(domanda.tecnica),
     peso: domanda.peso,
-    risposte: script.rispostaData?.risposta.map((el) => el.$.hash) || []
-  }
+    risposte: script.rispostaData?.risposta.map((el) => el.$.hash) || [],
+  };
 }
 
 if (typeof script.logRisposta === 'undefined') {
-  script.logRisposta = []
+  script.logRisposta = [];
 }
 
-if (script.audio) setAudioPams(script.audio)
-if (script.video) setVideoPams(script.video)
+if (script.audio) setAudioPams(script.audio);
+if (script.video) setVideoPams(script.video);
 
 script.rispostaData?.risposta.map((item, index) => {
-  item.ordine = index
-  item.label = common_api.sanitizeUnicode(item._)
-})
+  item.ordine = index;
+  item.label = common_api.sanitizeUnicode(item._);
+});
 
-const dragging = ref(false)
-const enabled = ref(true)
-const checkMove = () => null
+const dragging = ref(false);
+const enabled = ref(true);
+const checkMove = () => null;
 
 if (script.rispostaData) {
   watch(script.rispostaData.risposta, (risposteOrdinate) => {
     if (script.risposta2Server) {
-      script.risposta2Server.risposte = risposteOrdinate.map((r) => r.$.hash)
+      script.risposta2Server.risposte = risposteOrdinate.map((r) => r.$.hash);
     }
-  })
+  });
 }
 
 const check_primoItem = (ordine: number) => {
-  return ordine != 0
-}
+  return ordine != 0;
+};
 
 const set_ascolti = (val: number) => {
   if (script.audio) {
-    script.audio.ascolti_rimanenti = val
+    script.audio.ascolti_rimanenti = val;
   }
-}
+};
 const set_ascolti_video = (val: number) => {
   if (script.video) {
-    script.video.ascolti_rimanenti = val
+    script.video.ascolti_rimanenti = val;
   }
-}
+};
 
-const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle)
-const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle)
-
+const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle);
+const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 </script>
 <style lang="sass" scoped>
 

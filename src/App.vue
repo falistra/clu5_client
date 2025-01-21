@@ -4,23 +4,21 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'App'
-})
+  name: 'App',
+});
 
 // import moment from 'moment';
-import { useSessioneStore } from 'stores/sessione'
+import { useSessioneStore } from 'stores/sessione';
 // import { useLogStore } from 'stores/log'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { Cookies } from 'quasar';
 
-const sessioneStore = useSessioneStore()
+const sessioneStore = useSessioneStore();
 // const log = useLogStore()
 
-
-const router = useRouter()
+const router = useRouter();
 
 if (sessioneStore.domande.length > 0) {
-
   if (!Cookies.has('simulazione')) {
     if (sessioneStore.domande.length > 0) {
       router.push({
@@ -32,13 +30,12 @@ if (sessioneStore.domande.length > 0) {
     if (sessioneStore.domande.length > 0) {
       router.push({
         name: `simulazione_${sessioneStore.domande[sessioneStore.counter][0]}`,
-        params: { id: sessioneStore.counter }
-      })
+        params: { id: sessioneStore.counter },
+      });
     }
-    Cookies.set('simulazione', '', { expires: -1 }) // cancella cookie
+    Cookies.set('simulazione', '', { expires: -1 }); // cancella cookie
   }
 } else {
-  router.push('/erroreServer')
+  router.push('/erroreServer');
 }
-
 </script>

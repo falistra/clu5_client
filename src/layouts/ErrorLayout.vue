@@ -2,16 +2,17 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="bg-negative text-white" height-hint="98">
       <q-toolbar class="row flex-center">
-        <q-toolbar-title class=" col text-subtitle1">
+        <q-toolbar-title class="col text-subtitle1">
           <div class="row flex-center" v-if="sessioneStore.test">
-            {{ sessioneStore.test?.script?.test.studente.$.cognome + ' ' +
-              sessioneStore.test?.script?.test.studente.$.nome }}
+            {{
+              sessioneStore.test?.script?.test.studente.$.cognome +
+              ' ' +
+              sessioneStore.test?.script?.test.studente.$.nome
+            }}
           </div>
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
-          <div class="row flex-center">
-            Errore
-          </div>
+          <div class="row flex-center">Errore</div>
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
           <div class="row flex-center" v-if="sessioneStore.test">
@@ -29,7 +30,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="/icons/favicon-128x128.png">
+            <img src="/icons/favicon-128x128.png" />
           </q-avatar>
         </q-toolbar-title>
       </q-toolbar>
@@ -38,12 +39,10 @@
 </template>
 
 <script setup lang="ts">
-
 // import { useQuasar } from 'quasar'
-import { useSessioneStore } from '../stores/sessione'
+import { useSessioneStore } from '../stores/sessione';
 
-const sessioneStore = useSessioneStore()
-
+const sessioneStore = useSessioneStore();
 </script>
 
 <style lang="sass">
