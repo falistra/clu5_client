@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column" :style-fn="myTweak">
+  <q-page :style-fn="myTweak">
     <PrologoComponent
       class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
@@ -132,11 +132,11 @@ if (typeof script.value.logRisposta === 'undefined') {
 const primaDomanda: T_DomandaSceltaSingola | undefined =
   script.value.domande.domandasceltasingola.find(
     (domanda) =>
-      domanda.audio && domanda.audio.$.url && domanda.audio.$.url != ''
+      domanda.audio && domanda.audio.$.url && domanda.audio.$.url != '' && domanda.audio.$.url != 'undefined' && domanda.audio.$.url != 'null'
   ) ||
   script.value.domande.domandasceltasingola.find(
     (domanda) =>
-      domanda.video && domanda.video.$.url && domanda.video.$.url != ''
+      domanda.video && domanda.video.$.url && domanda.video.$.url != '' && domanda.video.$.url != 'undefined' && domanda.video.$.url != 'null'
   );
 
 if (primaDomanda) {
@@ -197,7 +197,6 @@ const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle);
 
 
 const myTweak = (offset: number) => {
-
   // "offset" is a Number (pixels) that refers to the total
   // height of header + footer that occupies on screen,
   // based on the QLayout "view" prop configuration

@@ -122,14 +122,14 @@ export default boot(async ({ router }) => {
           // sessioneStore.log_stazioni = stazioniPrecedenti;
           sessioneStore.log_STAZIONI = stazioniPrecedenti.log_STAZIONI;
           storia_precedente = stazioniPrecedenti.storia;
-          Object.entries(sessioneStore.log_stazioni).forEach(
+          Object.entries(sessioneStore.log_STAZIONI).forEach(
             ([id_stazione, stazione]) => {
               sessioneStore.punteggiStazioni[id_stazione] =
                 stazione.punteggioStazione;
               sessioneStore.DOMANDE_GIA_POSTE =
                 sessioneStore.DOMANDE_GIA_POSTE.concat(
                   Array.from(
-                    Object.keys(stazione.risposte || []).map((idDomanda) =>
+                    Object.keys(stazione.domandeStato || []).map((idDomanda) =>
                       parseInt(idDomanda)
                     )
                   )

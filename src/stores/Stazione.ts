@@ -1,4 +1,5 @@
 import jsep from 'jsep';
+import { do_eval } from './evalExp';
 import xml2js from 'xml2js';
 // import { parseFromString } from 'dom-parser';
 import { api } from '../boot/axios';
@@ -255,9 +256,9 @@ export const Stazione = class {
         sessioneStore.errore = errore;
       });
 
-    this.punteggioStazione = (
-      punteggiDomandeServer as punteggiDomandeStazione
-    ).punteggioTotale;
+    sessioneStore.punteggiStazioni[this.script.$.ID] = this.punteggioStazione =
+      (punteggiDomandeServer as punteggiDomandeStazione).punteggioTotale;
+
     this.punteggiDomande = (
       punteggiDomandeServer as punteggiDomandeStazione
     ).punteggiDomande;
@@ -306,15 +307,26 @@ export const Stazione = class {
         );
 
         return eval(condizione);
+      } else {
+        const espressione = caso.$.se;
+        this.test.STORIA.push(
+          `${this.test
+            .ServerTime()
+            .format('HH:mm:SS')} = Valutazione+se : ${espressione}`
+        );
+
+        const parse_tree: jsep.Expression = jsep(espressione);
+        const valore = do_eval(parse_tree);
+        // console.log(valore);
+        // console.log(valore == 1 ? true : false);
+
+        this.test.STORIA.push(
+          `${this.test.ServerTime().format('HH:mm:SS')} = Valutazione+se : ${
+            valore == 1 ? true : false
+          }`
+        );
+        return valore == 1 ? true : false;
       }
-      // else {
-      //   let espressione = caso.$.se;
-      //   const parse_tree = jsep(espressione)
-      //   const valore = evalExp.do_eval(test, parse_tree)
-      //   if (valore) {
-      //     return casoCorrente
-      //   }
-      // }
     });
     const azione = caso ? caso.azione : this.script.altrimenti?.azione;
     this.test.LIVELLO_ACQUISITO = azione?.$.esito_acquisito || ' ';
