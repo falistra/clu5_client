@@ -3,40 +3,22 @@
     <div class="flex flex-col h-100">
       <PrologoComponent
         class="max-h-10 my-1 mx-5 p-1 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
-      <audio-wrap
-        v-if="script.audio"
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
-      <video-wrap
-        v-if="script.video"
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+        :prologo="script.prologo" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
       <div class="col-auto">
-        <q-scroll-area
-          visible
-          :thumb-style="thumbStyle"
-          :bar-style="barStyle"
-          style="height: calc(50vh)"
-          class="text-subtitle2 q-my-sm q-mx-md"
-        >
+        <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
+          class="text-subtitle2 q-my-sm q-mx-md">
           <div class="q-mb-xs q-mr-md testo-domanda">
             <div class="column justify-start">
               <div v-for="(riga, index) in righe" :key="index" class="col">
-                <div class="row">
-                  <div class="col-5">
-                    <div class="q-pr-sm q-my-xs text-right testo">
-                      {{ riga[0] }}
-                    </div>
+                <div class="border-4 border-solid my-3 row">
+                  <div class="col-5 q-pr-sm q-my-xs text-right testo">
+                    {{ riga[0] }}
                   </div>
-                  <div class="col-2" />
-                  <div class="col-5">
-                    <div class="q-pl-sm q-my-xs testo">
-                      {{ riga[1] }}
-                    </div>
+                  <div class="col-2 border-2 border-dashed" />
+                  <div class="col-5 q-pl-sm q-my-xs testo">
+                    {{ riga[1] }}
                   </div>
                 </div>
               </div>
@@ -50,17 +32,8 @@
           <div class="row">
             <div class="col-5" />
             <div class="col-2">
-              <q-input
-                v-model="script.rispostaData"
-                input-class="text-subtitle1 text-weight-bold"
-                name="risposta"
-                autofocus
-                clearable
-                rounded
-                :label="t('Risposta')"
-                dense
-                @update:model-value="setRisposta"
-              />
+              <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold" name="risposta"
+                autofocus clearable rounded :label="t('Risposta')" dense @update:model-value="setRisposta" />
             </div>
             <div class="col-5" />
           </div>
@@ -69,11 +42,7 @@
       <div class="col-auto q-ml-md">
         <VirtualKeyboard class="..." @key-pressed="carattere">
           <div class="...">
-            <KeyButton
-              v-for="v of i18n.caratteri[linguaDomanda].split('')"
-              :key="`key-${v}`"
-              :value="v"
-            />
+            <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
           </div>
         </VirtualKeyboard>
       </div>
@@ -127,8 +96,11 @@ const righe = ref(
   script.testo
     .replace(/&nbsp;/g, '')
     .split('<br>')
+    .filter(el => el.length > 1)
     .map((el) => el.split(/_+/))
 );
+
+console.log(righe)
 
 import { useI18nStore } from '../stores/i18n';
 const i18n = ref(useI18nStore());
@@ -181,12 +153,6 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 
 <style lang="sass" scoped>
 
-.testo-domanda
-  .column > .col > .row
-    border: 1px solid black
-
 .testo
     font-size: small
-    font-weight : bold
-    line-height: 90%
 </style>

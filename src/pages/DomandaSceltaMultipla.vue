@@ -1,63 +1,33 @@
 <template>
   <q-page>
     <div class="flex flex-col h-100">
-      <PrologoComponent
-        style="max-height: calc(40vh)"
+      <PrologoComponent style="max-height: calc(40vh)"
         class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
-      <div
-        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(script.testo)"
-      />
-      <img-wrap
-        class="max-h-60"
-        v-if="script.immagine"
-        :src="script.immagine"
-      />
-      <audio-wrap
-        v-if="script.audio"
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
-      <video-wrap
-        v-if="script.video"
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+        :prologo="script.prologo" />
+      <div style="max-height: calc(60vh)"
+        class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        v-html="common_api.sanitizeUnicode(script.testo)" />
+      <img-wrap style="max-height: calc(60vh)" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
       <q-badge color="red" class="ml-2 w-40">
         <q-icon name="warning" color="white" class="q-ml-xs" />
         Risposte corrette: {{ script.$.risposteCorrette }}
       </q-badge>
-      <div style="max-height: calc(40vh)">
-        <q-scroll-area
-          visible
-          :thumb-style="my_thumbStyle"
-          :bar-style="my_barStyle"
-          style="height: calc(40vh)"
-          class="mr-5"
-        >
-          <div class="mt-3 mx-3 grid p-2 place-content-center">
-            <q-option-group
-              v-model="script.rispostaData"
-              :options="opzioni"
-              dense
-              type="checkbox"
-              @update:model-value="setRispostaData"
-            >
-              <template #label="opt">
-                <div class="flex flex-left q-mt-sm">
-                  <span
-                    class="q-ml-md text-weight-bold text-left"
-                    v-html="opt.label"
-                  />
-                </div>
-              </template>
-            </q-option-group>
-          </div>
-        </q-scroll-area>
-      </div>
+      <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(70vh)"
+        class="mr-5">
+        <div class="mt-3 mx-3 grid p-2 place-content-center">
+          <q-option-group v-model="script.rispostaData" :options="opzioni" dense type="checkbox"
+            @update:model-value="setRispostaData">
+            <template #label="opt">
+              <div class="flex flex-left q-my-sm">
+                <span class="q-ml-md text-left" v-html="opt.label" />
+              </div>
+            </template>
+          </q-option-group>
+        </div>
+      </q-scroll-area>
     </div>
   </q-page>
 </template>

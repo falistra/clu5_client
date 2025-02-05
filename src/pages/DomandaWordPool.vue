@@ -1,113 +1,55 @@
 <template>
   <q-page>
-    <div class="column" style="height: calc(90vh)">
-      <PrologoComponent
-        class="max-h-10 mx-5 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
-      <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
-        <div class="row" style="height: calc(75vh)">
-          <div class="col-6">
-            <div class="column">
-              <div
-                style="max-height: 150px"
-                class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-                v-html="common_api.sanitizeUnicode(script.testo)"
-              />
-              <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-                <audio-wrap :audio="script.audio" @update="set_ascolti" />
-              </div>
-              <div v-if="script.video" class="col-auto q-mt-md">
-                <video-wrap :video="script.video" @update="set_ascolti_video" />
-              </div>
-            </div>
-            <q-scroll-area
-              class="col-auto"
-              style="height: calc(60vh)"
-              visible
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <div class="q-pa-sm">
-                <q-card
-                  v-for="pool in script.pools.pool"
-                  :key="pool.$.hash"
-                  class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10"
-                  @dragover.prevent
-                  @dragenter.prevent
-                  @drop="onDrop($event, pool)"
-                >
-                  <div
-                    class="q-ml-sm q-mt-sm text-subtitle1 text-weight-bold"
-                    color="primary"
-                  >
-                    <span v-html="common_api.sanitizeUnicode(pool._)" />
-                  </div>
-                  <div class="row">
-                    <div
-                      v-for="item in pool.rispostaData"
-                      :key="item.$.hash"
-                      class="col-auto"
-                      @dblclick="annulla(item, pool)"
-                    >
-                      <div class="text-subtitle q-ma-sm item">
-                        <q-tooltip
-                          class="bg-indigo"
-                          anchor="top middle"
-                          self="bottom middle"
-                          :offset="[5, 5]"
-                        >
-                          <strong>{{ $t('Doppio_click') }}</strong>
-                        </q-tooltip>
-                        <span
-                          class="q-ma-md text-weight-medium"
-                          v-html="item.label"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </q-card>
-              </div>
-            </q-scroll-area>
-          </div>
-          <div class="col-6">
-            <q-scroll-area
-              style="height: calc(70vh)"
-              visible
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <q-list dense class="q-mr-lg">
-                <q-item
-                  v-for="item in lista_risposte_disponibili"
-                  :key="item.$.hash"
-                  class="q-my-sm"
-                >
-                  <q-item-section side>
-                    <p
-                      class="q-ma-sm item"
-                      draggable="true"
-                      @dragstart="startDrag($event, item)"
-                    >
-                      <q-tooltip
-                        class="bg-indigo"
-                        anchor="top middle"
-                        self="bottom middle"
-                        :offset="[5, 5]"
-                      >
-                        <strong>{{ $t('Trascina') }}</strong>
-                      </q-tooltip>
-                      <span
-                        class="bg-teal-2 q-pa-xs text-bold"
-                        v-html="item.label"
-                      />
-                    </p>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-scroll-area>
-          </div>
+    <PrologoComponent
+      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      :prologo="script.prologo" />
+    <div class="row">
+      <div class="col-6">
+        <div class="column">
+          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)" />
+          <audio-wrap v-if="script.audio" class="col q-my-md q-mx-md" :audio="script.audio" @update="set_ascolti" />
+          <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
+            @update="set_ascolti_video" />
         </div>
+        <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+          :bar-style="barStyle">
+          <div class="q-pa-sm">
+            <q-card v-for="pool in script.pools.pool" :key="pool.$.hash"
+              class="zona-ricevente q-ml-sm q-mr-md q-mt-lg shadow-10" @dragover.prevent @dragenter.prevent
+              @drop="onDrop($event, pool)">
+              <div class="q-ml-sm q-mt-sm text-subtitle1 text-weight-bold" color="primary">
+                <span v-html="common_api.sanitizeUnicode(pool._)" />
+              </div>
+              <div class="row">
+                <div v-for="item in pool.rispostaData" :key="item.$.hash" class="col-auto"
+                  @dblclick="annulla(item, pool)">
+                  <div class="text-subtitle q-ma-sm item">
+                    <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                      <strong>{{ $t('Doppio_click') }}</strong>
+                    </q-tooltip>
+                    <span class="q-ma-md text-weight-medium" v-html="item.label" />
+                  </div>
+                </div>
+              </div>
+            </q-card>
+          </div>
+        </q-scroll-area>
+      </div>
+      <div class="col-6">
+        <q-scroll-area class="q-mr-md" style="height: calc(70vh)" visible :thumb-style="thumbStyle"
+          :bar-style="barStyle">
+          <q-list dense class="q-mr-lg">
+            <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash">
+              <q-item-section class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)" side>
+                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                  <strong>{{ $t('Trascina') }}</strong>
+                </q-tooltip>
+                <span class="bg-teal-2 q-pa-xs text-bold" v-html="item.label" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
       </div>
     </div>
   </q-page>
@@ -282,7 +224,6 @@ const set_ascolti_video = (val: number) => {
 .item
   cursor: grab
   font-size: small
-  font-weight: bold
   text-align: justify
   line-height: 85%
   width: auto

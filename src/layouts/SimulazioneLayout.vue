@@ -10,23 +10,13 @@
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
           <div class="row flex-center">
-            <q-btn
-              class="teal-8 shadow-8"
-              icon="quiz"
-              label="Calcola punteggio"
-              @click="getPunteggio"
-            />
+            <q-btn class="teal-8 shadow-8" icon="quiz" label="Calcola punteggio" @click="getPunteggio" />
           </div>
         </q-toolbar-title>
         <q-toolbar-title class="col text-subtitle1">
           <div class="row flex-center">
-            <q-btn
-              class="q-ml-lg"
-              color="secondary"
-              size="xs"
-              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
-              @click="$q.fullscreen.toggle()"
-            />
+            <q-btn class="q-ml-lg" color="secondary" size="xs"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />
           </div>
         </q-toolbar-title>
       </q-toolbar>
@@ -34,11 +24,7 @@
 
     <q-page-container>
       <router-view />
-      <q-page-scroller
-        position="bottom-right"
-        :scroll-offset="150"
-        :offset="[18, 18]"
-      >
+      <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
         <q-btn fab icon="keyboard_arrow_up" color="accent" />
       </q-page-scroller>
     </q-page-container>
@@ -104,10 +90,11 @@ const getPunteggio = async () => {
     .post('/test/simulazione/punteggio/', new URLSearchParams(parms))
     .then((response) => {
       // return response.data;
+      const punteggio = Number((response.data.punteggio).toFixed(2));
       $q.notify({
         color: 'positive',
         position: 'center',
-        message: `Punteggio ottenuto: ${response.data.punteggio}`,
+        message: `Punteggio ottenuto: ${punteggio}`,
       });
     })
     .catch((errore) => {

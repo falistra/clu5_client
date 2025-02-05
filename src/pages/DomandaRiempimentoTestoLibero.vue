@@ -2,53 +2,18 @@
   <q-page class="column senza-scroll">
     <PrologoComponent
       class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-      :prologo="script.prologo"
-    />
+      :prologo="script.prologo" />
     <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
-    <audio-wrap
-      v-if="script.audio"
-      :audio="script.audio"
-      @update="set_ascolti"
-    />
-    <video-wrap
-      v-if="script.video"
-      :video="script.video"
-      @update="set_ascolti_video"
-    />
-    <q-scroll-area
-      visible
-      :thumb-style="thumbStyle"
-      :bar-style="barStyle"
-      style="height: calc(50vh)"
-      class="col-auto text-subtitle2 q-my-sm q-mx-md"
-    >
-      <div class="mx-5">
-        <span v-for="item in tokens" :key="item.index">
-          <span v-if="!item.isSlot" v-html="item.content" />
-          <span v-else-if="item.isSlot">
-            <input
-              class="m-2 px-2 rounded hover:rounded-lg bg-slate-200 border-solid hover:border-dotted"
-              :id="`campo_input_${item.index}`"
-              v-model="script.rispostaData[item.slotIndex]"
-              :name="`slot_${item.slotIndex}`"
-              @focus="
-                () => {
-                  currentSlot = item.slotIndex;
-                }
-              "
-            />
-          </span>
-        </span>
-      </div>
-    </q-scroll-area>
+    <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+    <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+    <!-- <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(80vh)"
+      class="col-auto text-subtitle2 q-my-sm q-mx-md"> -->
+    <div class="my-5 mx-5" v-html="testo_quesito"></div>
+    <!-- </q-scroll-area> -->
     <div class="col">
       <VirtualKeyboard class="..." @key-pressed="carattere">
         <div class="...">
-          <KeyButton
-            v-for="v of i18n.caratteri[linguaDomanda].split('')"
-            :key="`key-${v}`"
-            :value="v"
-          />
+          <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
         </div>
       </VirtualKeyboard>
     </div>
@@ -59,12 +24,13 @@
 defineOptions({
   name: 'DomandaRiempimentoTestoLibero',
 });
+
 import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
 import '@dongivan/virtual-keyboard/default.css';
 
 import { useSessioneStore } from '../stores/sessione';
 import { useI18nStore } from '../stores/i18n';
-import { T_DomandaRiempimentoTestoLibero, T_Token, IDomanda } from './models';
+import { T_DomandaRiempimentoTestoLibero, IDomanda } from './models';
 import { ref, computed, watch, onMounted } from 'vue';
 
 import PrologoComponent from '../components/PrologoComponent.vue';
@@ -73,7 +39,7 @@ import ImgWrap from '../components/ImgWrap.vue';
 import VideoWrap from '../components/VideoWrap.vue';
 import { setAudioPams, setVideoPams } from './common';
 
-import * as Common from './common';
+// import * as Common from './common';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[
@@ -109,44 +75,42 @@ watch(script.rispostaData, (rispostaData) => {
 
 const i18n = ref(useI18nStore());
 
-let primo_campo_input_indice = -1;
-const tokens = ref(
-  script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
-    const slot = content.match(/([_]+)(\d+)([_]+)/);
-    const slotIndex = slot ? slot[2] : '';
-    const isSlot = !!slot;
-    const risposta = script.rispostaData ? script.rispostaData[slotIndex] : '';
-    content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
-    if (primo_campo_input_indice == -1 && isSlot)
-      primo_campo_input_indice = index;
-    return { index, isSlot, slotIndex, content } as T_Token;
-  })
-);
-
-const focusInput = () => {
-  const primo_campo_input = document.getElementById(
-    `campo_input_${primo_campo_input_indice}`
-  ) as HTMLInputElement;
-  if (primo_campo_input) {
-    primo_campo_input.focus();
-  }
-};
-
-onMounted(focusInput);
-
 const currentSlot = ref<string>('');
 
-// const setRisposta = (item: T_Token) => {
-//   script.rispostaData[item.slotIndex] = item.content;
-// };
+const testo_quesito = ref(script.testo.replace(/(\_+)(\d+)(\_+)/g, `<INPUT CLASS='italic text-blue-600 placeholder:text-gray-500 slot-RTL-${domanda.id}' placeholder='__________________________'  ID='${domanda.id}-$2'></INPUT>`))
 
-const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle);
-const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
+const campiInput = () => {
+  const inputs = document.querySelectorAll(`input.slot-RTL-${domanda.id}`)
+  inputs.forEach((el, key) => {
+    if (key == 0) { // primo elemento
+      (el as HTMLInputElement).focus()
+    }
+    function updateValue(e: Event) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_idDomanda_, idSlot] = (e.target as HTMLInputElement).id.split('-')
+      const value = (e.target as HTMLInputElement).value
+      if (value) script.rispostaData[idSlot] = value
+      else delete script.rispostaData[idSlot]
+    }
+    (el as HTMLElement).addEventListener('change', updateValue)
+
+    function setCurrentInput(e: Event) {
+      currentSlot.value = (e.target as HTMLInputElement).id
+      console.log(currentSlot.value)
+    }
+    (el as HTMLElement).addEventListener('focus', setCurrentInput)
+  })
+};
+
+onMounted(campiInput);
+
+// const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle);
+// const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 
 const carattere = (key: string) => {
-  const campi_input = document.getElementsByName(`slot_${currentSlot.value}`);
-  if (campi_input) {
-    insertAtCaret(key, campi_input[0] as HTMLInputElement);
+  const campo_input = document.getElementById(`${currentSlot.value}`);
+  if (campo_input) {
+    insertAtCaret(key, campo_input as HTMLInputElement);
   }
 };
 
@@ -155,26 +119,23 @@ const insertAtCaret = function (
   campo_input?: HTMLInputElement | null
 ) {
   if (campo_input) {
-    const token = tokens.value?.find(
-      (item) => item.slotIndex == currentSlot.value
+    let strPos = campo_input.selectionStart || 0;
+    const front = campo_input.value.substring(0, strPos);
+    const back = campo_input.value.substring(
+      strPos,
+      campo_input.value.length
     );
-    if (token) {
-      let strPos = campo_input.selectionStart || 0;
-      const front = campo_input.value.substring(0, strPos);
-      const back = campo_input.value.substring(
-        strPos,
-        campo_input.value.length
-      );
-      token.content = front + text + back;
-      if (script.rispostaData)
-        script.rispostaData[currentSlot.value] = front + text + back;
-      campo_input.focus();
-      strPos = strPos + text.length;
-      const scrollPos = campo_input.scrollTop;
-      campo_input.selectionStart = strPos;
-      campo_input.selectionEnd = strPos;
-      campo_input.scrollTop = scrollPos;
+    if (script.rispostaData) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_idDomanda_, idSlot] = currentSlot.value.split('-')
+      script.rispostaData[idSlot] = campo_input.value = front + text + back;
     }
+    campo_input.focus();
+    strPos = strPos + text.length;
+    const scrollPos = campo_input.scrollTop;
+    campo_input.selectionStart = strPos;
+    campo_input.selectionEnd = strPos;
+    campo_input.scrollTop = scrollPos;
   }
 };
 const set_ascolti = (val: number) => {
@@ -188,9 +149,3 @@ const set_ascolti_video = (val: number) => {
   }
 };
 </script>
-
-<style lang="sass" scoped>
-.my-card
-  width: 98%
-  border: 2px solid black
-</style>

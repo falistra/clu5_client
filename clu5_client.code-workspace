@@ -2,9 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../clu4/client/test"
     }
   ],
   "settings": {

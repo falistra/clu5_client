@@ -1,121 +1,62 @@
 <template>
   <q-page>
-    <div class="column" style="height: calc(95vh)">
-      <PrologoComponent
-        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
-      <div class="col-auto q-mt-sm q-mx-sm q-shadow-10">
-        <div class="row" style="height: calc(70vh)">
-          <div class="col-6">
-            <div class="column">
-              <div
-                style="max-height: 150px"
-                class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-                v-html="common_api.sanitizeUnicode(script.testo)"
-              />
-              <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-                <audio-wrap :audio="script.audio" @update="set_ascolti" />
+    <PrologoComponent
+      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      :prologo="script.prologo" />
+    <div class="row q-mr-sm">
+      <div class="col-6">
+        <div class="column">
+          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)" />
+          <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
+            <audio-wrap :audio="script.audio" @update="set_ascolti" />
+          </div>
+          <div v-if="script.video" class="col-auto q-mt-md">
+            <video-wrap :video="script.video" @update="set_ascolti_video" />
+          </div>
+        </div>
+        <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+          :bar-style="barStyle">
+          <div class="q-pa-sm mr-3">
+            <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
+              <div class="col-6 parte-fissa">
+                <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: partefissa._ } }" />
+                <div v-else class="q-ma-sm text-wrap overflow-auto" v-html="partefissa.label" />
               </div>
-              <div v-if="script.video" class="col-auto q-mt-md">
-                <video-wrap :video="script.video" @update="set_ascolti_video" />
-              </div>
-            </div>
-            <q-scroll-area
-              class="col-auto"
-              style="height: calc(60vh)"
-              visible
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <div class="q-pa-sm mr-3">
-                <div
-                  class="row q-my-xs"
-                  v-for="partefissa in script.partiFisse.item"
-                  :key="partefissa.$.hash"
-                >
-                  <div class="col-6 parte-fissa">
-                    <ImgWrap
-                      v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'"
-                      :src="{ $: { url: partefissa._ } }"
-                    />
-                    <div
-                      v-else
-                      class="q-ma-sm text-wrap overflow-auto"
-                      v-html="partefissa.label"
-                      style="max-height: 200px"
-                    />
-                  </div>
-                  <div
-                    class="col-6 bg-teal-2 zona-ricevente"
-                    @dragover.prevent
-                    @dragenter.prevent
-                    @drop="onDrop($event, partefissa)"
-                  >
-                    <div class="column">
-                      <div
-                        v-for="item in partefissa.rispostaData"
-                        :key="item.$.hash"
-                        class="col-auto"
-                        @dblclick="annulla(item, partefissa)"
-                      >
-                        <div class="col text-subtitle q-ma-xs item">
-                          <div v-html="item.label" />
-                          <q-tooltip
-                            v-if="item.label"
-                            class="bg-indigo"
-                            anchor="top middle"
-                            self="bottom middle"
-                            :offset="[5, 5]"
-                          >
-                            <strong>{{ $t('Doppio_click') }} </strong>
-                          </q-tooltip>
-                        </div>
-                      </div>
+              <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
+                @drop="onDrop($event, partefissa)">
+                <div class="column">
+                  <div v-for="item in partefissa.rispostaData" :key="item.$.hash" class="col-auto"
+                    @dblclick="annulla(item, partefissa)">
+                    <div class="col text-subtitle q-ma-xs item">
+                      <div v-html="item.label" />
+                      <q-tooltip v-if="item.label" class="bg-indigo" anchor="top middle" self="bottom middle"
+                        :offset="[5, 5]">
+                        <strong>{{ $t('Doppio_click') }} </strong>
+                      </q-tooltip>
                     </div>
                   </div>
                 </div>
               </div>
-            </q-scroll-area>
+            </div>
           </div>
-          <div class="col-5">
-            <q-scroll-area
-              style="height: calc(70vh)"
-              visible
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-            >
-              <q-list dense class="q-mr-lg">
-                <q-item
-                  v-for="item in lista_risposte_disponibili"
-                  :key="item.$.hash"
-                  class="q-my-sm"
-                >
-                  <q-item-section side>
-                    <div
-                      class="q-ma-sm item"
-                      draggable="true"
-                      @dragstart="startDrag($event, item)"
-                    >
-                      <q-tooltip
-                        class="bg-indigo"
-                        anchor="top middle"
-                        self="bottom middle"
-                        :offset="[5, 5]"
-                      >
-                        <strong>{{ $t('Trascina') }}</strong>
-                      </q-tooltip>
-                      <span
-                        class="bg-teal-1 q-pa-xs text-weight-medium"
-                        v-html="item.label"
-                      />
-                    </div>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-scroll-area>
-          </div>
-        </div>
+        </q-scroll-area>
+      </div>
+      <div class="col-6">
+        <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+          <q-list dense>
+            <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash" class="q-my-sm">
+              <q-item-section side>
+                <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
+                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                    <strong>{{ $t('Trascina') }}</strong>
+                  </q-tooltip>
+                  <span class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label" />
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
       </div>
     </div>
   </q-page>
@@ -271,7 +212,7 @@ const set_ascolti_video = (val: number) => {
   min-height: 100px
   min-width: 250px
   overflow: auto
-  max-height: 350px
+
 
 .parte-fissa
   border: 2px solid black
@@ -280,7 +221,6 @@ const set_ascolti_video = (val: number) => {
 .item
   cursor: grab
   font-size: small
-  font-weight: bold
   text-align: justify
   width: auto
 

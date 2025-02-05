@@ -1,61 +1,26 @@
 <template>
-  <q-page class="column">
-    <div class="flex flex-col h-100">
+  <q-page>
+    <div class="flex flex-col ">
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
+        :prologo="script.prologo" />
       <div
         class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(script.testo)"
-      />
+        v-html="common_api.sanitizeUnicode(script.testo)" />
 
-      <audio-wrap
-        v-if="script.audio"
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
-      <video-wrap
-        v-if="script.video"
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
-      <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
-        <audio-wrap :audio="script.audio" @update="set_ascolti" />
-      </div>
-      <div v-if="script.video" class="col q-mt-md">
-        <video-wrap :video="script.video" @update="set_ascolti_video" />
-      </div>
-
-      <q-scroll-area
-        visible
-        :thumb-style="thumbStyle"
-        :bar-style="barStyle"
-        style="height: calc(60vh)"
-        class="col-auto text-subtitle2 q-my-sm q-mx-md"
-      >
-        <draggable
-          v-if="script.rispostaData"
-          :list="script.rispostaData.risposta"
-          :disabled="!enabled"
-          item-key="_"
-          class="q-mr-md list-group"
-          ghost-class="ghost"
-          :move="checkMove"
-          draggable=".not-draggable"
-          @start="dragging = true"
-          @end="dragging = false"
-        >
+      <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(60vh)"
+        class="col-auto text-subtitle2 q-my-sm q-mx-md">
+        <draggable v-if="script.rispostaData" :list="script.rispostaData.risposta" :disabled="!enabled" item-key="_"
+          class="q-mr-md list-group" ghost-class="ghost" :move="checkMove" draggable=".not-draggable"
+          @start="dragging = true" @end="dragging = false">
           <template #item="{ element }">
-            <div
-              class="q-my-md q-pa-sm list-group-item border-dotted border-2"
-              :class="{
-                'not-draggable': check_primoItem(element.ordine),
-                'primo-Item': !check_primoItem(element.ordine),
-              }"
-              v-html="element.label"
-            />
+            <div class="text-sm hover:text-base q-my-md q-pa-sm list-group-item border-dotted border-2" :class="{
+              'not-draggable': check_primoItem(element.ordine),
+              'primo-Item': !check_primoItem(element.ordine),
+            }" v-html="element.label" />
           </template>
         </draggable>
       </q-scroll-area>
@@ -148,9 +113,8 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 .list-group-item
     border-style: outset
     cursor: move
-    font-size: small
     text-align: justify
-    line-height: 85%
+
 
 .primo-Item
   font-weight: bold

@@ -1,63 +1,42 @@
 <template>
-  <q-page style="height: calc(100vh)">
+  <q-page>
     <div class="flex flex-col">
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
-        :prologo="script.prologo"
-      />
+        :prologo="script.prologo" />
       <div
-        class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(testoDomanda)"
-      />
-      <img-wrap
-        style="max-height: calc(60vh)"
-        v-if="script.immagine"
-        :src="script.immagine"
-      />
-      <audio-wrap
-        v-if="script.audio"
-        :audio="script.audio"
-        @update="set_ascolti"
-      />
-      <video-wrap
-        v-if="script.video"
-        :video="script.video"
-        @update="set_ascolti_video"
-      />
+        class="max-h-80 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        v-html="common_api.sanitizeUnicode(testoDomanda)" />
+      <img-wrap style="max-height: calc(60vh)" v-if="script.immagine" :src="script.immagine" />
+      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
-      <div class="grid mt-2 p-2 place-content-center">
-        <q-btn-toggle
-          v-model="script.rispostaData"
-          class="shadow-5"
-          no-caps
-          dense
-          push
-          toggle-color="primary"
-          :options="opzioni"
-          clearable
-          @update:model-value="setRisposta"
-        >
-          <template
-            v-for="button in opzioni"
-            :key="button.value"
-            #[button.slot]
-          >
-            <div
-              v-if="
-                script.risposte.$ == undefined ||
-                script.risposte.$?.tipoopzioni == 'TESTO'
-              "
-              class="risposta"
-              v-html="`${common_api.sanitizeUnicode(button.testo)}`"
-            ></div>
-            <div
-              v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'"
-              class="risposta q-px-sm"
-            >
+      <div v-if="(dimensioneListaRisposte < 250)" class="grid mt-2 p-2 place-content-center">
+        <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense push toggle-color="primary"
+          :options="opzioni" clearable @update:model-value="setRisposta">
+          <template v-for="button in opzioni" :key="button.value" #[button.slot]>
+            <div v-if="
+              script.risposte.$ == undefined ||
+              script.risposte.$?.tipoopzioni == 'TESTO'
+            " class="risposta" v-html="`${common_api.sanitizeUnicode(button.testo)}`"></div>
+            <div v-if="script.risposte.$?.tipoopzioni == 'IMMAGINE'" class="risposta q-px-sm">
               <ImgWrap :src="{ $: { url: button.testo } }" size="70px" />
             </div>
           </template>
         </q-btn-toggle>
+      </div>
+      <div v-else>
+        <q-list>
+          <q-item tag="label" v-ripple v-for="button in opzioni" :key="button.value">
+            <q-item-section avatar>
+              <q-radio clearable v-model="script.rispostaData" @update:model-value="setRisposta" :val="button.value"
+                color="teal" />
+            </q-item-section>
+            <q-item-section>
+              <div class="risposta" v-html="`${common_api.sanitizeUnicode(button.testo)}`"></div>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
   </q-page>
@@ -102,13 +81,13 @@ if (script.value.video) setVideoPams(script.value.video);
 const testoDomanda = ref(
   !script.value.rispostaData
     ? script.value.testo.replace(
-        /([_]+)/gi,
-        '<span class="text-weight-bold">$1</span>'
-      )
+      /([_]+)/gi,
+      '<span class="text-weight-bold">$1</span>'
+    )
     : script.value.testo.replace(
-        /([_]+)/gi,
-        `<span class="text-weight-bold"> ${script.value.rispostaData} </span>`
-      )
+      /([_]+)/gi,
+      `<span class="text-weight-bold"> ${script.value.rispostaData} </span>`
+    )
 );
 
 const opzioni = ref(
@@ -127,6 +106,10 @@ const opzioni = ref(
     };
   })
 );
+
+const dimensioneListaRisposte = ref(script.value.risposte.risposta.reduce((partialSum, a) => partialSum + a._.length, 0))
+
+
 
 const setRisposta = (risposta: string) => {
   if (!risposta) {
