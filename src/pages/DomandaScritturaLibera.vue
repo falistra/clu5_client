@@ -1,6 +1,10 @@
 <template>
   <q-page>
+
     <div class="flex flex-col h-100">
+
+      <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
+
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
@@ -12,21 +16,15 @@
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
       <div class="col q-mt-sm q-my-md">
         <div class="row items-center justify-center">
-          <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea" name="risposta"
-            bg-color="teal-1" input-class="text-body1 text-justify" @update:model-value="setRisposta">
+          <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea"
+            :name="`${domanda.id}-risposta`" bg-color="teal-1" input-class="text-body1 text-justify"
+            @update:model-value="setRisposta">
             <q-badge v-if="script.rispostaData" color="primary" floating style="top: 4px">
               {{ $t('Numero_Parole') }}
               {{ script.rispostaData.trim().split(/\s+/).length }}
             </q-badge>
           </q-input>
         </div>
-      </div>
-      <div class="col">
-        <VirtualKeyboard class="..." @key-pressed="carattere">
-          <div class="...">
-            <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
-          </div>
-        </VirtualKeyboard>
       </div>
     </div>
   </q-page>
@@ -39,19 +37,18 @@ defineOptions({
 });
 
 import moment from 'moment';
-import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
-import '@dongivan/virtual-keyboard/default.css';
 
 import { useSessioneStore } from '../stores/sessione';
 import { useLogStore } from '../stores/log';
 import { T_DomandaScritturaLibera, IDomanda } from './models';
 
-import { ref, computed } from 'vue'; // , computed
+import { computed } from 'vue'; // , computed
 import PrologoComponent from '../components/PrologoComponent.vue';
 import AudioWrap from '../components/AudioWrap.vue';
 import ImgWrap from '../components/ImgWrap.vue';
 import { common_api } from '../boot/common-utils';
 import VideoWrap from '../components/VideoWrap.vue';
+import TastieraVirtuale from '../components/TastieraVirtuale.vue';
 import { setAudioPams, setVideoPams } from './common';
 
 const sessione = useSessioneStore();
@@ -88,11 +85,8 @@ if (script.audio) setAudioPams(script.audio);
 if (script.video) setVideoPams(script.video);
 const linguaDomanda = computed(() => domanda.lingua || sessione.lingua);
 
-import { useI18nStore } from '../stores/i18n';
-const i18n = ref(useI18nStore());
-
 const carattere = (key: string) => {
-  const campi_input = document.getElementsByName('risposta');
+  const campi_input = document.getElementsByName(`${domanda.id}-risposta`);
   if (campi_input) {
     insertAtCaret(key, campi_input[0] as HTMLInputElement);
   }

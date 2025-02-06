@@ -32,8 +32,9 @@
           <div class="row">
             <div class="col-5" />
             <div class="col-2">
-              <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold" name="risposta"
-                autofocus clearable rounded :label="t('Risposta')" dense @update:model-value="setRisposta" />
+              <q-input v-model="script.rispostaData" input-class="text-subtitle1 text-weight-bold"
+                :name="`${domanda.id}-risposta`" autofocus clearable rounded :label="t('Risposta')" dense
+                @update:model-value="setRisposta" />
             </div>
             <div class="col-5" />
           </div>
@@ -100,13 +101,11 @@ const righe = ref(
     .map((el) => el.split(/_+/))
 );
 
-console.log(righe)
-
 import { useI18nStore } from '../stores/i18n';
 const i18n = ref(useI18nStore());
 
 const carattere = (key: string) => {
-  const campi_input = document.getElementsByName('risposta');
+  const campi_input = document.getElementsByName(`${domanda.id}-risposta`);
   if (campi_input) {
     insertAtCaret(key, campi_input[0] as HTMLInputElement);
   }

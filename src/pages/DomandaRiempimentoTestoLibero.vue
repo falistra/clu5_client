@@ -1,22 +1,16 @@
 <template>
   <q-page class="column senza-scroll">
+
+    <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
+
     <PrologoComponent
       class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
     <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
     <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
     <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
-    <!-- <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(80vh)"
-      class="col-auto text-subtitle2 q-my-sm q-mx-md"> -->
     <div class="my-5 mx-5" v-html="testo_quesito"></div>
-    <!-- </q-scroll-area> -->
-    <div class="col">
-      <VirtualKeyboard class="..." @key-pressed="carattere">
-        <div class="...">
-          <KeyButton v-for="v of i18n.caratteri[linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
-        </div>
-      </VirtualKeyboard>
-    </div>
+
   </q-page>
 </template>
 
@@ -25,11 +19,7 @@ defineOptions({
   name: 'DomandaRiempimentoTestoLibero',
 });
 
-import { VirtualKeyboard, KeyButton } from '@dongivan/virtual-keyboard';
-import '@dongivan/virtual-keyboard/default.css';
-
 import { useSessioneStore } from '../stores/sessione';
-import { useI18nStore } from '../stores/i18n';
 import { T_DomandaRiempimentoTestoLibero, IDomanda } from './models';
 import { ref, computed, watch, onMounted } from 'vue';
 
@@ -37,9 +27,9 @@ import PrologoComponent from '../components/PrologoComponent.vue';
 import AudioWrap from '../components/AudioWrap.vue';
 import ImgWrap from '../components/ImgWrap.vue';
 import VideoWrap from '../components/VideoWrap.vue';
+import TastieraVirtuale from '../components/TastieraVirtuale.vue';
 import { setAudioPams, setVideoPams } from './common';
-
-// import * as Common from './common';
+import { common_api } from '../boot/common-utils';
 
 const sessione = useSessioneStore();
 const script = sessione.domande[
@@ -73,11 +63,9 @@ watch(script.rispostaData, (rispostaData) => {
   }
 });
 
-const i18n = ref(useI18nStore());
-
 const currentSlot = ref<string>('');
 
-const testo_quesito = ref(script.testo.replace(/(\_+)(\d+)(\_+)/g, `<INPUT CLASS='italic text-blue-600 placeholder:text-gray-500 slot-RTL-${domanda.id}' placeholder='__________________________'  ID='${domanda.id}-$2'></INPUT>`))
+const testo_quesito = ref(common_api.sanitizeUnicode(script.testo.replace(/(\_+)(\d+)(\_+)/g, `<INPUT CLASS='italic font-medium text-blue-600 placeholder:text-gray-500 slot-RTL-${domanda.id}' placeholder='__________________________'  ID='${domanda.id}-$2'></INPUT>`)))
 
 const campiInput = () => {
   const inputs = document.querySelectorAll(`input.slot-RTL-${domanda.id}`)
@@ -85,6 +73,11 @@ const campiInput = () => {
     if (key == 0) { // primo elemento
       (el as HTMLInputElement).focus()
     }
+    const campo_input = el as HTMLInputElement
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_id, slot] = campo_input.id.split('-')
+    campo_input.value = script.rispostaData[slot] || ''
+
     function updateValue(e: Event) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_idDomanda_, idSlot] = (e.target as HTMLInputElement).id.split('-')
@@ -96,16 +89,12 @@ const campiInput = () => {
 
     function setCurrentInput(e: Event) {
       currentSlot.value = (e.target as HTMLInputElement).id
-      console.log(currentSlot.value)
     }
     (el as HTMLElement).addEventListener('focus', setCurrentInput)
   })
 };
 
 onMounted(campiInput);
-
-// const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle);
-// const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 
 const carattere = (key: string) => {
   const campo_input = document.getElementById(`${currentSlot.value}`);
