@@ -3,13 +3,11 @@
 
     <div class="flex flex-col h-100">
 
-      <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
-
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
       <div
-        class="max-h-100 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        class="max-h-60 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(script.testo)" />
       <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
@@ -26,6 +24,7 @@
           </q-input>
         </div>
       </div>
+      <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
     </div>
   </q-page>
 </template>

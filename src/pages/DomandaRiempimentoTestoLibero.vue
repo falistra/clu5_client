@@ -1,8 +1,6 @@
 <template>
   <q-page class="column senza-scroll">
 
-    <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
-
     <PrologoComponent
       class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
@@ -10,7 +8,7 @@
     <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
     <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
     <div class="my-5 mx-5" v-html="testo_quesito"></div>
-
+    <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
   </q-page>
 </template>
 

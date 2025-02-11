@@ -8,16 +8,16 @@
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
       <div class="col-auto">
         <q-scroll-area visible :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)"
-          class="text-subtitle2 q-my-sm q-mx-md">
-          <div class="q-mb-xs q-mr-md testo-domanda">
+          class="q-my-sm q-mx-md">
+          <div class="q-mb-xs q-mr-md">
             <div class="column justify-start">
               <div v-for="(riga, index) in righe" :key="index" class="col">
                 <div class="border-4 border-solid my-3 row">
-                  <div class="col-5 q-pr-sm q-my-xs text-right testo">
+                  <div class="col-5 q-pr-sm q-my-xs text-right ">
                     {{ riga[0] }}
                   </div>
                   <div class="col-2 border-2 border-dashed" />
-                  <div class="col-5 q-pl-sm q-my-xs testo">
+                  <div class="col-5 q-pl-sm q-my-xs ">
                     {{ riga[1] }}
                   </div>
                 </div>
@@ -149,9 +149,3 @@ const set_ascolti_video = (val: number) => {
 const thumbStyle = ref<Partial<CSSStyleDeclaration>>(Common.thumbStyle);
 const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
 </script>
-
-<style lang="sass" scoped>
-
-.testo
-    font-size: small
-</style>

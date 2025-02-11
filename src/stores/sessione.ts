@@ -29,6 +29,8 @@ export const useSessioneStore = defineStore('sessione', {
     logTest: {},
     DOMANDE_GIA_POSTE: <number[]>[],
     sessioneInterrotta: false,
+    IN_ASCOLTO: false,
+    IN_VISIONE: false,
   }),
   // persist: { pick: ['counter'] },
   actions: {

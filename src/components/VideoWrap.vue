@@ -6,10 +6,7 @@
     fileEsiste &&
     video.ascolti_rimanenti
   " class="self-center">
-    <!-- <q-badge v-if="!(video.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange"
-        text-color="black" :label="`Ascolti rimanenti: ${video.ascolti_rimanenti}`" /> -->
-
-    <video :src="mySource" ref="myVideo" :width="props.width" :height="props.height"></video>
+    <video :src="mySource" ref="myVideo" :width="props.width" :height="props.height" disablepictureinpicture></video>
     <q-toolbar class="mt-3">
       <q-toolbar-title class="text-sm font-semibold">
         Visioni rimanenti: {{ ascolti_rimanenti }} - {{ duration }}/{{
@@ -17,7 +14,7 @@
         }}
         <q-btn :disable="playing" class="ml-5" size="md" round color="primary" icon="play_arrow" @click="vai">
           <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
-            {{ playing ? 'In visione' : 'Click per vedere' }}
+            {{ (playing && sessione.IN_VISIONE) ? 'In visione' : 'Click per vedere' }}
           </q-tooltip>
         </q-btn>
       </q-toolbar-title>
@@ -40,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { Audio } from '../pages/models';
+import { Video } from '../pages/models';
 import {
   ref,
   computed,
@@ -48,10 +45,13 @@ import {
   onMounted,
 } from 'vue';
 
+import { useSessioneStore } from '../stores/sessione';
+const sessione = useSessioneStore();
+
 defineOptions({ name: 'VideoWrap' });
 
 interface Props {
-  video: Audio;
+  video: Video;
   height?: string;
   width?: string;
 }
@@ -108,8 +108,9 @@ onMounted(() => {
 
     (myVideo.value as HTMLMediaElement).onended = () => {
       playing.value = false;
+      sessione.IN_VISIONE = false;
       if (ascolti_rimanenti >= 0) {
-        console.log(`ascolti rimanenti ${ascolti_rimanenti}`);
+        // console.log(`ascolti rimanenti ${ascolti_rimanenti}`);
         emit('update', ascolti_rimanenti);
       }
     };
@@ -132,7 +133,7 @@ onMounted(() => {
 });
 
 onDeactivated(() => {
-  if (myVideo.value) myVideo.value.pause();
+  // if (myVideo.value) myVideo.value.pause();
   if (ascolti_rimanenti >= 0) {
     emit('update', ascolti_rimanenti);
   }

@@ -12,7 +12,7 @@
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
       <div v-if="(dimensioneListaRisposte < 250)" class="grid mt-2 p-2 place-content-center">
-        <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense push toggle-color="primary"
+        <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense toggle-color="primary"
           :options="opzioni" clearable @update:model-value="setRisposta">
           <template v-for="button in opzioni" :key="button.value" #[button.slot]>
             <div v-if="
@@ -158,7 +158,6 @@ const set_ascolti_video = (val: number) => {
 .risposta
   font-size: medium
   text-align: justify
-  line-height: 85%
 
 .risposta:last-child
   margin-right: 0px

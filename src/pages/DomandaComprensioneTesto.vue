@@ -28,16 +28,16 @@
         <q-card-section class="col-6">
           <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(60vh)">
             <!--:style="{ height: `${H}px` }" -->
-            <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md">
+            <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
               <div class="text-overline" v-html="domanda.prologo" />
-              <div class="text-subtitle q-ml-md q-my-sm text-weight-bold"
-                v-html="common_api.sanitizeUnicode(domanda.testo)" />
+              <div class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)" />
               <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"
                 :options="domanda.risposte" dense color="primary">
                 <template #label="risposta">
-                  <div class="q-my-sm" :class="{ active: isActive }" v-html="risposta.label" />
+                  <div :class="{ active: isActive }" v-html="risposta.label" />
                 </template>
               </q-option-group>
+
             </div>
           </q-scroll-area>
         </q-card-section>
@@ -215,7 +215,7 @@ const myTweak = (offset: number) => {
 
 .domanda
   border-style: solid solid solid solid
-  margin-bottom: 10px
+  margin-bottom: 30px
 
 .active
   border-style: dotted

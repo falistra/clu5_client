@@ -6,9 +6,6 @@
     fileEsiste &&
     audio.ascolti_rimanenti
   " class="self-center border-double border-4 border-indigo-600">
-    <!-- <q-badge v-if="!(audio.$.nrMaxRipetizioni == Number.MAX_SAFE_INTEGER.toString())" color="orange"
-        text-color="black" :label="`Ascolti rimanenti: ${audio.ascolti_rimanenti}`" /> -->
-
     <audio :src="mySource" ref="myAudio">
       <a :href="mySource"></a>
     </audio>
@@ -20,7 +17,7 @@
       </q-toolbar-title>
       <q-btn :disable="playing" size="md" round color="primary" icon="play_arrow" @click="vai">
         <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
-          {{ playing ? 'In ascolto' : 'Click per ascoltare' }}
+          {{ (playing && sessione.IN_ASCOLTO) ? 'In ascolto' : 'Click per ascoltare' }}
         </q-tooltip>
       </q-btn>
     </q-toolbar>
@@ -46,11 +43,14 @@ import { Audio } from '../pages/models';
 import {
   ref,
   computed,
-  /* onBeforeUnmount,*/ onDeactivated,
+  onDeactivated,
   onMounted,
 } from 'vue';
 
 defineOptions({ name: 'AudioWrap' });
+
+import { useSessioneStore } from '../stores/sessione';
+const sessione = useSessioneStore();
 
 const props = defineProps<{ audio: Audio }>();
 
@@ -100,8 +100,8 @@ onMounted(() => {
 
     (myAudio.value as HTMLMediaElement).onended = () => {
       playing.value = false;
+      sessione.IN_ASCOLTO = false;
       if (ascolti_rimanenti >= 0) {
-        console.log(`ascolti rimanenti ${ascolti_rimanenti}`);
         emit('update', ascolti_rimanenti);
       }
     };
@@ -124,7 +124,7 @@ onMounted(() => {
 });
 
 onDeactivated(() => {
-  if (myAudio.value) myAudio.value.pause();
+  // if (myAudio.value) myAudio.value.pause();
   if (ascolti_rimanenti >= 0) {
     emit('update', ascolti_rimanenti);
   }
