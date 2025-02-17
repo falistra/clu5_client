@@ -14,11 +14,13 @@
     </VirtualKeyboard>
   </q-page-sticky> -->
 
-  <VirtualKeyboard @key-pressed="carattere">
-    <div>
-      <KeyButton v-for="v of i18n.caratteri[props.linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
-    </div>
-  </VirtualKeyboard>
+  <div v-if="i18n.caratteri[props.linguaDomanda].length > 0" class="self-center border-4 border-indigo-600">
+    <VirtualKeyboard class="m-2" @key-pressed="carattere">
+      <div>
+        <KeyButton v-for="v of i18n.caratteri[props.linguaDomanda].split('')" :key="`key-${v}`" :value="v" />
+      </div>
+    </VirtualKeyboard>
+  </div>
 
 </template>
 

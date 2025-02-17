@@ -2,7 +2,7 @@
   <q-page class="column senza-scroll">
 
     <PrologoComponent
-      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
     <img-wrap class="max-h-60" v-if="script.immagine" :src="script.immagine" />
     <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />

@@ -5,25 +5,24 @@
       :prologo="script.prologo" />
     <q-card flat>
       <q-card-section horizontal>
-        <q-card-section class="col-6 container">
+        <q-card-section class="col-6 ">
           <q-scroll-area visible style="height: calc(60vh); max-height: calc(60vh)" :thumb-style="my_thumbStyle"
             :bar-style="my_barStyle">
-            <div class="flex flex-col mr-4">
-              <div v-if="
-                common_api.sanitizeUnicode(script.testo_comprensione) !== ''
-              " class="col text-wrap overflow-y-visible" v-html="testo_comprensione">
-              </div>
-              <div v-if="primaDomanda?.immagine" class="col">
-                <img-wrap :src="primaDomanda.immagine" size="200px" />
-              </div>
-              <div v-if="primaDomanda?.audio" class="col q-mt-md">
-                <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
-              </div>
-              <div v-if="primaDomanda?.video" class="col q-mt-md">
-                <video-wrap :video="primaDomanda.video" width="350" height="280" @update="set_ascolti_video" />
-              </div>
+            <div v-if="
+              common_api.sanitizeUnicode(script.testo_comprensione) !== ''
+            " class="col text-wrap mr-4" v-html="testo_comprensione">
             </div>
           </q-scroll-area>
+          <div v-if="primaDomanda?.immagine" class="col">
+            <img-wrap :src="primaDomanda.immagine" size="200px" />
+          </div><BR />
+          <div v-if="primaDomanda?.audio" class="col q-mt-md">
+            <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
+          </div>
+          <div v-if="primaDomanda?.video" class="col q-mt-md">
+            <video-wrap :video="primaDomanda.video" width="350" height="280" @update="set_ascolti_video" />
+          </div>
+
         </q-card-section>
         <q-card-section class="col-6">
           <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(60vh)">

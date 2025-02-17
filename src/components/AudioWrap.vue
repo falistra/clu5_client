@@ -5,7 +5,7 @@
     audio.$.url &&
     fileEsiste &&
     audio.ascolti_rimanenti
-  " class="self-center border-double border-4 border-indigo-600">
+  " class="max-w-80 self-center border-double border-4 border-indigo-600">
     <audio :src="mySource" ref="myAudio">
       <a :href="mySource"></a>
     </audio>
@@ -15,7 +15,7 @@
           elapsed
         }}
       </q-toolbar-title>
-      <q-btn :disable="playing" size="md" round color="primary" icon="play_arrow" @click="vai">
+      <q-btn :disable="playing && sessione.IN_ASCOLTO" size="md" round color="primary" icon="play_arrow" @click="vai">
         <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
           {{ (playing && sessione.IN_ASCOLTO) ? 'In ascolto' : 'Click per ascoltare' }}
         </q-tooltip>

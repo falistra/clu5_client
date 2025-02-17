@@ -1,12 +1,6 @@
 <template>
-  <q-img
-    class="self-center"
-    v-if="src && validImg"
-    no-native-menu
-    fit="scale-down"
-    :src="`/media/${src.$.url}`"
-    error-src="~assets/ImmagineNonDisponibile.jpeg"
-  />
+  <q-img class="self-center" v-if="src && validImg" no-native-menu fit="scale-down" :src="`/media/${src.$.url}`"
+    error-src="~assets/ImmagineNonDisponibile.jpeg" />
 </template>
 
 <script setup lang="ts">

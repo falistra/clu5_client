@@ -7,7 +7,7 @@
       <div
         class="max-h-80 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(testoDomanda)" />
-      <img-wrap style="max-height: calc(60vh)" v-if="script.immagine" :src="script.immagine" />
+      <img-wrap style="container" v-if="script.immagine" :src="script.immagine" />
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 

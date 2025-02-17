@@ -17,11 +17,13 @@ export default {
   click2D: 'Click per andare alla domanda',
   domandeNoRisposta: 'Alcune domande non hanno ricevuto risposta',
   domandeSenzaRisposta: 'Domande senza risposta',
-  confermaFine: 'Sei sicuro di voler consegnare?',
+  confermaFine: 'Confermi di aver terminato di rispondere?',
   Consegna: 'Consegna esercizi (se visti tutti)',
   tempoScaduto: 'Tempo scaduto',
   Doppio_click: 'Doppio click per togliere',
   Trascina: 'Trascina',
   Risposta: 'Risposta',
   Numero_Parole: 'Numero parole :',
+
+  manca1minuto: 'Manca un minuto',
 };

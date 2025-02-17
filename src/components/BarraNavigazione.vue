@@ -2,33 +2,19 @@
   <div class="row justify-between">
     <div>
       <!-- <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span> -->
-      <vue-countdown
-        v-slot="{ minutes, seconds }"
-        :time="
-          parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
-          60 *
-          1000
-        "
-        @end="gameover"
-        @progress="versoLaFine"
-      >
-        <span class="text-subtitle1"
-          >{{ $t('Tempo_rimanente') }} : {{ minutes }}
+      <vue-countdown v-slot="{ minutes, seconds }" :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
+        60 *
+        1000
+        " @end="gameover" @progress="versoLaFine">
+        <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} : {{ minutes }}
           {{ minutes == 1 ? $t('minuto') : $t('minuti') }}, {{ seconds }}
-          {{ $t('secondi') }}</span
-        >
+          {{ $t('secondi') }}</span>
       </vue-countdown>
     </div>
 
     <q-btn-group class="q-mr-lg q-mb-sm" push>
-      <q-btn
-        push
-        icon="chevron_left"
-        color="teal-8"
-        :disable="sessioneStore.counter == 0"
-        size="sm"
-        @click="precedente"
-      />
+      <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" size="sm"
+        @click="precedente" />
 
       <q-btn disable class="font-sans hover:font-serif" :label="stato">
         <q-tooltip>
@@ -36,23 +22,12 @@
         </q-tooltip>
       </q-btn>
 
-      <q-btn
-        push
-        icon="chevron_right"
-        color="teal-8"
-        size="sm"
-        :disable="sessioneStore.domande.length == sessioneStore.counter + 1"
-        @click="successivo"
-      />
+      <q-btn push icon="chevron_right" color="teal-8" size="sm"
+        :disable="sessioneStore.domande.length == sessioneStore.counter + 1" @click="successivo" />
     </q-btn-group>
 
-    <q-btn
-      class="q-ml-lg q-mb-sm text-caption"
-      :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
-      :disable="!ultimaDomanda || quasiTimeout"
-      :label="t('Consegna')"
-      @click="consegna(true)"
-    />
+    <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
+      :disable="!ultimaDomanda || quasiTimeout" :label="t('Consegna')" @click="consegna(true)" />
   </div>
 </template>
 
@@ -117,7 +92,7 @@ function versoLaFine(data: {
   }
   if (data.hours == 0 && data.minutes == 1 && data.seconds == 0) {
     Notify.create({
-      message: 'Manca un minuto',
+      message: t('manca1minuto'),
       color: 'info',
       position: 'top',
     });

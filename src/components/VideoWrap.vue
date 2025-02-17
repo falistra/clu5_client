@@ -12,7 +12,8 @@
         Visioni rimanenti: {{ ascolti_rimanenti }} - {{ duration }}/{{
           elapsed
         }}
-        <q-btn :disable="playing" class="ml-5" size="md" round color="primary" icon="play_arrow" @click="vai">
+        <q-btn :disable="playing && sessione.IN_VISIONE" class="ml-5" size="md" round color="primary" icon="play_arrow"
+          @click="vai">
           <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
             {{ (playing && sessione.IN_VISIONE) ? 'In visione' : 'Click per vedere' }}
           </q-tooltip>
