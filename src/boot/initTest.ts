@@ -61,7 +61,7 @@ export default boot(async ({ router }) => {
             { label: 'test 3', value: { idUser: 1, idSess: 3 } },
             { label: 'test 4', value: { idUser: 1, idSess: 6 } },
           ];
-      const el = options[3]; // options[Math.floor(Math.random() * options.length)]; // options[2];
+      const el = options[3]; // options[Math.floor(Math.random() * options.length)]; // ;
       Cookies.set('idUtente', el.value.idUser.toString());
       Cookies.set('idSessione', el.value.idSess.toString());
     }

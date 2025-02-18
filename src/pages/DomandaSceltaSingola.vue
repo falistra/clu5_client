@@ -7,9 +7,11 @@
       <div
         class="max-h-80 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(testoDomanda)" />
-      <img-wrap style="container" v-if="script.immagine" :src="script.immagine" />
-      <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
-      <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+
+      <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" fit="none" />
+      <!-- <img v-if="script.immagine" src="`/media/${script.immagine.$.url}`" style="object-fit: none;" /> -->
+      <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+      <video-wrap class="my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
       <div v-if="(dimensioneListaRisposte < 250)" class="grid mt-2 p-2 place-content-center">
         <q-btn-toggle v-model="script.rispostaData" class="shadow-5" no-caps dense toggle-color="primary"
