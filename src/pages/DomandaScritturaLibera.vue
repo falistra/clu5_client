@@ -9,7 +9,7 @@
       <div
         class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(script.testo)" />
-      <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
+      <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" mode="scale-down" />
       <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap class="my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
       <div class="col q-mt-sm q-my-md">

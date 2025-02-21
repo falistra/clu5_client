@@ -20,7 +20,8 @@
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
               <div class="col-6 parte-fissa">
-                <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: partefissa._ } }" />
+                <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="contain"
+                  :src="{ $: { url: partefissa._ } }" />
                 <div v-else class="q-ma-sm text-wrap overflow-auto" v-html="partefissa.label" />
               </div>
               <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent

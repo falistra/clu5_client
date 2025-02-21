@@ -15,11 +15,10 @@
         <q-scroll-area class="col" style="height: calc(60vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
-              <div class="col parte-fissa">
-                <div>
-                  <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" :src="{ $: { url: item._ } }" />
-                  <div v-else class="q-ma-sm" v-html="item.label" style="overflow: auto; max-height: 200px" />
-                </div>
+              <div class="col-auto parte-fissa">
+                <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="contain"
+                  :src="{ $: { url: item._ } }" />
+                <div v-else class="q-ma-sm" v-html="item.label" style="overflow: auto; max-height: 200px" />
               </div>
               <div class="col bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                 @drop="onDrop($event, item)" @dblclick="annulla(item)">

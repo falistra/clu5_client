@@ -18,6 +18,7 @@
             <q-btn class="q-ml-lg" color="secondary" size="xs"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'" @click="$q.fullscreen.toggle()" />
           </div>
+          <q-badge color="red" floating> versione {{ version }} </q-badge>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -42,7 +43,9 @@
 </template>
 
 <script setup lang="ts">
-// import { useQuasar } from 'quasar'
+
+import { version } from '../../package.json';
+
 import { useSessioneStore } from '../stores/sessione';
 import { IDomanda } from '../pages/models';
 import { IRisposta2Server /*, TRisposte */ } from '../stores/models';

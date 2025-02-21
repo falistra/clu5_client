@@ -5,16 +5,16 @@
       :prologo="script.prologo" />
     <q-card flat>
       <q-card-section horizontal>
-        <q-card-section class="col-6 ">
-          <q-scroll-area visible style="height: calc(60vh); max-height: calc(60vh)" :thumb-style="my_thumbStyle"
-            :bar-style="my_barStyle">
-            <div v-if="
-              common_api.sanitizeUnicode(script.testo_comprensione) !== ''
-            " class="col text-wrap mr-4" v-html="testo_comprensione">
-            </div>
-          </q-scroll-area>
+        <q-card-section class="col-6 scroll-mr-6 overflow-auto">
+          <!-- <q-scroll-area visible style="height: calc(60vh); max-height: calc(60vh)" :thumb-style="my_thumbStyle"
+          :bar-style="my_barStyle"> -->
+          <div v-if="
+            common_api.sanitizeUnicode(script.testo_comprensione) !== ''
+          " class="col pr-6 scroll overflow-auto max-h-80" v-html="testo_comprensione">
+          </div>
+          <!-- </q-scroll-area> -->
           <div v-if="primaDomanda?.immagine" class="col">
-            <img-wrap :src="primaDomanda.immagine" size="200px" />
+            <img-wrap :src="primaDomanda.immagine" />
           </div><BR />
           <div v-if="primaDomanda?.audio" class="col q-mt-md">
             <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
