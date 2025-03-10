@@ -7,7 +7,7 @@
     <div class="my-3 mx-5 p-2 rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       v-html="common_api.sanitizeUnicode(testoDomanda)" />
 
-    <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" mode="scale-down" />
+    <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
 
     <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
     <video-wrap class="my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />

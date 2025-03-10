@@ -6,8 +6,8 @@
     <div class="row q-mr-sm">
       <div class="col-6">
         <div class="column">
-          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-            v-html="common_api.sanitizeUnicode(script.testo)" />
+          <!-- <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)" /> -->
           <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
             <audio-wrap :audio="script.audio" @update="set_ascolti" />
           </div>

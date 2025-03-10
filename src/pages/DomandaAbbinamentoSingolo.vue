@@ -6,16 +6,16 @@
     <div class="row q-mr-sm">
       <div class="col-6">
         <div class="column">
-          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-            v-html="common_api.sanitizeUnicode(script.testo)" />
+          <!-- <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)" /> -->
           <audio-wrap v-if="script.audio" class="col q-my-md q-mx-md" :audio="script.audio" @update="set_ascolti" />
           <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
             @update="set_ascolti_video" />
         </div>
-        <q-scroll-area class="col" style="height: calc(60vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+        <q-scroll-area class="col" style="height: calc(80vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
-              <div class="col-auto parte-fissa">
+              <div class="col parte-fissa">
                 <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="contain"
                   :src="{ $: { url: item._ } }" />
                 <div v-else class="q-ma-sm" v-html="item.label" style="overflow: auto; max-height: 200px" />

@@ -98,6 +98,8 @@ const getPunteggio = async () => {
         color: 'positive',
         position: 'center',
         message: `Punteggio ottenuto: ${punteggio}`,
+        timeout: 2000,
+        closeBtn: 'OK'
       });
     })
     .catch((errore) => {

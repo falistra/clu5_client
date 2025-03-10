@@ -5,7 +5,7 @@
         class="max-h-40 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
 
-      <img-wrap style="max-height: calc(60vh)" v-if="script.immagine" :src="script.immagine" />
+      <img-wrap v-if="script.immagine" :src="script.immagine" />
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 

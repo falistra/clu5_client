@@ -1,18 +1,20 @@
 <template>
-  <q-page :style-fn="myTweak">
+  <q-page> <!-- :style-fn="myTweak" -->
     <PrologoComponent
       class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
-    <q-card flat>
-      <q-card-section horizontal>
-        <q-card-section class="col-6 scroll-mr-6 overflow-auto">
-          <!-- <q-scroll-area visible style="height: calc(60vh); max-height: calc(60vh)" :thumb-style="my_thumbStyle"
+    <div class="row my-2 mx-3">
+      <div class="col">
+        <div class="column">
+          <!-- <q-scroll-area visible style="height: calc(80vh)" :thumb-style="my_thumbStyle"
           :bar-style="my_barStyle"> -->
-          <div v-if="
-            common_api.sanitizeUnicode(script.testo_comprensione) !== ''
-          " class="col pr-6 scroll overflow-auto max-h-80" v-html="testo_comprensione">
+          <div class="col-auto">
+            <div v-if="
+              common_api.sanitizeUnicode(script.testo_comprensione) !== ''
+            " class="scroll q-mr-md" v-html="testo_comprensione">
+            </div>
+            <!-- </q-scroll-area> -->
           </div>
-          <!-- </q-scroll-area> -->
           <div v-if="primaDomanda?.immagine" class="col">
             <img-wrap :src="primaDomanda.immagine" />
           </div><BR />
@@ -22,26 +24,24 @@
           <div v-if="primaDomanda?.video" class="col q-mt-md">
             <video-wrap :video="primaDomanda.video" width="350" height="280" @update="set_ascolti_video" />
           </div>
-
-        </q-card-section>
-        <q-card-section class="col-6">
-          <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(60vh)">
-            <!--:style="{ height: `${H}px` }" -->
-            <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
-              <div class="text-overline" v-html="domanda.prologo" />
-              <div class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)" />
-              <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"
-                :options="domanda.risposte" dense color="primary">
-                <template #label="risposta">
-                  <div :class="{ active: isActive }" v-html="risposta.label" />
-                </template>
-              </q-option-group>
-
-            </div>
-          </q-scroll-area>
-        </q-card-section>
-      </q-card-section>
-    </q-card>
+        </div>
+      </div>
+      <div class="col">
+        <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(80vh)">
+          <!--:style="{ height: `${H}px` }" -->
+          <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
+            <div class="text-overline" v-html="domanda.prologo" />
+            <div class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)" />
+            <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"
+              :options="domanda.risposte" dense color="primary">
+              <template #label="risposta">
+                <div :class="{ active: isActive }" v-html="risposta.label" />
+              </template>
+            </q-option-group>
+          </div>
+        </q-scroll-area>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -195,14 +195,14 @@ const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle);
 const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle);
 
 
-const myTweak = (offset: number) => {
-  // "offset" is a Number (pixels) that refers to the total
-  // height of header + footer that occupies on screen,
-  // based on the QLayout "view" prop configuration
+// const myTweak = (offset: number) => {
+// "offset" is a Number (pixels) that refers to the total
+// height of header + footer that occupies on screen,
+// based on the QLayout "view" prop configuration
 
-  // this is actually what the default style-fn does in Quasar
-  return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-}
+// this is actually what the default style-fn does in Quasar
+// return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+// }
 
 </script>
 
@@ -218,4 +218,5 @@ const myTweak = (offset: number) => {
 
 .active
   border-style: dotted
+
 </style>
