@@ -1,7 +1,6 @@
 <template>
   <div class="row justify-between">
     <div>
-      <!-- <span class="text-subtitle1">{{ $t('Parte') }} {{ sessioneStore.numero_stazione_corrente }} - </span> -->
       <vue-countdown v-slot="{ minutes, seconds }" :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
         60 *
         1000
@@ -52,11 +51,19 @@ const idDomanda = computed(() => {
   return (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id;
 });
 
+if (sessioneStore.test.script.test.situazionePrecedente)
+  Notify.create({
+    message: t('ripresaTest'),
+    color: 'negative',
+    position: 'bottom',
+    timeout: 3000,
+    closeBtn: 'OK'
+  });
+
+
+
 const stato = computed(() => {
-  return `${t('Parte')} ${sessioneStore.id_stazione_corrente} - ${t(
-    'Domanda'
-  )} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`;
-  // return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.test.script.test.stazioni.stazione.length} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
+  return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.numero_stazioni} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
 });
 
 let notUltimaDomanda = true;

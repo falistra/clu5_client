@@ -17,7 +17,7 @@
           </div>
           <div v-if="primaDomanda?.immagine" class="col">
             <img-wrap :src="primaDomanda.immagine" />
-          </div><BR />
+          </div>
           <div v-if="primaDomanda?.audio" class="col q-mt-md">
             <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
           </div>

@@ -33,7 +33,6 @@ const binops: { [operator: string]: (op1: number, op2: number) => number } = {
     return a > b ? 1 : 0;
   },
   lt: function (a: number, b: number) {
-    console.log('a < b', a, b);
     return a < b ? 1 : 0;
   },
   ge: function (a: number, b: number) {

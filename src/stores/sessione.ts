@@ -9,6 +9,7 @@ export const useSessioneStore = defineStore('sessione', {
     errore: {},
     lingua: <string>'2',
     numero_stazione_corrente: 1,
+    numero_stazioni: 0,
     id_stazione_corrente: '',
     test: null as unknown as InstanceType<typeof Test>,
     risposte: <IRisposte>{},

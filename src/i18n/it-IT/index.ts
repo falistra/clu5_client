@@ -20,6 +20,7 @@ export default {
   confermaFine: 'Confermi di aver terminato di rispondere?',
   Consegna: 'Consegna esercizi (se visti tutti)',
   tempoScaduto: 'Tempo scaduto',
+  ripresaTest: 'Test precedentemente interrotto; ora ripreso.',
   Doppio_click: 'Doppio click per togliere',
   Trascina: 'Trascina',
   Risposta: 'Risposta',

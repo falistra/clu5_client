@@ -1,25 +1,23 @@
 <template>
-  <div v-if="
+  <div class="self-center column items-center" v-if="
     video &&
     validVideo &&
     video.$.url &&
     fileEsiste &&
     video.ascolti_rimanenti
-  " class="self-center">
-    <video :src="mySource" ref="myVideo" :width="props.width" :height="props.height" disablepictureinpicture></video>
-    <q-toolbar class="mt-3">
-      <q-toolbar-title class="text-sm font-semibold">
-        Visioni rimanenti: {{ ascolti_rimanenti }} - {{ duration }}/{{
-          elapsed
-        }}
+  ">
+    <video class="col" :src="mySource" ref="myVideo" :width="width" :height="height" disablepictureinpicture></video>
+    <div class="col">
+      <div class="mt-1 text-sm font-semibold">
+        Visioni rimanenti: {{ ascolti_rimanenti }} - Durata: {{ duration }}
         <q-btn :disable="playing && sessione.IN_VISIONE" class="ml-5" size="md" round color="primary" icon="play_arrow"
           @click="vai">
           <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
             {{ (playing && sessione.IN_VISIONE) ? 'In visione' : 'Click per vedere' }}
           </q-tooltip>
         </q-btn>
-      </q-toolbar-title>
-    </q-toolbar>
+      </div>
+    </div>
   </div>
 
   <div v-if="video && video.$.url && video.$.url != 'nessuno' && !fileEsiste" class="self-center">
@@ -53,13 +51,14 @@ defineOptions({ name: 'VideoWrap' });
 
 interface Props {
   video: Video;
-  height?: string;
-  width?: string;
+  // height?: string;
+  // width?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {});
-
-console.log(props);
+const props = withDefaults(defineProps<Props>(), {
+  // height: '360px',
+  // width: '720px',
+});
 
 const validVideo = computed(
   () =>
@@ -75,8 +74,6 @@ let ascolti_rimanenti = props.video.ascolti_rimanenti || 2; // Number.MAX_SAFE_I
 const emit = defineEmits(['update']);
 
 const mySource = computed(() => {
-  console.log(props.video?.$.url);
-  // return 'fake'
   if (
     props.video?.$.url.endsWith('.mp4') ||
     props.video?.$.url.endsWith('.MP4')
@@ -90,11 +87,14 @@ const myVideo = ref();
 const playing = ref(false);
 const duration = ref('');
 const elapsed = ref('0:00');
+const width = ref('720px');
+const height = ref('360px');
 
 const vai = () => {
   if (myVideo.value) {
     if (!playing.value) {
       myVideo.value.play();
+      sessione.IN_VISIONE = true;
       playing.value = true;
       ascolti_rimanenti--;
     }
@@ -103,6 +103,7 @@ const vai = () => {
 
 onMounted(() => {
   if (myVideo.value) {
+
     (myVideo.value as HTMLMediaElement).onerror = () => {
       fileEsiste.value = false;
     };
@@ -120,21 +121,36 @@ onMounted(() => {
       const d = (myVideo.value as HTMLMediaElement).duration;
       const s = Math.round(d % 60);
       const m = Math.round(d / 60);
-      duration.value = `${m}:${s}`;
+      duration.value = `${m} m: ${s} s`;
+      const h = (myVideo.value as HTMLVideoElement).videoHeight
+      const w = (myVideo.value as HTMLVideoElement).videoWidth
+
+      if (h > 360) {
+        height.value = '360px';
+        width.value = `${(360 * w) / h}px`;
+      }
+      else if (w > 720) {
+        width.value = '720px';
+        height.value = `${(720 * h) / w}px`;
+      } else {
+        width.value = `${w}px`;
+        height.value = `${h}px`;
+      }
     };
 
     (myVideo.value as HTMLMediaElement).ontimeupdate = () => {
       // console.log((myVideo.value as HTMLMediaElement).currentTime)
       const d = (myVideo.value as HTMLMediaElement).currentTime;
-      const s = Math.round(d % 60);
-      const m = Math.round(d / 60);
-      elapsed.value = `${m}:${s}`;
+      // const s = Math.round(d % 60);
+      // const m = Math.round(d / 60);
+      //      elapsed.value = `${m}:${s}`;
+      elapsed.value = `${d}`
     };
   }
 });
 
 onDeactivated(() => {
-  // if (myVideo.value) myVideo.value.pause();
+  if (myVideo.value) myVideo.value.pause();
   if (ascolti_rimanenti >= 0) {
     emit('update', ascolti_rimanenti);
   }

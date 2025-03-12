@@ -6,7 +6,7 @@ import { api } from 'boot/axios';
 import moment from 'moment';
 
 import { Test } from 'stores/Test';
-import { Loading, Notify } from 'quasar';
+import { Loading } from 'quasar';
 
 import { useSessioneStore } from 'stores/sessione';
 import { useLogStore } from 'stores/log';
@@ -136,17 +136,23 @@ export default boot(async ({ router }) => {
                 );
             }
           );
-          Notify.create({
-            message: 'Test precedentemente interrotto; ora ripreso.',
-            color: 'negative',
-            position: 'bottom',
-          });
+          // Notify.create({
+          //   message: t('ripresaTest'),
+          //   color: 'negative',
+          //   position: 'bottom',
+          // });
+          sessioneStore.numero_stazione_corrente =
+            Object.entries(sessioneStore.log_STAZIONI).length + 1;
+        } else {
+          sessioneStore.numero_stazione_corrente = 1;
         }
-
         const test = new Test(scriptJSON, script, storia_precedente);
 
         sessioneStore.test = test;
         sessioneStore.lingua = test.LINGUA;
+        sessioneStore.numero_stazioni = (
+          scriptJSON as Script
+        ).test.stazioni.stazione.length;
 
         const esitoPositivo =
           await test.stazione_corrente.richiediDomandeServer();

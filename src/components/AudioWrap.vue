@@ -87,6 +87,7 @@ const vai = () => {
     if (!playing.value) {
       myAudio.value.play();
       playing.value = true;
+      sessione.IN_ASCOLTO = true;
       ascolti_rimanenti--;
     }
   }
@@ -124,7 +125,7 @@ onMounted(() => {
 });
 
 onDeactivated(() => {
-  // if (myAudio.value) myAudio.value.pause();
+  if (myAudio.value) myAudio.value.pause();
   if (ascolti_rimanenti >= 0) {
     emit('update', ascolti_rimanenti);
   }

@@ -1,7 +1,7 @@
 <template>
   <q-page>
 
-    <div class="flex flex-col h-100">
+    <div class="flex flex-col">
 
       <PrologoComponent
         class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
@@ -11,7 +11,7 @@
         v-html="common_api.sanitizeUnicode(script.testo)" />
       <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
       <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
-      <video-wrap class="my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
+      <video-wrap class="col my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
       <div class="col q-mt-sm q-my-md">
         <div class="row items-center justify-center">
           <q-input v-model="script.rispostaData" class="col-7" autofocus outlined type="textarea"

@@ -20,6 +20,7 @@ export default {
   confermaFine: 'Submit?',
   Consegna: 'Hand in your exam',
   tempoScaduto: 'Time is up',
+  ripresaTest: 'Test running anew, after being interrupted.',
   Doppio_click: 'double click to remove option',
   Trascina: 'drag and drop',
   Risposta: 'Answer',
