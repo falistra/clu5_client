@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   Parte: 'Part',
   di: 'of',
@@ -9,6 +6,8 @@ export default {
   failed: 'Action failed',
   success: 'Action was successful',
   secondi: 'seconds',
+  ora: 'hour',
+  ore: 'hours',
   minuto: 'minute',
   minuti: 'minutes',
 
@@ -27,4 +26,7 @@ export default {
   Numero_Parole: 'Word count:',
 
   manca1minuto: 'one minute left',
+  durata: 'Duration',
+  Visioni_rimanenti: 'Remaining views',
+  Ascolti_rimanenti: 'Remaining listens',
 };

@@ -135,8 +135,13 @@ export interface T_DomandaRiempimentoTesto_risposta2Server
   risposte: { [Key: string]: string };
 }
 
-export interface T_DomandaRiempimentoTesto extends I_Domanda_ParteComune {
+export interface T_DomandaRiempimentoTesto {
   $: { id: number; lingua: string };
+  prologo: string;
+  testo: string | { _: string; $: { ampiezza: string } };
+  immagine?: Immagine;
+  audio?: Audio;
+  video?: Video;
   risposte: {
     risposta: Array<{ $: { hash: string }; _: string; disponibile?: boolean }>;
   };
@@ -298,4 +303,5 @@ export interface T_Token {
   slotIndex: string;
   content: string;
   hash: string;
+  l?: number;
 }

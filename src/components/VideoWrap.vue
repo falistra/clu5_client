@@ -9,7 +9,7 @@
     <video class="col" :src="mySource" ref="myVideo" :width="width" :height="height" disablepictureinpicture></video>
     <div class="col">
       <div class="mt-1 text-sm font-semibold">
-        Visioni rimanenti: {{ ascolti_rimanenti }} - Durata: {{ duration }}
+        {{ $t('Visioni_rimanenti') }} {{ ascolti_rimanenti }} - {{ $t('durata') }} {{ duration }}
         <q-btn :disable="playing && sessione.IN_VISIONE" class="ml-5" size="md" round color="primary" icon="play_arrow"
           @click="vai">
           <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
@@ -36,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { Video } from '../pages/models';
 import {
   ref,
@@ -46,6 +47,10 @@ import {
 
 import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
+
+import { useI18n } from 'vue-i18n';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { t } = useI18n();
 
 defineOptions({ name: 'VideoWrap' });
 
@@ -121,7 +126,7 @@ onMounted(() => {
       const d = (myVideo.value as HTMLMediaElement).duration;
       const s = Math.round(d % 60);
       const m = Math.round(d / 60);
-      duration.value = `${m} m: ${s} s`;
+      duration.value = `${m}:${s}`;
       const h = (myVideo.value as HTMLVideoElement).videoHeight
       const w = (myVideo.value as HTMLVideoElement).videoWidth
 

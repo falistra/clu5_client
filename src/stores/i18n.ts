@@ -246,9 +246,7 @@ const caratteri: { [Key: string]: string } = {
   2: 'ÙùÀàÉéÈèÊêÂâÎîÔôÛûÏïÜüÇç', // francese
   3: 'ßÜüÖöÄä', // tedesco
   4: '¿¡ÑñÜüÉéÁáÍíÓóÚú', // spagnolo
-  5: 'ÀÈÙÓàèéìòù', // italiano
-  6: '', // arabo
-  666: '',
+  5: 'ÀÈÉÌÒÙàèéìòù', // italiano
 };
 
 export const useI18nStore = defineStore('i18n', {

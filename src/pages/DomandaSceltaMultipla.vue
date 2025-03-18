@@ -11,9 +11,9 @@
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
-      <q-badge color="red" class="ml-2 w-40">
-        <q-icon name="warning" color="white" class="q-ml-xs" />
-        Risposte corrette: {{ script.$.risposteCorrette }}
+      <q-badge color="primary" class="ml-2 w-48">
+        <q-icon name="warning" color="white" class="q-mx-xs" />
+        Numero massimo risposte: {{ script.$.risposteCorrette }}
       </q-badge>
       <q-scroll-area visible :thumb-style="my_thumbStyle" :bar-style="my_barStyle" style="height: calc(100vh)"
         class="mr-5">

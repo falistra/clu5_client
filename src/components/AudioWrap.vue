@@ -11,7 +11,7 @@
     </audio>
     <q-toolbar>
       <q-toolbar-title class="text-sm font-semibold">
-        Ascolti rimanenti: {{ ascolti_rimanenti }} - {{ duration }}/{{
+        {{ $t('Ascolti_rimanenti') }} : {{ ascolti_rimanenti }} - {{ duration }}/{{
           elapsed
         }}
       </q-toolbar-title>
@@ -51,6 +51,10 @@ defineOptions({ name: 'AudioWrap' });
 
 import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
+
+import { useI18n } from 'vue-i18n';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { t } = useI18n();
 
 const props = defineProps<{ audio: Audio }>();
 

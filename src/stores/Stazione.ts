@@ -4,6 +4,7 @@ import xml2js from 'xml2js';
 // import { parseFromString } from 'dom-parser';
 import { api } from '../boot/axios';
 import { useSessioneStore } from './sessione';
+import { useLogStore } from './log';
 
 import {
   Script_Stazione,
@@ -329,8 +330,8 @@ export const Stazione = class {
       }
     });
     const azione = caso ? caso.azione : this.script.altrimenti?.azione;
-    this.test.LIVELLO_ACQUISITO = azione?.$.esito_acquisito || ' ';
-    this.test.STATO_ACQUISITO = azione?.$.stato_acquisito || '';
+    this.test.LIVELLO_ACQUISITO = azione?.$.stato_acquisito || ' ';
+    this.test.ESITO_USCITA = azione?.$.esito || '';
     const sessioneStore = useSessioneStore();
 
     const test = sessioneStore.test;
@@ -467,7 +468,7 @@ export const Stazione = class {
       idTest: test.ID_TEST,
       lingua: test.LINGUA,
       livello: test.LIVELLO_ACQUISITO,
-      esitoUscita: test.STATO_ACQUISITO || '_',
+      esitoUscita: test.ESITO_USCITA || '_',
       testTime: testTime.toString(),
       log: JSON.stringify({
         inizioTest: test.inizioTest.format('ddd D MMM YYYY HH:mm'),
@@ -483,7 +484,7 @@ export const Stazione = class {
         fineTest: fineTest.format('ddd D MMM YYYY HH:mm'),
         testTime,
         esito_acquisito: test.LIVELLO_ACQUISITO,
-        statoUscita: test.STATO_ACQUISITO,
+        statoUscita: test.ESITO_USCITA || '',
         RISPOSTE: { STAZIONI: sessioneStore.log_STAZIONI },
       }),
     };
@@ -491,6 +492,14 @@ export const Stazione = class {
       .post('/test/test/', new URLSearchParams(parms))
       .then((response) => {
         sessioneStore.logTest = response.data;
+        const user = sessioneStore.test?.ID_USER || 'Simulazione';
+        const log = useLogStore();
+        if (user in log.testiScritturaLibera)
+          try {
+            log.testiScritturaLibera[user] = {};
+          } catch (error) {}
+        {
+        }
         // return response.data;
       })
       .catch((errore) => {

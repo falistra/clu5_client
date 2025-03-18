@@ -27,7 +27,7 @@ export type Script_Stazione = {
     azione: {
       $: {
         stato_acquisito: string;
-        esito_acquisito?: string;
+        esito?: string;
         vai_a: string;
       };
     };
@@ -40,7 +40,7 @@ export type Script_Stazione = {
     azione: {
       $: {
         stato_acquisito: string;
-        esito_acquisito?: string;
+        esito?: string;
         vai_a: string;
       };
     };

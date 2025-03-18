@@ -29,8 +29,8 @@
                 <div class="column">
                   <div v-for="item in partefissa.rispostaData" :key="item.$.hash" class="col-auto"
                     @dblclick="annulla(item, partefissa)">
-                    <div class="col text-subtitle q-ma-xs item">
-                      <div v-html="item.label" />
+                    <div class="col  border-2 border-indigo-600 text-subtitle q-ma-xs item">
+                      <div class="q-pa-sm" v-html="item.label" />
                       <q-tooltip v-if="item.label" class="bg-indigo" anchor="top middle" self="bottom middle"
                         :offset="[5, 5]">
                         <strong>{{ $t('Doppio_click') }} </strong>

@@ -1,12 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header
-      bordered
-      class="bg-blue-2 text-black"
-      elevated
-      borded
-      style="max-height: 45px"
-    >
+    <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
         <q-toolbar-title class="col-4 text-subtitle2">
           <div class="row flex-center">
@@ -20,23 +14,17 @@
         <q-toolbar-title class="col-8 text-subtitle2">
           <div class="row flex-center">
             {{ sessioneStore.test?.script.test.$.descrizione }}
-            <q-btn
+            <!-- <q-btn
               class="q-ml-lg"
               color="secondary"
               size="xs"
               :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
               @click="$q.fullscreen.toggle()"
-            />
+            /> -->
             <!-- <q-select class="q-ml-md" v-model="locale" :options="localeOptions" dense borderless emit-value map-options
               options-dense style="min-width: 150px" /> -->
 
-            <q-btn-toggle
-              v-model="locale"
-              class="q-ml-lg"
-              push
-              toggle-color="primary"
-              :options="localeOptions"
-            >
+            <q-btn-toggle v-model="locale" class="q-ml-lg" push toggle-color="primary" :options="localeOptions">
               <template #en>
                 <span class="q-ml-sm fi fi-gb" />
               </template>
@@ -59,13 +47,7 @@
       </router-view>
     </q-page-container>
 
-    <q-footer
-      bordered
-      class="bg-blue-2 text-black"
-      elevated
-      borded
-      style="max-height: 45px"
-    >
+    <q-footer bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <!-- <q-badge class="text-xs/[3px]" floating v-if="sessioneStore.sessioneInterrotta" color="red"
         label="Test precedentemente interrotto; ora ripreso.">
         <q-icon name="warning" color="white" />
@@ -82,8 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
-const $q = useQuasar();
+// import { useQuasar } from 'quasar';
+//  const $q = useQuasar();
 
 import '/node_modules/flag-icons/css/flag-icons.min.css';
 

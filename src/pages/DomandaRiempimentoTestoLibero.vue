@@ -8,9 +8,9 @@
     <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
     <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
     <div class="my-5 mx-5" v-html="testo_quesito"></div>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
-    </q-page-sticky>
+    <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]"> -->
+    <TastieraVirtuale :linguaDomanda="linguaDomanda" @update="carattere" />
+    <!-- </q-page-sticky> -->
   </q-page>
 </template>
 

@@ -15,7 +15,7 @@ export const Test = class {
   ID_USER = '';
   LINGUA = '';
   LIVELLO_ACQUISITO = '';
-  STATO_ACQUISITO = '';
+  ESITO_USCITA = '';
   STORIA: string[] = [];
 
   stazione_corrente = null as unknown as InstanceType<typeof Stazione>;

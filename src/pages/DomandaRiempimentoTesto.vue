@@ -9,12 +9,12 @@
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
-      <div class="q-my-sm q-mx-md  my-2 mx-5 p-2 scroll-mr-6 overflow-auto" style="max-height: calc(50vh);">
-        <div class="text-subtitle q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
+      <div class="q-my-sm q-mx-md  my-2 mx-5 p-2 scroll-mr-6 overflow-auto" style="max-height: calc(47vh);">
+        <div class="q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
           <span v-for="item in tokens" :key="item.index">
-            <span v-if="!item.isSlot" v-html="item.content"></span>
-            <span v-else-if="item.isSlot" class="drop-zone" @dragover.prevent @dragenter.prevent
-              @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
+            <span v-if="!item.isSlot" v-html="common_api.sanitizeUnicode(item.content)"></span>
+            <span v-else-if="item.isSlot" class="hover:border-dotted pa-md drop-zone" @dragover.prevent
+              @dragenter.prevent @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
               <q-tooltip v-if="
                 script.rispostaData && item.slotIndex in script.rispostaData
               " class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
@@ -23,29 +23,28 @@
               {{
                 script.rispostaData && item.slotIndex in script.rispostaData
                   ? script.rispostaData[item.slotIndex]._
-                  : '_'.repeat(15)
+                  : '_'.repeat(item.l || 18)
               }}
             </span>
           </span>
         </div>
       </div>
 
-      <div class="col q-my-sm q-mx-md">
-        <q-scroll-area :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: calc(50vh)">
-          <div class="row">
-            <div class="col-auto" v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
-              <p class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, risposta.testo)">
-                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                  <strong>{{ $t('Trascina') }}</strong>
-                </q-tooltip>
-                <span
-                  class="bg-teal-1 q-pa-xs rounded border-solid hover:border-dotted border-2 border-indigo-600 text-weight-medium"
-                  v-html="risposta.label"></span>
-              </p>
+      <q-scroll-area class="q-gutter-md q-mt-md q-mx-md" :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle"
+        style="height: calc(47vh)">
+        <div class="row q-gutter-sm q-py-md" style="display: flex; flex-wrap: wrap;">
+          <div v-for="risposta in lista_risposte_disponibili" :key="risposta.id">
+            <div draggable="true" @dragstart="startDrag($event, risposta.testo)">
+              <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <strong>{{ $t('Trascina') }}</strong>
+              </q-tooltip>
+              <div
+                class="q-px-sm text-wrap text-small bg-teal-1 rounded border-solid hover:border-dotted border-2 border-indigo-600"
+                v-html="risposta.label"></div>
             </div>
           </div>
-        </q-scroll-area>
-      </div>
+        </div>
+      </q-scroll-area>
     </div>
   </q-page>
 </template>
@@ -97,18 +96,22 @@ watch(script.rispostaData, (rispostaData) => {
 
 if (script.audio) setAudioPams(script.audio);
 if (script.video) setVideoPams(script.video);
-
+console.log(script)
+let testo = '';
+if (typeof script.testo == 'string') testo = script.testo;
+if (typeof script.testo == 'object') testo = script.testo._;
 const tokens = ref(
-  script.testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
+  testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
     const slot = content.match(/([_]+)(\d+)([_]+)/);
+    const l = slot ? slot[1].length + slot[3].length : 0
     const slotIndex = slot ? slot[2] : '';
     const isSlot = slot ? true : false;
     const risposta =
       script.rispostaData && slotIndex in script.rispostaData
         ? script.rispostaData[slotIndex]._
-        : '_'.repeat(25);
-    content = isSlot ? risposta : content.replace(/\%u(\d+)/g, '&#x$1;');
-    return { index, isSlot, slotIndex, content } as T_Token;
+        : ' '.repeat(l);
+    content = isSlot ? risposta : content // .replace(/\%u(.{4})/g, '&#x$1;');
+    return { index, isSlot, slotIndex, content, l } as T_Token;
   })
 );
 
@@ -232,5 +235,5 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
   font-weight: 900
   width: 100px
   min-width: 100px
-  /* border: 1px dotted black */
+  border: 1px dotted black
 </style>

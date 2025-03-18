@@ -1,11 +1,13 @@
 <template>
   <div class="row justify-between">
     <div>
-      <vue-countdown v-slot="{ minutes, seconds }" :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
+      <vue-countdown v-slot="{ hours, minutes, seconds }" :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
         60 *
         1000
         " @end="gameover" @progress="versoLaFine">
-        <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} : {{ minutes }}
+        <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} :
+          {{ hours > 0 ? hours + ' ' + (hours == 1 ? $t('ora') : $t('ore')) : '' }}
+          {{ minutes }}
           {{ minutes == 1 ? $t('minuto') : $t('minuti') }}, {{ seconds }}
           {{ $t('secondi') }}</span>
       </vue-countdown>

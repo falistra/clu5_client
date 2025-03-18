@@ -204,7 +204,6 @@ export default boot(async ({ router }) => {
 
       if (jsonDomanda) {
         const domande = [jsonDomanda];
-
         sessioneStore.domande = (domande as Array<object>)
           .map((value) => {
             const domande = (value as { sql: string; domanda: object }).domanda;
