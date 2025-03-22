@@ -42,86 +42,86 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../layouts/MainLayout.vue'),
     children: [
       {
-        path: 'domandasceltasingola/:id',
+        path: 'domandasceltasingola/:st/:id',
         name: 'domandasceltasingola',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaSceltaSingola.vue'),
       },
       {
-        path: 'domandariordino/:id',
+        path: 'domandariordino/:st/:id',
         name: 'domandariordino',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiordino.vue'),
       },
       {
-        path: 'domandascritturalibera/:id',
+        path: 'domandascritturalibera/:st/:id',
         name: 'domandascritturalibera',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaScritturaLibera.vue'),
       },
       {
-        path: 'domandacomprensionetesto/:id',
+        path: 'domandacomprensionetesto/:st/:id',
         name: 'domandacomprensionetesto',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaComprensioneTesto.vue'),
       },
       {
-        path: 'domandasceltamultipla/:id',
+        path: 'domandasceltamultipla/:st/:id',
         name: 'domandasceltamultipla',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaSceltaMultipla.vue'),
       },
 
       {
-        path: 'domandariempimentotesto/:id',
+        path: 'domandariempimentotesto/:st/:id',
         name: 'domandariempimentotesto',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoTesto.vue'),
       },
       {
-        path: 'domandariempimentotestolibero/:id',
+        path: 'domandariempimentotestolibero/:st/:id',
         name: 'domandariempimentotestolibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
       },
       {
-        path: 'domandariempimentotestoLibero/:id',
+        path: 'domandariempimentotestoLibero/:st/:id',
         name: 'domandariempimentotestoLibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoTestoLibero.vue'),
       },
       {
-        path: 'domandariempimentolibero/:id',
+        path: 'domandariempimentolibero/:st/:id',
         name: 'domandariempimentolibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {
-        path: 'domandaRiempimentoLibero/:id',
+        path: 'domandaRiempimentoLibero/:st/:id',
         name: 'domandaRiempimentoLibero',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaRiempimentoLibero.vue'),
       },
       {
-        path: 'domandaoutputstudente/:id',
+        path: 'domandaoutputstudente/:st/:id',
         name: 'domandaoutputstudente',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaOutputStudente.vue'),
       },
       {
-        path: 'domandaabbinamentomultiplo/:id',
+        path: 'domandaabbinamentomultiplo/:st/:id',
         name: 'domandaabbinamentomultiplo',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaAbbinamentoMultiplo.vue'),
       },
       {
-        path: 'domandaabbinamentosingolo/:id',
+        path: 'domandaabbinamentosingolo/:st/:id',
         name: 'domandaabbinamentosingolo',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaAbbinamentoSingolo.vue'),
       },
       {
-        path: 'domandawordpool/:id',
+        path: 'domandawordpool/:st/:id',
         name: 'domandawordpool',
         meta: { keepAlive: true }, // use cache
         component: () => import('pages/DomandaWordPool.vue'),

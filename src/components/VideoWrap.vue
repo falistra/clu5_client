@@ -4,16 +4,16 @@
     validVideo &&
     video.$.url &&
     fileEsiste &&
-    video.ascolti_rimanenti
+    video.ascolti_rimanenti !== 0
   ">
     <video class="col" :src="mySource" ref="myVideo" :width="width" :height="height" disablepictureinpicture></video>
     <div class="col">
       <div class="mt-1 text-sm font-semibold">
         {{ $t('Visioni_rimanenti') }} {{ ascolti_rimanenti }} - {{ $t('durata') }} {{ duration }}
-        <q-btn :disable="playing && sessione.IN_VISIONE" class="ml-5" size="md" round color="primary" icon="play_arrow"
+        <q-btn :disable="sessione.IN_VISIONE" class="ml-5" size="md" round color="primary" icon="play_arrow"
           @click="vai">
           <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
-            {{ (playing && sessione.IN_VISIONE) ? 'In visione' : 'Click per vedere' }}
+            {{ (sessione.IN_VISIONE) ? 'In visione' : 'Click per vedere' }}
           </q-tooltip>
         </q-btn>
       </div>
@@ -34,7 +34,6 @@
     </q-toolbar>
   </div>
 </template>
-
 <script setup lang="ts">
 
 import { Video } from '../pages/models';
@@ -48,22 +47,20 @@ import {
 import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
 
-import { useI18n } from 'vue-i18n';
+// import { useI18n } from 'vue-i18n';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { t } = useI18n();
+// const { t } = useI18n();
 
 defineOptions({ name: 'VideoWrap' });
 
+
 interface Props {
   video: Video;
-  // height?: string;
-  // width?: string;
+  id?: string;
+  class?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  // height: '360px',
-  // width: '720px',
-});
+const props = defineProps<Props>()
 
 const validVideo = computed(
   () =>
@@ -91,7 +88,6 @@ const mySource = computed(() => {
 const myVideo = ref();
 const playing = ref(false);
 const duration = ref('');
-const elapsed = ref('0:00');
 const width = ref('720px');
 const height = ref('360px');
 
@@ -100,8 +96,8 @@ const vai = () => {
     if (!playing.value) {
       myVideo.value.play();
       sessione.IN_VISIONE = true;
+      sessione.IN_VISIONE_URL = mySource.value
       playing.value = true;
-      ascolti_rimanenti--;
     }
   }
 };
@@ -116,8 +112,8 @@ onMounted(() => {
     (myVideo.value as HTMLMediaElement).onended = () => {
       playing.value = false;
       sessione.IN_VISIONE = false;
+      ascolti_rimanenti--;
       if (ascolti_rimanenti >= 0) {
-        // console.log(`ascolti rimanenti ${ascolti_rimanenti}`);
         emit('update', ascolti_rimanenti);
       }
     };
@@ -143,21 +139,23 @@ onMounted(() => {
       }
     };
 
-    (myVideo.value as HTMLMediaElement).ontimeupdate = () => {
-      // console.log((myVideo.value as HTMLMediaElement).currentTime)
-      const d = (myVideo.value as HTMLMediaElement).currentTime;
-      // const s = Math.round(d % 60);
-      // const m = Math.round(d / 60);
-      //      elapsed.value = `${m}:${s}`;
-      elapsed.value = `${d}`
-    };
+    // (myVideo.value as HTMLMediaElement).ontimeupdate = () => {
+    //   // console.log((myVideo.value as HTMLMediaElement).currentTime)
+    //   const d = (myVideo.value as HTMLMediaElement).currentTime;
+    //   // const s = Math.round(d % 60);
+    //   // const m = Math.round(d / 60);
+    //   //      elapsed.value = `${m}:${s}`;
+    //   elapsed.value = `${d}`
+    // };
   }
 });
 
 onDeactivated(() => {
-  if (myVideo.value) myVideo.value.pause();
-  if (ascolti_rimanenti >= 0) {
-    emit('update', ascolti_rimanenti);
-  }
+  // if (myVideo.value) myVideo.value.pause();
+  // if (ascolti_rimanenti >= 0) {
+  //   emit('update', ascolti_rimanenti);
+  // }
+  playing.value = false;
+  sessione.IN_VISIONE = false;
 });
 </script>

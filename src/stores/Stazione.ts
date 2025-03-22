@@ -106,7 +106,6 @@ export const Stazione = class {
         sessioneStore.errore = errore;
         return false;
       });
-
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
         explicitArray: false,

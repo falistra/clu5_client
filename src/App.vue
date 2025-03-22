@@ -23,14 +23,15 @@ if (sessioneStore.domande.length > 0) {
     if (sessioneStore.domande.length > 0) {
       router.push({
         name: sessioneStore.domande[sessioneStore.counter][0],
-        params: { id: sessioneStore.counter },
+        params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
       });
     }
   } else {
     if (sessioneStore.domande.length > 0) {
+      console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
       router.push({
         name: `simulazione_${sessioneStore.domande[sessioneStore.counter][0]}`,
-        params: { id: sessioneStore.counter },
+        params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
       });
     }
     Cookies.set('simulazione', '', { expires: -1 }); // cancella cookie

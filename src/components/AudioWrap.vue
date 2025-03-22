@@ -4,20 +4,18 @@
     validAudio &&
     audio.$.url &&
     fileEsiste &&
-    audio.ascolti_rimanenti
+    audio.ascolti_rimanenti !== 0
   " class="max-w-80 self-center border-double border-4 border-indigo-600">
     <audio :src="mySource" ref="myAudio">
       <a :href="mySource"></a>
     </audio>
     <q-toolbar>
       <q-toolbar-title class="text-sm font-semibold">
-        {{ $t('Ascolti_rimanenti') }} : {{ ascolti_rimanenti }} - {{ duration }}/{{
-          elapsed
-        }}
+        {{ $t('Ascolti_rimanenti') }} : {{ ascolti_rimanenti }} - {{ duration }}
       </q-toolbar-title>
-      <q-btn :disable="playing && sessione.IN_ASCOLTO" size="md" round color="primary" icon="play_arrow" @click="vai">
+      <q-btn :disable="sessione.IN_ASCOLTO" size="md" round color="primary" icon="play_arrow" @click="vai">
         <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
-          {{ (playing && sessione.IN_ASCOLTO) ? 'In ascolto' : 'Click per ascoltare' }}
+          {{ (sessione.IN_ASCOLTO) ? 'In ascolto' : 'Click per ascoltare' }}
         </q-tooltip>
       </q-btn>
     </q-toolbar>
@@ -52,11 +50,17 @@ defineOptions({ name: 'AudioWrap' });
 import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
 
-import { useI18n } from 'vue-i18n';
+// import { useI18n } from 'vue-i18n';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { t } = useI18n();
+// const { t } = useI18n();
 
-const props = defineProps<{ audio: Audio }>();
+interface Props {
+  audio: Audio;
+  id?: string;
+  class?: string;
+}
+
+const props = defineProps<Props>()
 
 const validAudio = computed(
   () =>
@@ -68,6 +72,7 @@ const validAudio = computed(
 );
 
 const fileEsiste = ref(true);
+
 let ascolti_rimanenti = props.audio.ascolti_rimanenti || 2; // Number.MAX_SAFE_INTEGER
 const emit = defineEmits(['update']);
 
@@ -84,7 +89,7 @@ const mySource = computed(() => {
 const myAudio = ref();
 const playing = ref(false);
 const duration = ref('');
-const elapsed = ref('0:00');
+// const elapsed = ref('0:00');
 
 const vai = () => {
   if (myAudio.value) {
@@ -92,7 +97,6 @@ const vai = () => {
       myAudio.value.play();
       playing.value = true;
       sessione.IN_ASCOLTO = true;
-      ascolti_rimanenti--;
     }
   }
 };
@@ -106,32 +110,42 @@ onMounted(() => {
     (myAudio.value as HTMLMediaElement).onended = () => {
       playing.value = false;
       sessione.IN_ASCOLTO = false;
+      ascolti_rimanenti--;
       if (ascolti_rimanenti >= 0) {
         emit('update', ascolti_rimanenti);
       }
     };
 
     (myAudio.value as HTMLMediaElement).onloadedmetadata = () => {
-      const d = (myAudio.value as HTMLMediaElement).duration;
-      const s = Math.round(d % 60);
-      const m = Math.round(d / 60);
-      duration.value = `${m}:${s}`;
+      if (myAudio.value) {
+        const d = (myAudio.value as HTMLMediaElement).duration;
+        const s = Math.round(d % 60);
+        const m = Math.round(d / 60);
+        duration.value = `${m}:${s}`;
+      }
     };
 
-    (myAudio.value as HTMLMediaElement).ontimeupdate = () => {
-      // console.log((myAudio.value as HTMLMediaElement).currentTime)
-      const d = (myAudio.value as HTMLMediaElement).currentTime;
-      const s = Math.round(d % 60);
-      const m = Math.round(d / 60);
-      elapsed.value = `${m}:${s}`;
-    };
+    // (myAudio.value as HTMLMediaElement).ontimeupdate = () => {
+    //   // console.log((myAudio.value as HTMLMediaElement).currentTime)
+    //   if (myAudio.value) {
+    //     const d = (myAudio.value as HTMLMediaElement).currentTime;
+    //     const s = Math.round(d % 60);
+    //     const m = Math.round(d / 60);
+    //     elapsed.value = `${m}:${s}`;
+    //   }
+    // };
   }
 });
 
 onDeactivated(() => {
-  if (myAudio.value) myAudio.value.pause();
-  if (ascolti_rimanenti >= 0) {
-    emit('update', ascolti_rimanenti);
-  }
+  // @ts-check  if (myAudio.value) myAudio.value.pause();
+  // if (myAudio.value) {
+  //   (myAudio.value as HTMLMediaElement).pause();
+  // }
+  playing.value = false;
+  sessione.IN_ASCOLTO = false;
+  // if (ascolti_rimanenti >= 0) {
+  //   emit('update', ascolti_rimanenti);
+  // }
 });
 </script>

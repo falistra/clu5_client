@@ -10,9 +10,10 @@ const router = useRouter();
 const jsonData = ref(sessioneStore.test);
 
 const back = () => {
+  console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
+    params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
 };
 </script>

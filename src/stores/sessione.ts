@@ -31,7 +31,9 @@ export const useSessioneStore = defineStore('sessione', {
     DOMANDE_GIA_POSTE: <number[]>[],
     sessioneInterrotta: false,
     IN_ASCOLTO: false,
+    IN_ASCOLTO_URL: '',
     IN_VISIONE: false,
+    IN_VISIONE_URL: '',
   }),
   // persist: { pick: ['counter'] },
   actions: {

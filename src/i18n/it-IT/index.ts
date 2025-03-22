@@ -29,4 +29,6 @@ export default {
   durata: 'Durata',
   Visioni_rimanenti: 'Visioni rimanenti',
   Ascolti_rimanenti: 'Ascolti rimanenti',
+  In_ascolto: 'In ascolto',
+  In_visione: 'In visione',
 };

@@ -1,6 +1,6 @@
 <template>
   <q-img class="self-center" v-if="src && validImg" no-native-menu :fit="mode" :src="`/media/${src.$.url}`"
-    :height="altezzaNaturale" :width="larghezzaNaturale" style="max-height : 350px; max-width: 350px"
+    :width="larghezzaNaturale" :height="altezzaNaturale" style="max-height : 350px; max-width: 350px"
     error-src="~assets/ImmagineNonDisponibile.jpeg" />
 </template>
 
@@ -16,7 +16,7 @@ import { ref, computed } from 'vue';
 
 interface Props {
   src: Immagine;
-  mode: 'fill' | 'scale-down' | 'cover' | 'contain' | 'none' | undefined
+  mode?: 'fill' | 'scale-down' | 'cover' | 'contain' | 'none' | undefined
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,15 +39,26 @@ const validImg = computed(
 
 
 onMounted(() => {
-  const img = document.querySelectorAll(`[src='/media/${props.src.$.url}']`);
-  if (img.length > 0) {
-    larghezzaNaturale.value = (img[0] as HTMLImageElement).naturalWidth.toString() + 'px'
-    altezzaNaturale.value = (img[0] as HTMLImageElement).naturalHeight.toString() + 'px'
-  }
-  if (altezzaNaturale.value === '0px') {
-    larghezzaNaturale.value = '255px'
-    altezzaNaturale.value = '255px'
-  }
+  const imgs = document.querySelectorAll(`[src='/media/${props.src.$.url}']`);
+  if (imgs.length > 0) {
+    const img = imgs[0]
+    let L = (img as HTMLImageElement).naturalWidth;
+    let H = (img as HTMLImageElement).naturalHeight;
+    // console.log('Larghezza naturale: ', L, 'Altezza naturale: ', H)
 
+    if (L < 355) {
+      H = Math.round((H * 355) / L);
+      L = 355;
+    }
+    if (H < 355) {
+      L = Math.round((L * 355) / H);
+      H = 355;
+    }
+
+    // console.log('Larghezza naturale: ', L, 'Altezza naturale: ', H)
+
+    larghezzaNaturale.value = L.toString() + 'px'
+    altezzaNaturale.value = H.toString() + 'px'
+  }
 });
 </script>

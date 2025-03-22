@@ -10,21 +10,10 @@
       <q-card-section>
         <q-btn-dropdown color="primary" :label="t('domandeSenzaRisposta')">
           <q-list dense bordered>
-            <q-tooltip
-              class="bg-indigo"
-              anchor="top middle"
-              self="bottom middle"
-              :offset="[1, 1]"
-            >
+            <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[1, 1]">
               <strong>{{ $t('click2D') }}</strong>
             </q-tooltip>
-            <q-item
-              clickable
-              v-close-popup
-              @click="vai(D)"
-              v-for="D in indiciDomandeSenzaRisposta"
-              :key="D.indice"
-            >
+            <q-item clickable v-close-popup @click="vai(D)" v-for="D in indiciDomandeSenzaRisposta" :key="D.indice">
               <q-item-section>
                 <q-item-label>{{ `${t('Domanda')} ${D.indice}` }}</q-item-label>
               </q-item-section>
@@ -78,9 +67,10 @@ const vai = (D: { tipo: string; indice: number }) => {
   show.value = false;
 
   sessioneStore.counter = D.indice - 1;
+  console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
+    params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
 };
 

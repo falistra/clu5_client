@@ -9,7 +9,7 @@
 
     <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
 
-    <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
+    <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" :id="domanda.id" @update="set_ascolti" />
     <video-wrap class="my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
     <div v-if="(dimensioneListaRisposte < 250)" class="grid mt-2 p-2 place-content-center">

@@ -14,8 +14,16 @@
     </div>
 
     <q-btn-group class="q-mr-lg q-mb-sm" push>
-      <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.counter == 0" size="sm"
-        @click="precedente" />
+      <q-btn push icon="chevron_left" color="teal-8"
+        :disable="sessioneStore.IN_ASCOLTO || sessioneStore.IN_VISIONE || sessioneStore.counter == 0" size="sm"
+        @click="precedente">
+        <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
+          {{ $t('In_ascolto') }}
+        </q-tooltip>
+        <q-tooltip v-if="sessioneStore.IN_VISIONE">
+          {{ $t('In_visione') }}
+        </q-tooltip>
+      </q-btn>
 
       <q-btn disable class="font-sans hover:font-serif" :label="stato">
         <q-tooltip>
@@ -24,7 +32,15 @@
       </q-btn>
 
       <q-btn push icon="chevron_right" color="teal-8" size="sm"
-        :disable="sessioneStore.domande.length == sessioneStore.counter + 1" @click="successivo" />
+        :disable="sessioneStore.IN_ASCOLTO || sessioneStore.IN_VISIONE || sessioneStore.domande.length == sessioneStore.counter + 1"
+        @click="successivo">
+        <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
+          {{ $t('In_ascolto') }}
+        </q-tooltip>
+        <q-tooltip v-if="sessioneStore.IN_VISIONE">
+          {{ $t('In_visione') }}
+        </q-tooltip>
+      </q-btn>
     </q-btn-group>
 
     <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
@@ -112,7 +128,7 @@ function precedente() {
   sessioneStore.decrement();
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
+    params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
 }
 
@@ -120,7 +136,7 @@ function successivo() {
   sessioneStore.increment();
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
-    params: { id: sessioneStore.counter },
+    params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
 }
 
@@ -143,11 +159,12 @@ async function effettuaConsegna() {
   } else {
     const esitoPositivo =
       await sessioneStore.test.stazione_corrente.richiediDomandeServer();
+
     if (esitoPositivo) {
       sessioneStore.counter = 0;
       router.push({
         name: sessioneStore.domande[sessioneStore.counter][0],
-        params: { id: sessioneStore.counter },
+        params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
       });
     } else {
       router.push('/erroreServer');

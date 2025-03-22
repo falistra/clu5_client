@@ -29,4 +29,6 @@ export default {
   durata: 'Duration',
   Visioni_rimanenti: 'Remaining views',
   Ascolti_rimanenti: 'Remaining listens',
+  In_ascolto: 'Listening',
+  In_visione: 'Watching',
 };
