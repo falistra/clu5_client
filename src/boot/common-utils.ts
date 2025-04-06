@@ -3,12 +3,17 @@ import { boot } from 'quasar/wrappers';
 const common_api = {
   sanitizeUnicode: (testo: string) => {
     try {
-      return (
-        testo
-          .replace(/\%u([a-zA-Z0-9]{4})/g, '&#x$1;')
-          //      .replace(/\%u(\d+)/g, '&#x$1;')
-          .replace('[object Object]', '')
-      );
+      const testoZ = testo
+        .replace(/\%u([a-zA-Z0-9]{4})/g, '&#x$1;')
+        //      .replace(/\%u(\d+)/g, '&#x$1;')
+        .replace('[object Object]', '')
+        .replace(/<p> \n<\/p>/g, '<BR/>')
+        .replace(
+          /<ul>/g,
+          '<ul style="list-style-type:disc; margin-left: 20px !important;">'
+        )
+        .replace(/;;;/g, '');
+      return testoZ;
     } catch {
       return '';
     }

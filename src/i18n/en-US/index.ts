@@ -31,4 +31,11 @@ export default {
   Ascolti_rimanenti: 'Remaining listens',
   In_ascolto: 'Listening',
   In_visione: 'Watching',
+  No_Visioni: 'No views left',
+  No_Ascolti: 'No listens left',
+  Click_Ascolto: 'Click to listen',
+  Click_Visione: 'Click to watch',
+  Cancella_Risposta: 'Clear answer',
+  Parziale: 'Partial',
+  'Non risposto': 'Not answered',
 };

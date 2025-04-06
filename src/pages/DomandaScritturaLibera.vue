@@ -4,10 +4,9 @@
     <div class="flex flex-col">
 
       <PrologoComponent
-        class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+        class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
-      <div
-        class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+      <div class="quesito my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(script.testo)" />
       <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
       <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
@@ -139,4 +138,21 @@ const set_ascolti_video = (val: number) => {
   width: 100%
   max-width: auto
   border: 2px solid
+
+.quesito
+    font-family: sans-serif
+    font-style: normal
+    font-variant: normal
+    font-weight: normal
+    font-size: medium
+    line-height: 150%
+    word-spacing: normal
+    letter-spacing: normal
+    text-decoration: none
+    text-transform: none
+    text-align: left
+    text-indent: 0ex
+    padding:10px
+
+
 </style>

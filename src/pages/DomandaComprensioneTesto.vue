@@ -1,7 +1,7 @@
 <template>
   <q-page> <!-- :style-fn="myTweak" -->
     <PrologoComponent
-      class="max-h-20 my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
+      class="max-h-20 my-3 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
       :prologo="script.prologo" />
     <div class="row my-2 mx-3">
       <div class="col">
@@ -11,7 +11,7 @@
           <div class="col-auto">
             <div v-if="
               common_api.sanitizeUnicode(script.testo_comprensione) !== ''
-            " class="scroll q-mr-md" v-html="testo_comprensione">
+            " style="max-height: calc(80vh)" class="testo pr-3 mr-2 scroll overflow-auto" v-html="testo_comprensione">
             </div>
             <!-- </q-scroll-area> -->
           </div>
@@ -31,7 +31,12 @@
           <!--:style="{ height: `${H}px` }" -->
           <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
             <div class="text-overline" v-html="domanda.prologo" />
-            <div class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)" />
+            <div class="my-1"><q-btn flat size="xs" icon="cancel" @click="cancella(domanda)">
+                <q-tooltip> {{ $t('Cancella_Risposta') }}</q-tooltip>
+              </q-btn>
+              <span class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)">
+              </span>
+            </div>
             <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"
               :options="domanda.risposte" dense color="primary">
               <template #label="risposta">
@@ -108,6 +113,16 @@ const domande = reactive(
     rispostaData: dss.rispostaData,
   }))
 );
+
+const cancella = (domanda: {
+  hash: string;
+  rispostaData: string | undefined;
+}) => {
+  const index = domande.findIndex((d) => d.hash === domanda.hash);
+  if (index !== -1) {
+    domande[index].rispostaData = undefined;
+  }
+};
 
 if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {
@@ -207,6 +222,9 @@ const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle);
 </script>
 
 <style lang="sass" scoped>
+testo
+  color: red
+
 .risposta
   font-size: small
   text-align: justify

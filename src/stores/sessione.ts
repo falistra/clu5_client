@@ -4,6 +4,7 @@ import { IRisposte, Ilog_STAZIONI } from './models';
 
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
+    descrizioneSessione: '',
     counter: 0,
     domande: <[string, unknown, unknown, number, string][]>[],
     errore: {},
@@ -34,6 +35,10 @@ export const useSessioneStore = defineStore('sessione', {
     IN_ASCOLTO_URL: '',
     IN_VISIONE: false,
     IN_VISIONE_URL: '',
+    MEDIA_AUDIO: <{ [Key: string]: HTMLAudioElement }>{},
+    MEDIA_AUDIO_DURATA: <{ [Key: string]: number }>{},
+    MEDIA_VIDEO: <{ [Key: string]: HTMLVideoElement }>{},
+    MEDIA_VIDEO_DURATA: <{ [Key: string]: number }>{},
   }),
   // persist: { pick: ['counter'] },
   actions: {

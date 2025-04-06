@@ -15,7 +15,7 @@
             </q-tooltip>
             <q-item clickable v-close-popup @click="vai(D)" v-for="D in indiciDomandeSenzaRisposta" :key="D.indice">
               <q-item-section>
-                <q-item-label>{{ `${t('Domanda')} ${D.indice}` }}</q-item-label>
+                <q-item-label>{{ `${t('Domanda')} ${D.indice}: ${t(D.stato)}` }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -52,7 +52,7 @@ const show = ref(true);
 
 interface Props {
   persistent: boolean;
-  indiciDomandeSenzaRisposta: { tipo: string; indice: number }[];
+  indiciDomandeSenzaRisposta: { tipo: string; indice: number; stato: string }[];
 }
 
 defineProps<Props>();
@@ -67,7 +67,7 @@ const vai = (D: { tipo: string; indice: number }) => {
   show.value = false;
 
   sessioneStore.counter = D.indice - 1;
-  console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
+  // console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
   router.push({
     name: sessioneStore.domande[sessioneStore.counter][0],
     params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },

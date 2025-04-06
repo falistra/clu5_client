@@ -1,7 +1,6 @@
 <template>
   <q-img class="self-center" v-if="src && validImg" no-native-menu :fit="mode" :src="`/media/${src.$.url}`"
-    :width="larghezzaNaturale" :height="altezzaNaturale" style="max-height : 350px; max-width: 350px"
-    error-src="~assets/ImmagineNonDisponibile.jpeg" />
+    :width="larghezzaNaturale" :height="altezzaNaturale" error-src="~assets/ImmagineNonDisponibile.jpeg" />
 </template>
 
 <script setup lang="ts">

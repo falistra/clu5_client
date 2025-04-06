@@ -65,7 +65,7 @@ watch(script.rispostaData, (rispostaData) => {
 
 const currentSlot = ref<string>('');
 
-const testo_quesito = ref(common_api.sanitizeUnicode(script.testo.replace(/(\_+)(\d+)(\_+)/g, `<INPUT CLASS='italic font-medium text-blue-600 placeholder:text-gray-500 m-2 px-2 rounded hover:rounded-lg bg-slate-200 border-solid hover:border-dotted slot-RTL-${domanda.id}' placeholder='__________________________'  ID='${domanda.id}-$2'></INPUT>`)))
+const testo_quesito = ref(common_api.sanitizeUnicode(script.testo.replace(/(\_+)(\d+)(\_+)/g, `<INPUT CLASS='font-medium text-blue-600 placeholder:text-gray-500 m-2 px-2 rounded hover:rounded-lg bg-slate-200 border-solid hover:border-dotted slot-RTL-${domanda.id}' placeholder='__________________________'  ID='${domanda.id}-$2'></INPUT>`)))
 
 const campiInput = () => {
   const inputs = document.querySelectorAll(`input.slot-RTL-${domanda.id}`)

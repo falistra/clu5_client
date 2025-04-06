@@ -3,19 +3,18 @@
     audio &&
     validAudio &&
     audio.$.url &&
-    fileEsiste &&
-    audio.ascolti_rimanenti !== 0
-  " class="max-w-80 self-center border-double border-4 border-indigo-600">
-    <audio :src="mySource" ref="myAudio">
-      <a :href="mySource"></a>
-    </audio>
+    fileEsiste
+  " class="self-center border-double border-4 border-indigo-600">
     <q-toolbar>
       <q-toolbar-title class="text-sm font-semibold">
-        {{ $t('Ascolti_rimanenti') }} : {{ ascolti_rimanenti }} - {{ duration }}
+        {{ $t('Ascolti_rimanenti') }} : {{ audio.ascolti_rimanenti }} - {{ $t('durata') }} : {{
+          durata }} / {{ elapsed }}
       </q-toolbar-title>
-      <q-btn :disable="sessione.IN_ASCOLTO" size="md" round color="primary" icon="play_arrow" @click="vai">
+      <q-btn :disable="sessione.IN_ASCOLTO || audio.ascolti_rimanenti === 0" size="md" round color="primary"
+        :icon="play_arrow" @click="vai">
         <q-tooltip class="font-bold text-blue-600/100 bg-slate-100">
-          {{ (sessione.IN_ASCOLTO) ? 'In ascolto' : 'Click per ascoltare' }}
+          {{ (sessione.IN_ASCOLTO) ? $t('In_ascolto') : (audio.ascolti_rimanenti === 0) ? $t('No_Ascolti') :
+            $t('Click_Ascolto') }}
         </q-tooltip>
       </q-btn>
     </q-toolbar>
@@ -27,32 +26,30 @@
     </q-toolbar>
   </div>
 
-  <div v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0" class="self-center">
-    <q-toolbar class="q-pa-sm text-white bg-red">
-      <q-toolbar-title>
-        Raggiunto il numero massimo di ascolti permessi.
+  <!-- <div v-if="audio && audio.$.url && fileEsiste && audio.ascolti_rimanenti == 0"
+    class="self-center border-double border-4 border-indigo-600">
+    <q-toolbar>
+      <q-toolbar-title class="text-sm font-semibold text-white bg-red">
+        Raggiunto il numero massimo di ascolti permessi. {{ $t('durata') }} : {{
+          durata }} / {{ elapsed }}
       </q-toolbar-title>
     </q-toolbar>
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
-import { Audio } from '../pages/models';
+
+import moment from 'moment';
+import type { Audio } from '../pages/models';
 import {
   ref,
   computed,
-  onDeactivated,
-  onMounted,
 } from 'vue';
 
 defineOptions({ name: 'AudioWrap' });
 
 import { useSessioneStore } from '../stores/sessione';
 const sessione = useSessioneStore();
-
-// import { useI18n } from 'vue-i18n';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const { t } = useI18n();
 
 interface Props {
   audio: Audio;
@@ -74,6 +71,8 @@ const validAudio = computed(
 const fileEsiste = ref(true);
 
 let ascolti_rimanenti = props.audio.ascolti_rimanenti || 2; // Number.MAX_SAFE_INTEGER
+const play_arrow = computed(() => { return sessione.IN_ASCOLTO ? 'pause' : (props.audio.ascolti_rimanenti === 0) ? 'cancel' : 'play_arrow'; })
+
 const emit = defineEmits(['update']);
 
 const mySource = computed(() => {
@@ -86,9 +85,35 @@ const mySource = computed(() => {
   return `/media/${file_mp3}`;
 });
 
-const myAudio = ref();
+const durata = computed(() => {
+  if (sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url]) {
+    const durata = moment
+      .duration(sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url], 'seconds')
+
+    return `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
+    //.humanize();
+  } else if (myAudio.value) {
+    return sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url];
+  } else {
+    return 0;
+  }
+});
+const elapsed = ref('0:00');
+
+if (props.audio?.$.url) {
+  if (!(props.audio?.$.url in sessione.MEDIA_AUDIO)) {
+    sessione.MEDIA_AUDIO[props.audio?.$.url] = new Audio(mySource.value);
+  }
+}
+
+const myAudio = ref(sessione.MEDIA_AUDIO[props.audio?.$.url]);
+if (myAudio.value) {
+  if (myAudio.value.error) fileEsiste.value = false;
+}
+
+
 const playing = ref(false);
-const duration = ref('');
+
 // const elapsed = ref('0:00');
 
 const vai = () => {
@@ -96,56 +121,54 @@ const vai = () => {
     if (!playing.value) {
       myAudio.value.play();
       playing.value = true;
+      ascolti_rimanenti--;
+      // play_arrow.value = 'pause';
       sessione.IN_ASCOLTO = true;
+      if (ascolti_rimanenti >= 0) {
+        emit('update', ascolti_rimanenti);
+      }
     }
   }
 };
 
-onMounted(() => {
-  if (myAudio.value) {
-    (myAudio.value as HTMLMediaElement).onerror = () => {
-      fileEsiste.value = false;
-    };
+if (myAudio.value) {
+  (myAudio.value as HTMLMediaElement).onerror = () => {
+    fileEsiste.value = false;
+  };
 
-    (myAudio.value as HTMLMediaElement).onended = () => {
-      playing.value = false;
-      sessione.IN_ASCOLTO = false;
-      ascolti_rimanenti--;
-      if (ascolti_rimanenti >= 0) {
-        emit('update', ascolti_rimanenti);
-      }
-    };
+  (myAudio.value as HTMLMediaElement).onended = () => {
+    playing.value = false;
+    sessione.IN_ASCOLTO = false;
+    // play_arrow.value = 'play_arrow';
+  };
 
-    (myAudio.value as HTMLMediaElement).onloadedmetadata = () => {
-      if (myAudio.value) {
-        const d = (myAudio.value as HTMLMediaElement).duration;
-        const s = Math.round(d % 60);
-        const m = Math.round(d / 60);
-        duration.value = `${m}:${s}`;
-      }
-    };
+  (myAudio.value as HTMLMediaElement).onloadedmetadata = () => {
+    if (myAudio.value) {
+      sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url] = (myAudio.value as HTMLMediaElement).duration;
+    }
+  };
 
-    // (myAudio.value as HTMLMediaElement).ontimeupdate = () => {
-    //   // console.log((myAudio.value as HTMLMediaElement).currentTime)
-    //   if (myAudio.value) {
-    //     const d = (myAudio.value as HTMLMediaElement).currentTime;
-    //     const s = Math.round(d % 60);
-    //     const m = Math.round(d / 60);
-    //     elapsed.value = `${m}:${s}`;
-    //   }
-    // };
-  }
-});
+  (myAudio.value as HTMLMediaElement).ontimeupdate = () => {
+    // console.log((myAudio.value as HTMLMediaElement).currentTime)
+    if (myAudio.value) {
+      const durata = moment
+        .duration((myAudio.value as HTMLMediaElement).currentTime, 'seconds')
 
-onDeactivated(() => {
-  // @ts-check  if (myAudio.value) myAudio.value.pause();
-  // if (myAudio.value) {
-  //   (myAudio.value as HTMLMediaElement).pause();
-  // }
-  playing.value = false;
-  sessione.IN_ASCOLTO = false;
-  // if (ascolti_rimanenti >= 0) {
-  //   emit('update', ascolti_rimanenti);
-  // }
-});
+      elapsed.value = `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
+    }
+  };
+}
+
+
+// onDeactivated(() => {
+//   // @ts-check  if (myAudio.value) myAudio.value.pause();
+//   // if (myAudio.value) {
+//   //   (myAudio.value as HTMLMediaElement).pause();
+//   // }
+//   // playing.value = false;
+//   // sessione.IN_ASCOLTO = false;
+//   // // if (ascolti_rimanenti >= 0) {
+//   // //   emit('update', ascolti_rimanenti);
+//   // }
+// });
 </script>

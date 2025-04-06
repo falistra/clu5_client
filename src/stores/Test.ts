@@ -25,9 +25,9 @@ export const Test = class {
 
     this.script = script;
     this.SCRIPT = SCRIPT;
-    this.inizioTest = moment(this.script.test.$.serverTime);
-    this.serverTime = this.inizioTest; // clone
-    this.clientTime = moment();
+    this.inizioTest = moment(); // this.script.test.$.serverTime);
+    this.serverTime = this.inizioTest.clone(); // clone
+    this.clientTime = this.inizioTest.clone();
     this.ID_TEST = this.script.test.$.id;
     this.ID_SESSION = this.script.test.$.sessionId;
     this.ID_USER = this.script.test.$.idUser;
@@ -67,7 +67,8 @@ export const Test = class {
 
   ServerTime() {
     const ora = moment();
-    const delta = ora.diff(this.clientTime, 'ms');
-    return this.inizioTest.add(delta, 'ms');
+    return ora;
+    // const delta = ora.diff(this.clientTime, 'ms');
+    // return this.inizioTest.add(delta, 'ms');
   }
 };

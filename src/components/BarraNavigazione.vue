@@ -14,9 +14,8 @@
     </div>
 
     <q-btn-group class="q-mr-lg q-mb-sm" push>
-      <q-btn push icon="chevron_left" color="teal-8"
-        :disable="sessioneStore.IN_ASCOLTO || sessioneStore.IN_VISIONE || sessioneStore.counter == 0" size="sm"
-        @click="precedente">
+      <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.IN_VISIONE || sessioneStore.counter == 0"
+        size="sm" @click="precedente">
         <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
           {{ $t('In_ascolto') }}
         </q-tooltip>
@@ -32,7 +31,7 @@
       </q-btn>
 
       <q-btn push icon="chevron_right" color="teal-8" size="sm"
-        :disable="sessioneStore.IN_ASCOLTO || sessioneStore.IN_VISIONE || sessioneStore.domande.length == sessioneStore.counter + 1"
+        :disable="sessioneStore.IN_VISIONE || sessioneStore.domande.length == sessioneStore.counter + 1"
         @click="successivo">
         <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
           {{ $t('In_ascolto') }}

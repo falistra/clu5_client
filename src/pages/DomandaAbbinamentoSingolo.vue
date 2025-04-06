@@ -16,8 +16,11 @@
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
               <div class="col parte-fissa">
+                <q-img v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" no-native-menu :src="`/media/${item._}`"
+                  style="max-height : 100%; max-width: 100%" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+                <!--
                 <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="contain"
-                  :src="{ $: { url: item._ } }" />
+                  :src="{ $: { url: item._ } }" /> -->
                 <div v-else class="q-ma-sm" v-html="item.label" style="overflow: auto; max-height: 200px" />
               </div>
               <div class="col bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
@@ -63,7 +66,7 @@ import { T_DomandaAbbinamentoSingolo, IDomanda } from './models';
 import { ref, reactive, computed, watch } from 'vue';
 import * as Common from './common';
 import PrologoComponent from '../components/PrologoComponent.vue';
-import ImgWrap from '../components/ImgWrap.vue';
+// import ImgWrap from '../components/ImgWrap.vue';
 import { common_api } from '../boot/common-utils';
 import AudioWrap from '../components/AudioWrap.vue';
 import VideoWrap from '../components/VideoWrap.vue';

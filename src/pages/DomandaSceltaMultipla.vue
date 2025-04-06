@@ -5,8 +5,9 @@
         class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
       <div style="max-height: calc(60vh)"
-        class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
+        class="my-2 mr-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
         v-html="common_api.sanitizeUnicode(script.testo)" />
+
       <img-wrap v-if="script.immagine" :src="script.immagine" />
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
@@ -50,6 +51,8 @@ const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla
 );
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
+
+
 
 if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {
@@ -113,9 +116,22 @@ const set_ascolti_video = (val: number) => {
 
 const my_thumbStyle = ref<Partial<CSSStyleDeclaration>>(thumbStyle);
 const my_barStyle = ref<Partial<CSSStyleDeclaration>>(barStyle);
+
 </script>
 
 <style lang="sass" scoped>
+.q-option-group
+  margin: 0 !important
+  padding: 0 !important
+  max-height: calc(100vh - 20px) !important
+  overflow: auto !important
+  background-color: transparent !important
+
+ul.Z
+    list-style-type: disc !important
+    margin-left: 10px !important
+
+
 .scelta
   text-align: left !important
   font-size: small

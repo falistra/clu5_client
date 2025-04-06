@@ -31,4 +31,11 @@ export default {
   Ascolti_rimanenti: 'Ascolti rimanenti',
   In_ascolto: 'In ascolto',
   In_visione: 'In visione',
+  No_Ascolti: 'Non ci sono ascolti',
+  No_Visioni: 'Non ci sono visioni',
+  Click_Ascolto: 'Click per ascoltare',
+  Click_Visione: 'Click per vedere',
+  Cancella_Risposta: 'Cancella risposta',
+  Parziale: 'Parziale',
+  'Non risposto': 'Non risposto',
 };

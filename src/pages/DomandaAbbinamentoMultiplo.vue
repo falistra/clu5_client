@@ -15,14 +15,19 @@
             <video-wrap :video="script.video" @update="set_ascolti_video" />
           </div>
         </div>
-        <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+        <q-scroll-area class="col-auto" style="height: calc(70vh)" visible :thumb-style="thumbStyle"
           :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
               <div class="col-6 parte-fissa">
-                <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="contain"
-                  :src="{ $: { url: partefissa._ } }" />
-                <div v-else class="q-ma-sm text-wrap overflow-auto" v-html="partefissa.label" />
+                <div>
+                  <q-img v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" no-native-menu :src="`/media/${partefissa._}`"
+                    style="max-height : 100%; max-width: 100%" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+
+                  <!-- <ImgWrap v-if="script.coppie.$.tipoopzioni == 'IMMAGINE'" mode="scale-down"
+                    :src="{ $: { url: partefissa._ } }" /> -->
+                  <div v-else class="q-ma-sm text-wrap overflow-auto" v-html="partefissa.label" />
+                </div>
               </div>
               <div class="col-6 bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                 @drop="onDrop($event, partefissa)">
@@ -72,7 +77,7 @@ import { T_DomandaAbbinamentoMultiplo, IDomanda } from './models';
 import { ref, computed, watch } from 'vue';
 import * as Common from './common';
 import PrologoComponent from '../components/PrologoComponent.vue';
-import ImgWrap from '../components/ImgWrap.vue';
+// import ImgWrap from '../components/ImgWrap.vue';
 import { common_api } from '../boot/common-utils';
 import AudioWrap from '../components/AudioWrap.vue';
 import VideoWrap from '../components/VideoWrap.vue';

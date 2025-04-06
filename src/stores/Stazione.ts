@@ -17,6 +17,18 @@ import {
   IDomande,
 } from './models';
 
+import {
+  T_DomandaComprensioneTesto,
+  T_DomandaSceltaMultipla,
+  T_DomandaRiordino,
+  T_DomandaAbbinamentoSingolo,
+  T_DomandaAbbinamentoMultiplo,
+  T_DomandaRiempimentoTesto,
+  T_DomandaWordPool,
+  T_DomandaRiempimentoLibero,
+  T_DomandaRiempimentoTestoLibero,
+} from '../pages/models';
+
 import { Test } from './Test';
 
 import { IDomanda } from '../pages/models';
@@ -106,6 +118,7 @@ export const Stazione = class {
         sessioneStore.errore = errore;
         return false;
       });
+
     const jsonDomande = await xml2js
       .parseStringPromise(domandeXML, {
         explicitArray: false,
@@ -156,34 +169,230 @@ export const Stazione = class {
             'XML', //xmlDomande[id],
           ] as [string, object, object, number, string];
         });
+
       return true;
     }
   }
 
-  checkRisposte(): { tipo: string; indice: number }[] {
+  checkRisposte(): { tipo: string; indice: number; stato?: string }[] {
+    type partiale = 'Parziale' | 'Non risposto' | 'Risposto';
     const checkRispostaNonData = (
       domanda: IDomanda,
-      risposte: TRisposte
-    ): boolean => {
-      if (domanda.tecnica === '2') {
-        // comprensione testo
-        const risposto = Object.entries(risposte).find((r) => r[1] !== '');
-        if (risposto) {
-          return true;
+      risposte: TRisposte,
+      scriptDomanda: unknown
+    ): partiale => {
+      switch (domanda.tecnica) {
+        case '1': {
+          // scelta singola
+          const rispostaData = risposte as string;
+          if (rispostaData.length === 0) {
+            return 'Non risposto';
+          }
+          return 'Risposto';
         }
-        return false;
-      }
+        case '2':
+          {
+            const script = scriptDomanda as T_DomandaComprensioneTesto;
+            const risposteDovute = script.domande.domandasceltasingola.length;
 
-      if (risposte === null) return false;
-      if (typeof risposte === 'undefined') return false;
-      if (
-        typeof risposte === 'object' &&
-        !Array.isArray(risposte) &&
-        risposte !== null
-      ) {
-        return Object.keys(risposte).length > 0;
+            const NonRisposto = Object.entries(risposte).filter(
+              (r) => r[1] === ''
+            ).length;
+
+            if (NonRisposto === 0) {
+              return 'Risposto';
+            }
+            if (NonRisposto === risposteDovute) {
+              return 'Non risposto';
+            }
+            if (NonRisposto > 0 && NonRisposto < risposteDovute) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '3':
+          {
+            // scelta multipla
+            const script = scriptDomanda as T_DomandaSceltaMultipla;
+            const risposteDovute = script.risposte.risposta.length;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '4':
+          {
+            // riordino
+            const script = scriptDomanda as T_DomandaRiordino;
+            const risposteDovute = script.risposte.risposta.length;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposte === '' || risposte === null) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+          }
+          break;
+        case '5':
+          {
+            // abbinamento singolo
+            const script = scriptDomanda as T_DomandaAbbinamentoSingolo;
+            const risposteDovute = script.partiFisse.item.length;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '6':
+          {
+            // abbinamento multiplo
+            const script = scriptDomanda as T_DomandaAbbinamentoMultiplo;
+            const risposteDovute = script.partiFisse.item.length;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '7':
+          {
+            // riempimento testo
+            const script = scriptDomanda as T_DomandaRiempimentoTesto;
+            const testo =
+              typeof script.testo === 'string'
+                ? script.testo
+                : (script.testo._ as string);
+
+            const risposteDovute = testo.match(/(\_+)(\d+)(\_+)/g)?.length || 0;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '8':
+          {
+            // word pool
+            const script = scriptDomanda as T_DomandaWordPool;
+            const risposteDovute = script.words.word.length;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '10':
+          {
+            // scrittura libera
+            const rispostaData = risposte as string;
+            console.log(rispostaData);
+            console.log(rispostaData.length);
+            if (rispostaData.length === 0) {
+              return 'Non risposto';
+            }
+            if (rispostaData.length > 0) {
+              return 'Risposto';
+            }
+          }
+          break;
+        case '9':
+          {
+            // output test
+            const rispostaData = risposte as string;
+            if (rispostaData.length === 0) {
+              return 'Non risposto';
+            }
+            if (rispostaData.length > 0) {
+              return 'Risposto';
+            }
+          }
+          break;
+        case '11':
+          {
+            // riempimento libero
+            const script = scriptDomanda as T_DomandaRiempimentoLibero;
+            const risposteDovute =
+              script.testo.match(/(\_+)(\d+)(\_+)/g)?.length || 0;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        case '12':
+          {
+            // riempimento testo libero
+            console.log('riempimento testo libero');
+            const script = scriptDomanda as T_DomandaRiempimentoTestoLibero;
+            const risposteDovute =
+              script.testo.match(/(\_+)(\d+)(\_+)/g)?.length || 0;
+            const risposteDate = Object.entries(risposte).length;
+            if (risposteDate === 0) {
+              return 'Non risposto';
+            }
+            if (risposteDovute === risposteDate) {
+              return 'Risposto';
+            }
+            if (risposteDovute > risposteDate) {
+              return 'Parziale';
+            }
+          }
+          break;
+        default: {
+          if (risposte === null) return 'Non risposto';
+          if (typeof risposte === 'undefined') return 'Non risposto';
+          if (
+            typeof risposte === 'object' &&
+            !Array.isArray(risposte) &&
+            risposte !== null
+          ) {
+            return Object.keys(risposte).length > 0
+              ? 'Risposto'
+              : 'Non risposto';
+          }
+          return risposte.length > 0 ? 'Risposto' : 'Non risposto';
+        }
       }
-      return risposte.length > 0;
+      return 'Risposto';
     };
 
     const sessioneStore = useSessioneStore();
@@ -191,26 +400,39 @@ export const Stazione = class {
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
         const script = D[1] as IRisposta2Server;
-        if (!(typeof script.risposta2Server === 'undefined')) {
-          Map[domanda.id] = checkRispostaNonData(
+        const scriptDomanda = D[1];
+        if (typeof script.risposta2Server === 'undefined') {
+          Map[domanda.id] = 'Non risposto';
+          return Map;
+        } else {
+          const risposta = checkRispostaNonData(
             domanda,
-            script.risposta2Server.risposte
-          )
-            ? 'Risposto'
-            : 'Non risposto';
-        } else Map[domanda.id] = 'Non risposto';
+            script.risposta2Server.risposte,
+            scriptDomanda
+          );
+          if (risposta === 'Risposto') {
+            Map[domanda.id] = 'Risposto';
+          } else if (risposta === 'Parziale') {
+            Map[domanda.id] = 'Parziale';
+          } else {
+            Map[domanda.id] = 'Non risposto';
+          }
+        }
         return Map;
       }, {} as { [Key: string]: string });
 
-    const domandeSenzaRisposta = sessioneStore.domande.filter((D) => {
-      const domanda = D[2] as IDomanda;
-      const script = D[1] as IRisposta2Server;
-      if (typeof script.risposta2Server === 'undefined') return true;
-      else
-        return !checkRispostaNonData(domanda, script.risposta2Server.risposte);
-    });
+    const domandeStato =
+      sessioneStore.log_STAZIONI[this.script.$.ID].domandeStato || {};
 
-    return domandeSenzaRisposta.map((D) => ({ tipo: D[0], indice: D[3] }));
+    return sessioneStore.domande
+      .map((D) => {
+        return {
+          tipo: D[0],
+          indice: D[3],
+          stato: domandeStato[(D[2] as IDomanda).id],
+        };
+      })
+      .filter((d) => d.stato !== 'Risposto');
   }
 
   async richiediPunteggio() {
@@ -444,6 +666,9 @@ export const Stazione = class {
           script_nuova_stazione_corrente,
           this.test
         );
+        // console.log(
+        //   `COUNTDOWN: ${sessioneStore.test.stazione_corrente.script.$.countdown}`
+        // );
         sessioneStore.numero_stazione_corrente += 1;
         sessioneStore.id_stazione_corrente =
           script_nuova_stazione_corrente?.$.ID || '';
@@ -458,7 +683,7 @@ export const Stazione = class {
     // test.STATO_ACQUISITO = azione?.$.stato_acquisito || '';
     const fineTest = moment();
     const testTime = moment
-      .duration(test.inizioTest.diff(fineTest))
+      .duration(fineTest.diff(test.inizioTest))
       .asSeconds();
 
     const parms = {

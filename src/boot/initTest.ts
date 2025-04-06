@@ -64,6 +64,7 @@ export default boot(async ({ router }) => {
       const el = options[3]; // options[Math.floor(Math.random() * options.length)]; // ;
       Cookies.set('idUtente', el.value.idUser.toString());
       Cookies.set('idSessione', el.value.idSess.toString());
+      Cookies.set('sessione', 'Test');
     }
 
     allCookies = Cookies.getAll();
@@ -72,8 +73,10 @@ export default boot(async ({ router }) => {
         `/test/script/?idUser=${allCookies.idUtente}&idSess=${allCookies.idSessione}`
       )
       .then((response) => {
+        sessioneStore.descrizioneSessione = allCookies.sessione || '';
         Cookies.set('idUtente', '', { expires: -1 });
         Cookies.set('idSessione', '', { expires: -1 });
+        Cookies.set('sessione', '', { expires: -1 });
         return response.data;
       })
       .catch((errore) => {
@@ -86,6 +89,7 @@ export default boot(async ({ router }) => {
         };
         Cookies.set('idUtente', '', { expires: -1 });
         Cookies.set('idSessione', '', { expires: -1 });
+        Cookies.set('sessione', '', { expires: -1 });
       });
     if (script) {
       const scriptJSON = await xml2js
