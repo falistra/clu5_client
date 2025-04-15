@@ -62,6 +62,8 @@ export const Test = class {
     sessioneStore.id_stazione_corrente = script_stazione_corrente?.$.ID || '';
     if (script_stazione_corrente) {
       this.stazione_corrente = new Stazione(script_stazione_corrente, this);
+      sessioneStore.countdown_stazione_corrente =
+        parseInt(this.stazione_corrente.script.$.countdown) * 60 * 1000;
     }
   }
 

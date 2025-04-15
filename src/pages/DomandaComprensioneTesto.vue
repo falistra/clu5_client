@@ -18,7 +18,7 @@
           <div v-if="primaDomanda?.immagine" class="col">
             <img-wrap :src="primaDomanda.immagine" />
           </div>
-          <div v-if="primaDomanda?.audio" class="col q-mt-md">
+          <div v-if="primaDomanda?.audio" class="col q-mt-md q-mr-md">
             <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
           </div>
           <div v-if="primaDomanda?.video" class="col q-mt-md">
@@ -31,10 +31,11 @@
           <!--:style="{ height: `${H}px` }" -->
           <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
             <div class="text-overline" v-html="domanda.prologo" />
-            <div class="my-1"><q-btn flat size="xs" icon="cancel" @click="cancella(domanda)">
+            <div class="my-1">
+              <q-btn flat size="xs" icon="cancel" @click="cancella(domanda)">
                 <q-tooltip> {{ $t('Cancella_Risposta') }}</q-tooltip>
               </q-btn>
-              <span class="text-subtitle q-ml-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)">
+              <span class="text-subtitle q-my-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)">
               </span>
             </div>
             <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"

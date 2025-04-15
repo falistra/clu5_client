@@ -28,7 +28,7 @@ if (sessioneStore.domande.length > 0) {
     }
   } else {
     if (sessioneStore.domande.length > 0) {
-      console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
+      // console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
       router.push({
         name: `simulazione_${sessioneStore.domande[sessioneStore.counter][0]}`,
         params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },

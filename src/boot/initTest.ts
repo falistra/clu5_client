@@ -173,6 +173,9 @@ export default boot(async ({ router }) => {
         params: { idDomanda: allCookies.simulazione },
       })
       .then((response) => {
+        // const txt = document.createElement('textarea');
+        // txt.innerHTML = response.data;
+        // return txt.value;
         return response.data;
       })
       .catch((errore) => {

@@ -93,9 +93,10 @@ if (script.video) setVideoPams(script.video);
 
 const linguaDomanda = computed(() => domanda.lingua || sessione.lingua);
 
+const testo = script.testo.replace(/<div>/g, '<br>').replace(/<\/div>/g, '').replace(/&nbsp;/g, ' ');
+
 const righe = ref(
-  script.testo
-    .replace(/&nbsp;/g, '')
+  testo
     .split('<br>')
     .filter(el => el.length > 1)
     .map((el) => el.split(/_+/))
@@ -126,6 +127,7 @@ const insertAtCaret = function (
     campo_input.selectionStart = strPos;
     campo_input.selectionEnd = strPos;
     campo_input.scrollTop = scrollPos;
+    setRisposta();
   }
 };
 

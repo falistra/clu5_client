@@ -13,8 +13,8 @@
         </q-toolbar-title>
         <q-toolbar-title class="col-8 text-subtitle2">
           <div class="row flex-center">
-            {{ sessioneStore.descrizioneSessione }}
-            <!-- {{ sessioneStore.test?.script.test.$.descrizione }} -->
+            <!-- {{ sessioneStore.descrizioneSessione }} -->
+            {{ sessioneStore.test?.script.test.$.descrizione }}
             <!-- <q-btn
               class="q-ml-lg"
               color="secondary"

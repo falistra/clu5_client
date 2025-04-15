@@ -65,7 +65,8 @@ export const sanitazeScript = (script: {
 }) => {
   if (
     script.audio &&
-    (typeof script.audio.$.url === 'undefined' ||
+    (typeof script.audio.$ === 'undefined' ||
+      typeof script.audio.$.url === 'undefined' ||
       script.audio.$.url == '' ||
       script.audio.$.url == 'undefined' ||
       script.audio.$.url == 'nessuno')
@@ -75,7 +76,8 @@ export const sanitazeScript = (script: {
 
   if (
     script.video &&
-    (typeof script.video.$.url === 'undefined' ||
+    (typeof script.video.$ === 'undefined' ||
+      typeof script.video.$.url === 'undefined' ||
       script.video.$.url == '' ||
       script.video.$.url == 'undefined' ||
       script.video.$.url == 'nessuno')
@@ -85,7 +87,8 @@ export const sanitazeScript = (script: {
 
   if (
     script.immagine &&
-    (typeof script.immagine.$.url === 'undefined' ||
+    (typeof script.immagine.$ === 'undefined' ||
+      typeof script.immagine.$.url === 'undefined' ||
       script.immagine.$.url == '' ||
       script.immagine.$.url == 'undefined' ||
       script.immagine.$.url == 'nessuno')

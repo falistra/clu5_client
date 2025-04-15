@@ -99,6 +99,8 @@ export const Stazione = class {
 
   async richiediDomandeServer(): Promise<boolean> {
     const sessioneStore = useSessioneStore();
+    console.log(this.set_query);
+    console.log(sessioneStore.DOMANDE_GIA_POSTE);
     const parms = {
       idUser: this.test.script.test.$.idUser,
       idSession: this.test.script.test.$.sessionId,
@@ -227,20 +229,25 @@ export const Stazione = class {
             }
           }
           break;
-        case '4':
-          {
-            // riordino
-            const script = scriptDomanda as T_DomandaRiordino;
-            const risposteDovute = script.risposte.risposta.length;
-            const risposteDate = Object.entries(risposte).length;
-            if (risposte === '' || risposte === null) {
-              return 'Non risposto';
+        case '4': {
+          // riordino
+          const script = scriptDomanda as T_DomandaRiordino;
+          const risposteDovute = script.risposte.risposta.map((r) => r.$.hash);
+          const risposteDate = risposte as string[];
+
+          function arraysEqual(a: string[], b: string[]): boolean {
+            if (a === b) return true;
+            if (a == null || b == null) return false;
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; ++i) {
+              if (a[i] !== b[i]) return false;
             }
-            if (risposteDovute === risposteDate) {
-              return 'Risposto';
-            }
+            return true;
           }
-          break;
+          if (arraysEqual(risposteDovute, risposteDate)) {
+            return 'Non risposto';
+          } else return 'Risposto';
+        }
         case '5':
           {
             // abbinamento singolo
@@ -262,8 +269,12 @@ export const Stazione = class {
           {
             // abbinamento multiplo
             const script = scriptDomanda as T_DomandaAbbinamentoMultiplo;
-            const risposteDovute = script.partiFisse.item.length;
-            const risposteDate = Object.entries(risposte).length;
+            const risposte_ = risposte as { [Key: string]: string[] };
+            const risposteDovute = script.partiMobili.item.length;
+            const risposteDate = Object.values(risposte_).reduce(
+              (acc, element) => acc + element.length,
+              0
+            );
             if (risposteDate === 0) {
               return 'Non risposto';
             }
@@ -301,8 +312,12 @@ export const Stazione = class {
           {
             // word pool
             const script = scriptDomanda as T_DomandaWordPool;
+            const risposte_ = risposte as { [Key: string]: string[] };
             const risposteDovute = script.words.word.length;
-            const risposteDate = Object.entries(risposte).length;
+            const risposteDate = Object.values(risposte_).reduce(
+              (acc, element) => acc + element.length,
+              0
+            );
             if (risposteDate === 0) {
               return 'Non risposto';
             }
@@ -318,8 +333,6 @@ export const Stazione = class {
           {
             // scrittura libera
             const rispostaData = risposte as string;
-            console.log(rispostaData);
-            console.log(rispostaData.length);
             if (rispostaData.length === 0) {
               return 'Non risposto';
             }
@@ -361,7 +374,6 @@ export const Stazione = class {
         case '12':
           {
             // riempimento testo libero
-            console.log('riempimento testo libero');
             const script = scriptDomanda as T_DomandaRiempimentoTestoLibero;
             const risposteDovute =
               script.testo.match(/(\_+)(\d+)(\_+)/g)?.length || 0;
@@ -474,7 +486,6 @@ export const Stazione = class {
         return response.data;
       })
       .catch((errore) => {
-        console.log(errore);
         sessioneStore.errore = errore;
       });
 
@@ -539,8 +550,6 @@ export const Stazione = class {
 
         const parse_tree: jsep.Expression = jsep(espressione);
         const valore = do_eval(parse_tree);
-        // console.log(valore);
-        // console.log(valore == 1 ? true : false);
 
         this.test.STORIA.push(
           `${this.test.ServerTime().format('HH:mm:SS')} = Valutazione+se : ${
@@ -579,7 +588,6 @@ export const Stazione = class {
       .duration(fine.diff(sessioneStore.log_stazioni[id_stazione].inizio))
       .asSeconds();
 
-    // console.log(this.punteggiDomande);
     sessioneStore.log_STAZIONI[id_stazione].domande =
       sessioneStore.domande.reduce((Map, D) => {
         const domanda = D[2] as IDomanda;
@@ -615,6 +623,21 @@ export const Stazione = class {
       this.punteggioStazione;
     sessioneStore.log_STAZIONI[id_stazione].fine = fine.format('HH:mm:SS');
     sessioneStore.log_STAZIONI[id_stazione].durata = durata;
+
+    sessioneStore.countdown_stazione_corrente = 10000;
+    // attenzione : 10 secondi per evitare timeout
+
+    Object.values(sessioneStore.MEDIA_AUDIO).forEach(
+      (audio: HTMLAudioElement) => {
+        audio.pause();
+      }
+    );
+
+    Object.values(sessioneStore.MEDIA_VIDEO).forEach(
+      (video: HTMLVideoElement) => {
+        video.pause();
+      }
+    );
 
     if (azione?.$.vai_a == 'uscita') {
       this.test.STORIA.push(
@@ -666,12 +689,14 @@ export const Stazione = class {
           script_nuova_stazione_corrente,
           this.test
         );
-        // console.log(
-        //   `COUNTDOWN: ${sessioneStore.test.stazione_corrente.script.$.countdown}`
-        // );
+
         sessioneStore.numero_stazione_corrente += 1;
         sessioneStore.id_stazione_corrente =
           script_nuova_stazione_corrente?.$.ID || '';
+        sessioneStore.countdown_stazione_corrente =
+          parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
+          60 *
+          1000;
       }
     }
   }

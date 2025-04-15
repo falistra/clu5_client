@@ -108,6 +108,13 @@ const elapsed = ref('00:00');
 const vai = () => {
   if (myVideo.value) {
     if (!playing.value) {
+
+      Object.values(sessione.MEDIA_VIDEO).forEach(
+        (video: HTMLVideoElement) => {
+          video.pause();
+        }
+      );
+
       myVideo.value.play();
       sessione.IN_VISIONE = true;
       sessione.IN_VISIONE_URL = mySource.value
@@ -135,25 +142,27 @@ onMounted(() => {
     };
 
     (myVideo.value as HTMLMediaElement).onloadedmetadata = () => {
-      const durata = moment.duration((myVideo.value as HTMLMediaElement).duration, 'seconds')
-      duration.value = `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
+      if (myVideo.value) {
+        const durata = moment.duration((myVideo.value as HTMLMediaElement).duration, 'seconds')
+        duration.value = `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
 
-      const h = (myVideo.value as HTMLVideoElement).videoHeight
-      const w = (myVideo.value as HTMLVideoElement).videoWidth
+        const h = (myVideo.value as HTMLVideoElement).videoHeight
+        const w = (myVideo.value as HTMLVideoElement).videoWidth
 
-      const h_max = 720
-      const w_max = 1280
+        const h_max = 720
+        const w_max = 1280
 
-      if (h > h_max) {
-        height.value = `${h_max}px`;
-        width.value = `${(h_max * w) / h}px`;
-      }
-      else if (w > w_max) {
-        width.value = `${w_max}px`;
-        height.value = `${(w_max * h) / w}px`;
-      } else {
-        width.value = `${w}px`;
-        height.value = `${h}px`;
+        if (h > h_max) {
+          height.value = `${h_max}px`;
+          width.value = `${(h_max * w) / h}px`;
+        }
+        else if (w > w_max) {
+          width.value = `${w_max}px`;
+          height.value = `${(w_max * h) / w}px`;
+        } else {
+          width.value = `${w}px`;
+          height.value = `${h}px`;
+        }
       }
     };
 

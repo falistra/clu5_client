@@ -6,8 +6,8 @@
     <div class="row q-mr-sm">
       <div class="col-6">
         <div class="column">
-          <!-- <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
-            v-html="common_api.sanitizeUnicode(script.testo)" /> -->
+          <div style="max-height: 150px" class="col-auto scroll text-subtitle2 q-my-sm q-mx-md"
+            v-html="common_api.sanitizeUnicode(script.testo)" />
           <div v-if="script.audio" class="col-auto q-my-sm q-mx-md">
             <audio-wrap :audio="script.audio" @update="set_ascolti" />
           </div>
@@ -15,7 +15,7 @@
             <video-wrap :video="script.video" @update="set_ascolti_video" />
           </div>
         </div>
-        <q-scroll-area class="col-auto" style="height: calc(70vh)" visible :thumb-style="thumbStyle"
+        <q-scroll-area class="col-auto" style="height: calc(90vh)" visible :thumb-style="thumbStyle"
           :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="partefissa in script.partiFisse.item" :key="partefissa.$.hash">
@@ -49,7 +49,7 @@
         </q-scroll-area>
       </div>
       <div class="col-6">
-        <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+        <q-scroll-area style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <q-list dense>
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash" class="q-my-sm">
               <q-item-section side>

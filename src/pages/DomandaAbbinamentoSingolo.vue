@@ -12,7 +12,7 @@
           <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
             @update="set_ascolti_video" />
         </div>
-        <q-scroll-area class="col" style="height: calc(80vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+        <q-scroll-area class="col" style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
               <div class="col parte-fissa">
@@ -38,7 +38,7 @@
         </q-scroll-area>
       </div>
       <div class="col-6">
-        <q-scroll-area style="height: calc(70vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+        <q-scroll-area style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <q-list dense class="q-mr-lg">
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash">
               <q-item-section side>
@@ -97,7 +97,6 @@ if (typeof script.risposta2Server === 'undefined') {
 }
 
 watch(script.partiFisse, (partiFisse) => {
-  console.log('Parti fisse cambiato')
   partiFisse.item.forEach((item) => {
     if (script.risposta2Server) {
       if (item.rispostaData) {
@@ -183,7 +182,6 @@ const annulla = (item: Item) => {
   );
   item.rispostaData = undefined;
   if (item_) item_.disponibile = true;
-  console.log(script.partiFisse.item)
   const item__ = script.partiFisse.item.find(
     (value) =>
       value.$.hash == (item.rispostaData ? item.rispostaData.$.hash : null)

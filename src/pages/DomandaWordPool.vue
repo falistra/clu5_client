@@ -12,7 +12,7 @@
           <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
             @update="set_ascolti_video" />
         </div>
-        <q-scroll-area class="col-auto" style="height: calc(60vh)" visible :thumb-style="thumbStyle"
+        <q-scroll-area class="col-auto" style="height: calc(70vh)" visible :thumb-style="thumbStyle"
           :bar-style="barStyle">
           <div class="q-pa-sm">
             <q-card v-for="pool in script.pools.pool" :key="pool.$.hash"

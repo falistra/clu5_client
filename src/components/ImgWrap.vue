@@ -1,10 +1,19 @@
 <template>
+  <!--
   <q-img class="self-center" v-if="src && validImg" no-native-menu :fit="mode" :src="`/media/${src.$.url}`"
     :width="larghezzaNaturale" :height="altezzaNaturale" error-src="~assets/ImmagineNonDisponibile.jpeg" />
+-->
+  <ZoomImg class="self-center" v-if="src && validImg" :src="`/media/${src.$.url}`">
+    <template #error>
+      <img src="~assets/ImmagineNonDisponibile.jpeg">
+    </template>
+  </ZoomImg>
+
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { ZoomImg } from 'vue3-zoomer';
 
 defineOptions({
   name: 'ImgWrap',
@@ -29,6 +38,7 @@ const larghezzaNaturale = ref('255px');
 const validImg = computed(
   () =>
     !(
+      typeof props.src.$ === 'undefined' ||
       typeof props.src.$.url === 'undefined' ||
       props.src.$.url == '' ||
       props.src.$.url == 'nessuno' ||

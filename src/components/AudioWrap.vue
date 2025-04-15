@@ -119,6 +119,14 @@ const playing = ref(false);
 const vai = () => {
   if (myAudio.value) {
     if (!playing.value) {
+
+      // se altri audio in ascolto
+      Object.values(sessione.MEDIA_AUDIO).forEach(
+        (audio: HTMLAudioElement) => {
+          audio.pause();
+        }
+      );
+
       myAudio.value.play();
       playing.value = true;
       ascolti_rimanenti--;

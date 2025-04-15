@@ -1,10 +1,8 @@
 <template>
   <div class="row justify-between">
     <div>
-      <vue-countdown v-slot="{ hours, minutes, seconds }" :time="parseInt(sessioneStore.test.stazione_corrente.script.$.countdown) *
-        60 *
-        1000
-        " @end="gameover" @progress="versoLaFine">
+      <vue-countdown v-slot="{ hours, minutes, seconds }" :time="sessioneStore.countdown_stazione_corrente"
+        @end="gameover" @progress="versoLaFine">
         <span class="text-subtitle1">{{ $t('Tempo_rimanente') }} :
           {{ hours > 0 ? hours + ' ' + (hours == 1 ? $t('ora') : $t('ore')) : '' }}
           {{ minutes }}
@@ -16,12 +14,12 @@
     <q-btn-group class="q-mr-lg q-mb-sm" push>
       <q-btn push icon="chevron_left" color="teal-8" :disable="sessioneStore.IN_VISIONE || sessioneStore.counter == 0"
         size="sm" @click="precedente">
-        <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
+        <!-- <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
           {{ $t('In_ascolto') }}
         </q-tooltip>
         <q-tooltip v-if="sessioneStore.IN_VISIONE">
           {{ $t('In_visione') }}
-        </q-tooltip>
+        </q-tooltip> -->
       </q-btn>
 
       <q-btn disable class="font-sans hover:font-serif" :label="stato">
@@ -33,22 +31,22 @@
       <q-btn push icon="chevron_right" color="teal-8" size="sm"
         :disable="sessioneStore.IN_VISIONE || sessioneStore.domande.length == sessioneStore.counter + 1"
         @click="successivo">
-        <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
+        <!-- <q-tooltip v-if="sessioneStore.IN_ASCOLTO">
           {{ $t('In_ascolto') }}
         </q-tooltip>
         <q-tooltip v-if="sessioneStore.IN_VISIONE">
           {{ $t('In_visione') }}
-        </q-tooltip>
+        </q-tooltip> -->
       </q-btn>
     </q-btn-group>
 
     <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
-      :disable="!ultimaDomanda || quasiTimeout" :label="t('Consegna')" @click="consegna(true)" />
+      :disable="(!ultimaDomanda) || quasiTimeout" :label="t('Consegna')" @click="consegna(true)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 // import { Todo, Meta } from './models';
 import { useSessioneStore } from '../stores/sessione';
 import { useRouter } from 'vue-router';
@@ -56,6 +54,7 @@ import { Loading, Dialog, Notify } from 'quasar';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import ConfermaChiusura from './ConfermaChiusura.vue';
 import { IDomanda } from '../pages/models';
+// import { debounce } from 'quasar';
 
 const sessioneStore = useSessioneStore();
 const router = useRouter();
@@ -78,22 +77,30 @@ if (sessioneStore.test.script.test.situazionePrecedente)
   });
 
 
-
 const stato = computed(() => {
   return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.numero_stazioni} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
 });
 
-let notUltimaDomanda = true;
+const ultimaDomanda = ref(false);
 
-const ultimaDomanda = computed(() => {
-  if (notUltimaDomanda) {
-    if (sessioneStore.domande.length == sessioneStore.counter + 1) {
-      notUltimaDomanda = false;
-      return true;
-    } else return false;
-  }
-  return true;
-});
+watch(
+  () => sessioneStore.id_stazione_corrente,
+  () => {
+    ultimaDomanda.value = false;
+  },
+  { immediate: true }
+);
+
+
+watch(
+  () => sessioneStore.counter,
+  (newValue) => {
+    if (sessioneStore.domande.length == newValue + 1) {
+      ultimaDomanda.value = true;
+    }
+  },
+  { immediate: true }
+);
 
 async function gameover() {
   Notify.create({
@@ -140,7 +147,7 @@ function successivo() {
 }
 
 async function effettuaConsegna() {
-  notUltimaDomanda = true;
+  // notUltimaDomanda = true;
   quasiTimeout.value = false;
   Loading.show();
   // le tre chiamate successive devono essere in await in quanto ciascuna modifica lo store
@@ -171,6 +178,9 @@ async function effettuaConsegna() {
   }
   Loading.hide();
 }
+
+// const effettuaConsegna = debounce(effettuaConsegnaZ, 1000);
+
 
 async function consegna(dialog = true) {
   const indiciDomandeSenzaRisposta =

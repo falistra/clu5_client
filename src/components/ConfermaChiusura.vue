@@ -87,6 +87,7 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 function onOKClick() {
   // on OK, it is REQUIRED to
   // call onDialogOK (with optional payload)
+  show.value = false;
   onDialogOK();
   // or with payload: onDialogOK({ ... })
   // ...and it will also hide the dialog automatically

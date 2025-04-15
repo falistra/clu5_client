@@ -23,7 +23,7 @@
               {{
                 script.rispostaData && item.slotIndex in script.rispostaData
                   ? script.rispostaData[item.slotIndex]._
-                  : '_'.repeat(item.l || 18)
+                  : '_'.repeat(Math.max(item.l || 10, 10))
               }}
             </span>
           </span>
@@ -71,6 +71,7 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
+
 if (!script.rispostaData) script.rispostaData = {};
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
 
@@ -96,7 +97,7 @@ watch(script.rispostaData, (rispostaData) => {
 
 if (script.audio) setAudioPams(script.audio);
 if (script.video) setVideoPams(script.video);
-console.log(script)
+// console.log(script)
 let testo = '';
 if (typeof script.testo == 'string') testo = script.testo;
 if (typeof script.testo == 'object') testo = script.testo._;
@@ -109,8 +110,8 @@ const tokens = ref(
     const risposta =
       script.rispostaData && slotIndex in script.rispostaData
         ? script.rispostaData[slotIndex]._
-        : ' '.repeat(l);
-    content = isSlot ? risposta : content // .replace(/\%u(.{4})/g, '&#x$1;');
+        : ' '.repeat(Math.max(l, 10));
+    content = isSlot ? risposta : common_api.sanitizeUnicode(content) // .replace(/\%u(.{4})/g, '&#x$1;');
     return { index, isSlot, slotIndex, content, l } as T_Token;
   })
 );
