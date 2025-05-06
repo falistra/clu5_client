@@ -53,8 +53,11 @@ import { useRouter } from 'vue-router';
 import { Loading, Dialog, Notify } from 'quasar';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 import ConfermaChiusura from './ConfermaChiusura.vue';
+import ConfermaChiusuraDefinitiva from './ConfermaChiusuraDefinitiva.vue';
 import { IDomanda } from '../pages/models';
 // import { debounce } from 'quasar';
+import { useQuasar } from 'quasar';
+const $q = useQuasar()
 
 const sessioneStore = useSessioneStore();
 const router = useRouter();
@@ -132,7 +135,7 @@ function versoLaFine(data: {
 
 function precedente() {
   sessioneStore.decrement();
-  router.push({
+  router.replace({
     name: sessioneStore.domande[sessioneStore.counter][0],
     params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
@@ -140,7 +143,7 @@ function precedente() {
 
 function successivo() {
   sessioneStore.increment();
-  router.push({
+  router.replace({
     name: sessioneStore.domande[sessioneStore.counter][0],
     params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   });
@@ -156,8 +159,16 @@ async function effettuaConsegna() {
   await sessioneStore.test.stazione_corrente.passaStazione();
 
   if (sessioneStore.testCompletato) {
+    $q.fullscreen.exit()
+      .then(() => {
+        // success!
+      })
+      .catch(() => {
+        // oh, no!!!
+      })
+
     if (process.env.DEV) {
-      router.push('/fineTestFuori');
+      router.replace('/fineTestFuori');
     } else {
       window.open('/test-GOODBYE.php', '_self')?.focus();
     }
@@ -168,12 +179,12 @@ async function effettuaConsegna() {
 
     if (esitoPositivo) {
       sessioneStore.counter = 0;
-      router.push({
+      router.replace({
         name: sessioneStore.domande[sessioneStore.counter][0],
         params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
       });
     } else {
-      router.push('/erroreServer');
+      router.replace('/erroreServer');
     }
   }
   Loading.hide();
@@ -208,19 +219,22 @@ async function consegna(dialog = true) {
     } // ci sono tutte le risposte
     else {
       Dialog.create({
-        title: t('confermaFine'),
-        persistent: true,
-        ok: {
-          label: t('si'),
-          color: 'positive',
+        component: ConfermaChiusuraDefinitiva,
+        // props forwarded to your custom component
+        componentProps: {
+          persistent: true
         },
-        cancel: {
-          label: t('no'),
-          color: 'negative',
-        },
-      }).onOk(() => {
-        effettuaConsegna();
-      });
+      })
+        .onOk(() => {
+          effettuaConsegna();
+        })
+        .onCancel(() => {
+          // console.log('Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('Called on OK or Cancel')
+        });
+
     }
   } else effettuaConsegna();
 }

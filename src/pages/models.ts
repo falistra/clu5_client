@@ -297,11 +297,11 @@ export interface T_DomandaWordPool {
   logRisposta?: TLogRisposte;
 }
 
-export interface T_Token {
-  index: number;
-  isSlot: boolean;
-  slotIndex: string;
-  content: string;
-  hash: string;
-  l?: number;
-}
+// export interface T_Token {
+//   index: number;
+//   isSlot: boolean;
+//   slotIndex: string;
+//   content: string;
+//   hash: string;
+//   l?: number;
+// }

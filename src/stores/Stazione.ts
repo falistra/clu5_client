@@ -99,8 +99,6 @@ export const Stazione = class {
 
   async richiediDomandeServer(): Promise<boolean> {
     const sessioneStore = useSessioneStore();
-    console.log(this.set_query);
-    console.log(sessioneStore.DOMANDE_GIA_POSTE);
     const parms = {
       idUser: this.test.script.test.$.idUser,
       idSession: this.test.script.test.$.sessionId,
@@ -707,9 +705,16 @@ export const Stazione = class {
     // test.LIVELLO_ACQUISITO = azione?.$.esito_acquisito || ' ';
     // test.STATO_ACQUISITO = azione?.$.stato_acquisito || '';
     const fineTest = moment();
-    const testTime = moment
-      .duration(fineTest.diff(test.inizioTest))
-      .asSeconds();
+    const testTime: number = Object.entries(sessioneStore.log_STAZIONI).reduce(
+      (acc, [, value]) => {
+        return acc + (value.durata || 0);
+      },
+      0
+    );
+
+    // const testTime = moment
+    //   .duration(fineTest.diff(test.inizioTest))
+    //   .asSeconds();
 
     const parms = {
       idUser: test.ID_USER,

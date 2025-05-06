@@ -7,7 +7,7 @@
         class="my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-100 shadow-lg shadow-slate-200/50"
         :prologo="script.prologo" />
       <div class="quesito my-2 mx-5 p-2 scroll-mr-6 overflow-auto rounded bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(script.testo)" />
+        v-html="testo" />
       <img-wrap class="my-1" v-if="script.immagine" :src="script.immagine" />
       <audio-wrap class="my-1" v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap class="col my-1" v-if="script.video" :video="script.video" @update="set_ascolti_video" />
@@ -55,6 +55,12 @@ const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaScritturaLibera;
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
+
+const testo = common_api.sanitizeUnicode(script.testo)
+  .replace(/<div>\s+<\/div>/g, '<div><br/><\/div>')
+  .replace(/<br>/g, '<br/>')
+  .replace(/<\/p><p>/g, '</p><br/><p>')
+
 
 // prova a recuperare dal log
 const user = sessione.test?.ID_USER || 'Simulazione';

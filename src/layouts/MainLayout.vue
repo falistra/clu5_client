@@ -1,8 +1,8 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="shadow-2 rounded-borders">
     <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
-        <q-toolbar-title class="col-4 text-subtitle2">
+        <q-toolbar-title class="col-6 text-h4">
           <div class="row flex-center">
             {{
               sessioneStore.test?.script?.test.studente.$.cognome +
@@ -11,10 +11,9 @@
             }}
           </div>
         </q-toolbar-title>
-        <q-toolbar-title class="col-8 text-subtitle2">
+        <q-toolbar-title class="col-6 text-subtitle2">
           <div class="row flex-center">
-            <!-- {{ sessioneStore.descrizioneSessione }} -->
-            {{ sessioneStore.test?.script.test.$.descrizione }}
+            {{ sessioneStore.descrizioneSessione }}
             <!-- <q-btn
               class="q-ml-lg"
               color="secondary"
@@ -27,10 +26,10 @@
 
             <q-btn-toggle v-model="locale" class="q-ml-lg" push toggle-color="primary" :options="localeOptions">
               <template #en>
-                <span class="q-ml-sm fi fi-gb" />
+                <span class="q-ml-sm fi fi-gb fis" />
               </template>
               <template #it>
-                <span class="q-ml-sm fi fi-it" />
+                <span class="q-ml-sm fi fi-it fis" />
               </template>
             </q-btn-toggle>
           </div>
@@ -42,10 +41,16 @@
     <q-page-container>
       <router-view :key="$route.fullPath" v-slot="{ Component }">
         <!--- server per il cambio pagina -->
-        <keep-alive>
+        <transition mode="out-in">
           <component :is="Component" v-if="$route.meta.keepAlive" />
-        </keep-alive>
+        </transition>
+        <!-- <keep-alive>
+          <component :is="Component" v-if="$route.meta.keepAlive" />
+        </keep-alive> -->
       </router-view>
+      <q-page-scroller expand position="bottom-right" :scroll-offset="100" :offset="[18, 18]">
+        <q-btn fab icon="keyboard_arrow_up" color="accent" />
+      </q-page-scroller>
     </q-page-container>
 
     <q-footer bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
@@ -68,7 +73,8 @@
 // import { useQuasar } from 'quasar';
 //  const $q = useQuasar();
 
-import '/node_modules/flag-icons/css/flag-icons.min.css';
+// import '/node_modules/flag-icons/css/flag-icons.min.css';
+import '../css/flag-icons.css';
 
 import { useSessioneStore } from '../stores/sessione';
 import { useI18n } from 'vue-i18n';

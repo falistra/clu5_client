@@ -7,6 +7,7 @@ export const useSessioneStore = defineStore('sessione', {
     descrizioneSessione: '',
     counter: 0,
     domande: <[string, unknown, unknown, number, string][]>[],
+    IN_ERRORE: false,
     errore: {},
     lingua: <string>'2',
     numero_stazione_corrente: 1,

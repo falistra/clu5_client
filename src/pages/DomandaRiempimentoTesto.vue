@@ -9,26 +9,13 @@
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
       <video-wrap v-if="script.video" :video="script.video" @update="set_ascolti_video" />
 
-      <div class="q-my-sm q-mx-md  my-2 mx-5 p-2 scroll-mr-6 overflow-auto" style="max-height: calc(47vh);">
-        <div class="q-mt-sm q-mb-xs q-ml-sm q-mr-lg">
-          <span v-for="item in tokens" :key="item.index">
-            <span v-if="!item.isSlot" v-html="common_api.sanitizeUnicode(item.content)"></span>
-            <span v-else-if="item.isSlot" class="hover:border-dotted pa-md drop-zone" @dragover.prevent
-              @dragenter.prevent @drop="onDrop($event, item.slotIndex)" @dblclick="annulla(item)">
-              <q-tooltip v-if="
-                script.rispostaData && item.slotIndex in script.rispostaData
-              " class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                <strong>{{ $t('Doppio_click') }}</strong>
-              </q-tooltip>
-              {{
-                script.rispostaData && item.slotIndex in script.rispostaData
-                  ? script.rispostaData[item.slotIndex]._
-                  : '_'.repeat(Math.max(item.l || 10, 10))
-              }}
-            </span>
-          </span>
-        </div>
-      </div>
+      <!-- <div class="q-my-sm q-mx-md  my-2 mx-5 p-2 scroll-mr-6 overflow-auto" style="max-height: calc(47vh);"> -->
+
+      <q-scroll-area class="q-gutter-md q-mt-md q-mx-md" :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle"
+        style="height: calc(47vh)">
+        <div class="my-5 mx-5" v-html="testo_quesito"></div>
+      </q-scroll-area>
+      <!-- </div> -->
 
       <q-scroll-area class="q-gutter-md q-mt-md q-mx-md" :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle"
         style="height: calc(47vh)">
@@ -53,16 +40,23 @@
 defineOptions({
   name: 'DomandaRiempimentoTesto',
 });
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 import { useSessioneStore } from '../stores/sessione';
-import { T_DomandaRiempimentoTesto, T_Token, IDomanda } from './models';
+import { T_DomandaRiempimentoTesto, IDomanda } from './models';
 import PrologoComponent from '../components/PrologoComponent.vue';
 import AudioWrap from '../components/AudioWrap.vue';
 import ImgWrap from '../components/ImgWrap.vue';
 import VideoWrap from '../components/VideoWrap.vue';
 import { setAudioPams, setVideoPams } from './common';
 import { common_api } from '../boot/common-utils';
+
+import tippy, { Instance } from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
+import { useI18n } from 'vue-i18n';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { t } = useI18n();
 
 import * as Common from './common';
 
@@ -71,6 +65,8 @@ const sessione = useSessioneStore();
 const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
+
+console.log(script.risposte.risposta)
 
 if (!script.rispostaData) script.rispostaData = {};
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
@@ -81,6 +77,7 @@ if (typeof script.risposta2Server == 'undefined')
     peso: domanda.peso,
     risposte: {},
   };
+
 
 watch(script.rispostaData, (rispostaData) => {
   if (script.risposta2Server)
@@ -101,66 +98,174 @@ if (script.video) setVideoPams(script.video);
 let testo = '';
 if (typeof script.testo == 'string') testo = script.testo;
 if (typeof script.testo == 'object') testo = script.testo._;
-const tokens = ref(
-  testo.match(/([^_]+)|([_]+(\d+)[_]+)/giu)?.map((content, index) => {
-    const slot = content.match(/([_]+)(\d+)([_]+)/);
-    const l = slot ? slot[1].length + slot[3].length : 0
-    const slotIndex = slot ? slot[2] : '';
-    const isSlot = slot ? true : false;
-    const risposta =
-      script.rispostaData && slotIndex in script.rispostaData
-        ? script.rispostaData[slotIndex]._
-        : ' '.repeat(Math.max(l, 10));
-    content = isSlot ? risposta : common_api.sanitizeUnicode(content) // .replace(/\%u(.{4})/g, '&#x$1;');
-    return { index, isSlot, slotIndex, content, l } as T_Token;
-  })
-);
 
-const onDrop = function (evt: DragEvent, slotIndex: string) {
-  if (evt.dataTransfer) {
-    const item = tokens.value?.find(
-      (item: T_Token) => item.slotIndex == slotIndex
-    );
-    if (item) {
-      // se lo slot e' gia' occupato lo libera
-      if (slotIndex in script.rispostaData) {
-        const item = tokens.value?.find(
-          (item: T_Token) => item.slotIndex == slotIndex
-        );
-        if (item) {
-          const risposta = lista_risposte.value?.find(
-            (value) => value.testo == item.content
-          );
-          if (risposta) {
-            risposta.disponibile = true;
-            delete script.rispostaData[item.slotIndex];
-            item.content = '';
+const slots = testo.match(/((\_+)(\d+)(\_+))/g)
+const dimslots = Object.fromEntries(slots?.map(
+  (value, index) => {
+    return [index, value.length]
+  }
+) || [])
+
+// console.log('dimslots', dimslots)
+
+const testo_quesito = ref(common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `)))
+
+const dropZones = () => {
+
+  const spans = document.querySelectorAll(`span.slot-RT-${domanda.id}`)
+  const tippies: { [Key: string]: Instance } = {};
+
+  spans.forEach((el) => {
+
+    const span = el as HTMLElement
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_id, slotIndex] = span.id.split('-')
+    span.textContent = script.rispostaData[slotIndex]
+      ? script.rispostaData[slotIndex]._
+      : '_'.repeat(dimslots[slotIndex] || 10);
+
+    if (span.textContent.match(/^(\_+)$/)) {
+      // span.classList.remove('tooltip');
+      // (span, { onShow: (instance) => { instance.hide() } })
+      // tippy(span).destroy()
+    } else {
+      const t_ = tippy(span, {
+        content: t('dblclick_annulla'),
+        allowHTML: true,
+        theme: 'light',
+        arrow: true,
+        trigger: 'mouseenter'
+      })
+      tippies[span.id] = t_
+    }
+
+    span.addEventListener('dragenter', (event) => {
+      event.preventDefault();
+      (event.target as HTMLElement).style.border = 'dotted 2px black';
+    })
+
+    span.addEventListener('dragleave', (event) => {
+      event.preventDefault();
+      (event.target as HTMLElement).style.border = 'none';
+    })
+
+    span.addEventListener('dragend', (event) => {
+      event.preventDefault();
+      (event.target as HTMLElement).style.border = 'none';
+    })
+
+    span.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      if (event.dataTransfer)
+        event.dataTransfer.dropEffect = 'move';
+    })
+
+    span.addEventListener('drop', (event) => {
+      event.preventDefault();
+      (event.target as HTMLElement).style.border = 'none';
+      if (event.dataTransfer) {
+        const risposta_data = event.dataTransfer.getData('risposta');
+        if (event.target) {
+          const span = (event.target as HTMLElement)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const [_id, slotIndex] = span.id.split('-')
+
+          if (span.textContent?.match(/^(\_+)$/)) {
+
+            const risposta = lista_risposte_disponibili.value?.find(
+              (value) => value.testo == risposta_data
+            );
+            if (risposta) {
+              script.rispostaData[slotIndex] = {
+                hash: risposta.id,
+                _: risposta.testo,
+              };
+              risposta.disponibile = false;
+              const script_risposta = script.risposte.risposta.find(
+                (value) => value._ == risposta.testo
+              );
+              if (script_risposta) script_risposta.disponibile = false;
+            }
+            span.textContent = risposta_data;
+
+          } else {
+            // toglie risposta precedente
+            const risposta_precedente = span.textContent
+            const risposta_p = lista_risposte.value?.find(
+              (value) => value.testo == risposta_precedente
+            );
+            if (risposta_p) {
+              delete script.rispostaData[slotIndex]
+
+              risposta_p.disponibile = true;
+              const script_risposta = script.risposte.risposta.find(
+                (value) => value._ == risposta_p.testo
+              );
+              if (script_risposta) script_risposta.disponibile = true;
+            }
+
+            tippies[span.id]?.destroy();
+
+
+            // aggiunge risposta nuova
+
+            const risposta = lista_risposte_disponibili.value?.find(
+              (value) => value.testo == risposta_data
+            );
+            if (risposta) {
+              script.rispostaData[slotIndex] = {
+                hash: risposta.id,
+                _: risposta.testo,
+              };
+              risposta.disponibile = false;
+              const script_risposta = script.risposte.risposta.find(
+                (value) => value._ == risposta.testo
+              );
+              if (script_risposta) script_risposta.disponibile = false;
+            }
+            span.textContent = risposta_data;
           }
+          const t_ = tippy(span, {
+            content: t('dblclick_annulla'),
+            allowHTML: true,
+            theme: 'light',
+            arrow: true,
+            trigger: 'mouseenter',
+          });
+          tippies[span.id] = t_
+
         }
       }
+    })
 
-      const risposta_data = evt.dataTransfer.getData('risposta');
+    span.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      const span = (event.target as HTMLElement)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_id, slotIndex] = span.id.split('-')
 
-      item.content = risposta_data;
-      const risposta = lista_risposte_disponibili.value?.find(
+      const risposta_data = span.textContent
+      const risposta = lista_risposte.value?.find(
         (value) => value.testo == risposta_data
       );
-
       if (risposta) {
-        script.rispostaData[slotIndex] = {
-          hash: risposta.id,
-          _: risposta.testo,
-        };
-        risposta.disponibile = false;
+        delete script.rispostaData[slotIndex]
 
+        risposta.disponibile = true;
         const script_risposta = script.risposte.risposta.find(
           (value) => value._ == risposta.testo
         );
-        if (script_risposta) script_risposta.disponibile = false;
+        if (script_risposta) script_risposta.disponibile = true;
       }
-    }
-  }
+
+      span.textContent = '_'.repeat(dimslots[slotIndex] || 10);
+      tippies[span.id]?.destroy();
+    })
+  })
 };
+
+onMounted(dropZones);
 
 const startDrag = (evt: DragEvent, item: string) => {
   if (evt.dataTransfer) {
@@ -182,34 +287,16 @@ const lista_risposte = ref(
       <IRisposta>{
         id: value.$.hash,
         testo: value._,
-        disponibile: value?.disponibile || true,
+        disponibile: value.disponibile === undefined ? true : value.disponibile,
         label: common_api.sanitizeUnicode(value._),
       }
   )
 );
 
-// const dimensioneListaRisposte = ref(lista_risposte.value.reduce((partialSum, a) => partialSum + a.testo.length, 0))
-
 
 const lista_risposte_disponibili = computed(() =>
-  lista_risposte.value.filter((value) => value.disponibile)
+  lista_risposte.value.filter((value) => value.disponibile === true)
 );
-
-const annulla = (item: T_Token) => {
-  const risposta = lista_risposte.value?.find(
-    (value) => value.testo == item.content
-  );
-  if (risposta) {
-    risposta.disponibile = true;
-    const script_risposta = script.risposte.risposta.find(
-      (value) => value._ == risposta.testo
-    );
-    if (script_risposta) script_risposta.disponibile = true;
-
-    delete script.rispostaData[item.slotIndex];
-    item.content = '';
-  }
-};
 
 const set_ascolti = (val: number) => {
   if (script.audio) {
@@ -237,4 +324,5 @@ const barStyle = ref<Partial<CSSStyleDeclaration>>(Common.barStyle);
   width: 100px
   min-width: 100px
   border: 1px dotted black
+
 </style>

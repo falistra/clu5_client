@@ -38,4 +38,6 @@ export default {
   Cancella_Risposta: 'Clear answer',
   Parziale: 'Partial',
   'Non risposto': 'Not answered',
+  IniziaTest: 'Start',
+  dblclick_annulla: 'Double click to cancel',
 };

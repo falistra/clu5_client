@@ -18,7 +18,7 @@
           <div v-if="primaDomanda?.immagine" class="col">
             <img-wrap :src="primaDomanda.immagine" />
           </div>
-          <div v-if="primaDomanda?.audio" class="col q-mt-md q-mr-md">
+          <div v-if="primaDomanda?.audio" style="max-width: 70%;" class="col q-mt-md q-mr-md">
             <audio-wrap :audio="primaDomanda.audio" @update="set_ascolti" />
           </div>
           <div v-if="primaDomanda?.video" class="col q-mt-md">
@@ -31,12 +31,15 @@
           <!--:style="{ height: `${H}px` }" -->
           <div v-for="domanda in domande" :key="domanda.testo" class="domanda q-mr-md ">
             <div class="text-overline" v-html="domanda.prologo" />
-            <div class="my-1">
-              <q-btn flat size="xs" icon="cancel" @click="cancella(domanda)">
-                <q-tooltip> {{ $t('Cancella_Risposta') }}</q-tooltip>
-              </q-btn>
-              <span class="text-subtitle q-my-md text-weight-bold" v-html="common_api.sanitizeUnicode(domanda.testo)">
-              </span>
+            <div class="row items-center justify-start my-1">
+              <div class="col-1">
+                <q-btn flat size="xs" icon="cancel" @click="cancella(domanda)">
+                  <q-tooltip> {{ $t('Cancella_Risposta') }}</q-tooltip>
+                </q-btn>
+              </div>
+              <div class="col text-subtitle q-my-md text-weight-bold"
+                v-html="common_api.sanitizeUnicode(domanda.testo)">
+              </div>
             </div>
             <q-option-group v-model="domanda.rispostaData" class="q-mx-sm q-mb-sm text-weight-medium"
               :options="domanda.risposte" dense color="primary">
@@ -82,16 +85,21 @@ const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaComprensioneTesto
 );
 
-const testoMalformato = script.value.domande.domandasceltasingola[0].testo;
-if (testoMalformato.toString() === '[object Object]') {
-  const patch = testoMalformato as unknown as { _: string; audio: Audio };
-  script.value.domande.domandasceltasingola[0].audio = patch.audio;
-  script.value.domande.domandasceltasingola[0].testo = patch._;
-} // else { console.log('REGOLARE!') }
+if (script.value.domande.domandasceltasingola) {
+  const testoMalformato = script.value.domande.domandasceltasingola[0].testo;
+  if (testoMalformato.toString() === '[object Object]') {
+    const patch = testoMalformato as unknown as { _: string; audio: Audio };
+    script.value.domande.domandasceltasingola[0].audio = patch.audio;
+    script.value.domande.domandasceltasingola[0].testo = patch._;
+  } // else { console.log('REGOLARE!') }
+}
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
 
 const testo_comprensione = common_api.sanitizeUnicode(script.value.testo_comprensione)
+  .replace(/<div>\s+<\/div>/g, '<div><br/><\/div>')
+  .replace(/<br>/g, '<br/>')
+  .replace(/<\/p><p>/g, '</p><br/><p>')
 
 const domande = reactive(
   script.value.domande.domandasceltasingola.map((dss) => ({

@@ -6,7 +6,7 @@
         :prologo="script.prologo" />
       <div style="max-height: calc(60vh)"
         class="my-2 mr-5 p-2 scroll-mr-6 overflow-auto rounded hover:rounded-lg bg-slate-200 shadow-lg shadow-slate-300/50"
-        v-html="common_api.sanitizeUnicode(script.testo)" />
+        v-html="testo" />
 
       <img-wrap v-if="script.immagine" :src="script.immagine" />
       <audio-wrap v-if="script.audio" :audio="script.audio" @update="set_ascolti" />
@@ -52,7 +52,11 @@ const script = ref(
 );
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
 
-
+const testo = common_api.sanitizeUnicode(script.value.testo)
+  .replace(/<\/ul>/g, '<\/ul><br/>')
+  .replace(/<div>\s+<\/div>/g, '<div><br/><\/div>')
+  .replace(/<br>/g, '<br/>')
+  .replace(/<\/p><p>/g, '</p><br/><p>')
 
 if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {

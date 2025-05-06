@@ -8,7 +8,8 @@ const jsonData = ref(sessioneStore.errore);
 
 <template>
   <q-page class="column">
-    <div class="col-12">
+    <div class="col-12" v-if="'errore' in sessioneStore.errore" v-html="sessioneStore.errore.errore" />
+    <div class="col-12" v-else>
       <JsonViewer :value="jsonData" copyable boxed sort theme="jv-dark" />
     </div>
   </q-page>

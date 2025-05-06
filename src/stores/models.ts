@@ -59,6 +59,7 @@ export type Script = {
       serverTime: string;
       sessionId: string;
       signed_userId: string;
+      descrizione_sessione: string;
     };
     prologo: {
       $: {

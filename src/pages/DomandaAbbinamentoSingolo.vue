@@ -210,6 +210,7 @@ const set_ascolti_video = (val: number) => {
 .zona-ricevente
   border-top: 2px solid black
   border-bottom: 2px solid black
+  border-right: 2px solid black
   min-height: 20px
   min-width: 150px
   text-wrap: wrap

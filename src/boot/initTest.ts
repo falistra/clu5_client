@@ -54,6 +54,7 @@ export default boot(async ({ router }) => {
             { label: 'test 3', value: { idUser: 2, idSess: 93 } },
             { label: 'test 4', value: { idUser: 2, idSess: 108 } }, // test 793
             { label: 'test 5', value: { idUser: 2, idSess: 75 } },
+            { label: 'test Error', value: { idUser: 0, idSess: 0 } },
           ]
         : [
             { label: 'test 1', value: { idUser: 1, idSess: 1 } },
@@ -73,24 +74,24 @@ export default boot(async ({ router }) => {
         `/test/script/?idUser=${allCookies.idUtente}&idSess=${allCookies.idSessione}`
       )
       .then((response) => {
-        sessioneStore.descrizioneSessione = allCookies.sessione || '';
-        Cookies.set('idUtente', '', { expires: -1 });
-        Cookies.set('idSessione', '', { expires: -1 });
-        Cookies.set('sessione', '', { expires: -1 });
         return response.data;
       })
       .catch((errore) => {
-        console.log(errore.response.data);
+        console.log(errore);
+        const erroreJSON = errore.toJSON();
+        console.log(erroreJSON);
         Loading.hide();
+        sessioneStore.IN_ERRORE = true;
         sessioneStore.errore = {
           idUser: allCookies.idUtente,
           idSess: allCookies.idSessione,
           errore: errore.response.data,
         };
-        Cookies.set('idUtente', '', { expires: -1 });
-        Cookies.set('idSessione', '', { expires: -1 });
-        Cookies.set('sessione', '', { expires: -1 });
       });
+    Cookies.set('idUtente', '', { expires: -1 });
+    Cookies.set('idSessione', '', { expires: -1 });
+    Cookies.set('sessione', '', { expires: -1 });
+
     if (script) {
       const scriptJSON = await xml2js
         .parseStringPromise(script, {
@@ -150,6 +151,8 @@ export default boot(async ({ router }) => {
         } else {
           sessioneStore.numero_stazione_corrente = 1;
         }
+        sessioneStore.descrizioneSessione =
+          scriptJSON.test.$.descrizione_sessione;
         const test = new Test(scriptJSON, script, storia_precedente);
 
         sessioneStore.test = test;
@@ -162,7 +165,7 @@ export default boot(async ({ router }) => {
           await test.stazione_corrente.richiediDomandeServer();
         Loading.hide();
         if (!esitoPositivo) {
-          router.push('/erroreServer');
+          router.replace('/erroreServer');
           return;
         }
       }

@@ -71,7 +71,7 @@ const validAudio = computed(
 const fileEsiste = ref(true);
 
 let ascolti_rimanenti = props.audio.ascolti_rimanenti || 2; // Number.MAX_SAFE_INTEGER
-const play_arrow = computed(() => { return sessione.IN_ASCOLTO ? 'pause' : (props.audio.ascolti_rimanenti === 0) ? 'cancel' : 'play_arrow'; })
+const play_arrow = computed(() => 'play_arrow') // { return sessione.IN_ASCOLTO ? 'pause' : (props.audio.ascolti_rimanenti === 0) ? 'cancel' : 'play_arrow'; })
 
 const emit = defineEmits(['update']);
 
