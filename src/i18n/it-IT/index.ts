@@ -21,7 +21,7 @@ export default {
   tempoScaduto: 'Tempo scaduto',
   ripresaTest: 'Test precedentemente interrotto; ora ripreso.',
   Doppio_click: 'Doppio click per togliere',
-  Trascina: 'Trascina',
+  Trascina: 'Trascina per abbinare',
   Risposta: 'Risposta',
   Numero_Parole: 'Numero parole :',
 

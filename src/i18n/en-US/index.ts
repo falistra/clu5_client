@@ -21,7 +21,7 @@ export default {
   tempoScaduto: 'Time is up',
   ripresaTest: 'Test running anew, after being interrupted.',
   Doppio_click: 'double click to remove option',
-  Trascina: 'drag and drop',
+  Trascina: 'Drag and drop to match',
   Risposta: 'Answer',
   Numero_Parole: 'Word count:',
 

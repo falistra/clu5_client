@@ -89,7 +89,12 @@ const ultimaDomanda = ref(false);
 watch(
   () => sessioneStore.id_stazione_corrente,
   () => {
-    ultimaDomanda.value = false;
+    if (sessioneStore.domande.length == 1) {
+      ultimaDomanda.value = true;
+    }
+    else {
+      ultimaDomanda.value = false;
+    }
   },
   { immediate: true }
 );
@@ -98,6 +103,9 @@ watch(
 watch(
   () => sessioneStore.counter,
   (newValue) => {
+    if (sessioneStore.domande.length == 1) {
+      ultimaDomanda.value = true;
+    }
     if (sessioneStore.domande.length == newValue + 1) {
       ultimaDomanda.value = true;
     }

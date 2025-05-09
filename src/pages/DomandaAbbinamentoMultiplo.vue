@@ -38,7 +38,7 @@
                       <div class="q-pa-sm" v-html="item.label" />
                       <q-tooltip v-if="item.label" class="bg-indigo" anchor="top middle" self="bottom middle"
                         :offset="[5, 5]">
-                        <strong>{{ $t('Doppio_click') }} </strong>
+                        <strong>{{ $t('Trascina') }}.{{ $t('Doppio_click') }}</strong>
                       </q-tooltip>
                     </div>
                   </div>
@@ -55,7 +55,7 @@
               <q-item-section side>
                 <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
                   <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
-                    <strong>{{ $t('Trascina') }}</strong>
+                    <strong>{{ $t('Trascina') }}.{{ $t('Doppio_click') }}</strong>
                   </q-tooltip>
                   <span class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label" />
                 </div>

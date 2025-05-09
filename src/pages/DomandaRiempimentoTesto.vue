@@ -66,7 +66,7 @@ const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaRiempimentoTesto;
 
-console.log(script.risposte.risposta)
+// console.log(script.risposte.risposta)
 
 if (!script.rispostaData) script.rispostaData = {};
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;

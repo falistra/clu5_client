@@ -46,7 +46,10 @@ export default boot(async ({ router }) => {
   });
 
   if (!Cookies.has('simulazione')) {
-    if (!(Cookies.has('idUtente') && Cookies.has('idSessione'))) {
+    if (
+      process.env.DEV &&
+      !(Cookies.has('idUtente') && Cookies.has('idSessione'))
+    ) {
       const options = process.env.DEV
         ? [
             // { label: 'test 1', value: { idUser: 2, idSess: 19 } },
