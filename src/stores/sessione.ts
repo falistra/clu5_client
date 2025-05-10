@@ -4,6 +4,7 @@ import { IRisposte, Ilog_STAZIONI } from './models';
 
 export const useSessioneStore = defineStore('sessione', {
   state: () => ({
+    tipoSesssione: 'test' as string,
     descrizioneSessione: '',
     counter: 0,
     domande: <[string, unknown, unknown, number, string][]>[],

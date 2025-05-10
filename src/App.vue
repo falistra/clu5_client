@@ -1,6 +1,6 @@
 <template>
-  <router-view v-if="testIn || Cookies.has('simulazione')" />
-  <div v-if="(!testIn && !Cookies.has('simulazione'))"
+  <router-view v-if="testIn || sessioneStore.tipoSesssione == 'simulazione'" />
+  <div v-if="!testIn && sessioneStore.test && sessioneStore.tipoSesssione == 'test'"
     class="window-height window-width row justify-center items-center ">
     <div class="column  justify-evenly items-center rounded-borders shadow-15 bg-teal-1"
       style="height: 150px; width: 200px;">
@@ -33,7 +33,7 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 // import { useLogStore } from 'stores/log'
 import { useRouter } from 'vue-router';
-import { useQuasar, Cookies } from 'quasar';
+import { useQuasar /* , Cookies */ } from 'quasar';
 import { ref, watch } from 'vue';
 
 import './css/flag-icons.css';
@@ -69,7 +69,7 @@ const testIn = ref(false);
 
 const router = useRouter();
 
-if (Cookies.has('simulazione')) {
+if (sessioneStore.tipoSesssione == 'simulazione') {
   if (sessioneStore.domande.length > 0) {
     // console.log(`sessioneStore.numero_stazione_corrente: ${sessioneStore.numero_stazione_corrente}`);
     router.push({
@@ -77,7 +77,6 @@ if (Cookies.has('simulazione')) {
       params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
     });
   }
-  // Cookies.set('simulazione', '', { expires: -1 }); // cancella cookie
 }
 
 const vai = () => {
