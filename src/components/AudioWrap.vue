@@ -89,11 +89,12 @@ const durata = computed(() => {
   if (sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url]) {
     const durata = moment
       .duration(sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url], 'seconds')
-
     return `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
     //.humanize();
   } else if (myAudio.value) {
-    return sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url];
+    const durata = moment
+      .duration(sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url], 'seconds')
+    return `${moment.utc(durata.asMilliseconds()).format('mm:ss')}`
   } else {
     return 0;
   }
