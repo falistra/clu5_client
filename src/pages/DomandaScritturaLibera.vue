@@ -69,6 +69,8 @@ if (!script.rispostaData) {
     try {
       script.rispostaData =
         log.testiScritturaLibera[user][domanda.id].value || '';
+      console.log('recupero risposta da log rispostaData', script.rispostaData);
+      console.log('recupero risposta da log', log.testiScritturaLibera[user][domanda.id].value);
     } catch (error) {
     } { }
 }
@@ -77,7 +79,7 @@ if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {
     specie: parseInt(domanda.tecnica),
     peso: domanda.peso,
-    risposte: '',
+    risposte: script.rispostaData || '',
   };
 }
 

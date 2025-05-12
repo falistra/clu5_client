@@ -47,12 +47,13 @@ const localeOptions = ref([
 const $q = useQuasar()
 
 watch(() => $q.fullscreen.isActive, (val: boolean) => {
-  // console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
   if (!val) {
-    if (process.env.DEV) {
-      router.replace('/fineTestFuori');
-    } else {
-      window.open('/test-GOODBYE.php', '_self')?.focus();
+    if (sessioneStore.tipoSesssione == 'test') {
+      if (process.env.DEV) {
+        router.replace('/fineTestFuori');
+      } else {
+        window.open('/test-GOODBYE.php', '_self')?.focus();
+      }
     }
   }
 })

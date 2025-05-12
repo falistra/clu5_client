@@ -15,10 +15,8 @@ import { Script, Ilog_STAZIONI } from 'stores/models';
 // import { parseFromString } from 'dom-parser';
 // import { useRouter } from 'vue-router';
 
-export default boot(async ({ router }) => {
+export default boot(async ({ router, urlPath }) => {
   /* { app, router, ... } */
-
-  let allCookies = Cookies.getAll();
 
   const sessioneStore = useSessioneStore();
   const log = useLogStore();
@@ -41,217 +39,208 @@ export default boot(async ({ router }) => {
   });
   log.testiScritturaLibera = testiScritturaLibera;
 
-  if (!Cookies.has('simulazione')) {
-    sessioneStore.tipoSesssione = 'test';
+  console.log(urlPath);
+  console.log(router.currentRoute.value.params);
 
-    if (
-      process.env.DEV // && !(Cookies.has('idUtente') && Cookies.has('idSessione'))
-    ) {
-      const options = process.env.DEV
-        ? [
-            // { label: 'test 1', value: { idUser: 2, idSess: 19 } },
-            { label: 'test 2', value: { idUser: 2, idSess: 27 } }, // test 760
-            { label: 'test 3', value: { idUser: 2, idSess: 93 } },
-            { label: 'test 4', value: { idUser: 2, idSess: 108 } }, // test 793
-            { label: 'test 5', value: { idUser: 2, idSess: 75 } },
-            { label: 'test Error', value: { idUser: 0, idSess: 0 } },
-          ]
-        : [
-            { label: 'test 1', value: { idUser: 1, idSess: 1 } },
-            { label: 'test 2', value: { idUser: 1, idSess: 2 } },
-            { label: 'test 3', value: { idUser: 1, idSess: 3 } },
-            { label: 'test 4', value: { idUser: 1, idSess: 6 } },
-          ];
-      const el = options[3]; // options[Math.floor(Math.random() * options.length)]; // ;
-      Cookies.set('idUtente', el.value.idUser.toString());
-      Cookies.set('idSessione', el.value.idSess.toString());
-      Cookies.set('sessione', 'Test');
-    }
+  if (urlPath.startsWith('/clu5-simulazione'))
+    sessioneStore.tipoSesssione = 'simulazione';
+  else sessioneStore.tipoSesssione = 'test';
 
-    allCookies = Cookies.getAll();
-    console.log(allCookies);
+  switch (sessioneStore.tipoSesssione) {
+    case 'test':
+      if (process.env.DEV) {
+        const el = { label: 'test 5', value: { idUser: 2, idSess: 75 } };
+        Cookies.set('idUtente', el.value.idUser.toString());
+        Cookies.set('idSessione', el.value.idSess.toString());
+        Cookies.set('sessione', 'Test');
+      }
 
-    if (allCookies.idUtente !== undefined) {
-      Loading.show({
-        message: 'Attendere, prego...',
-      });
-      const script = await api
-        .get(
-          `/test/script/?idUser=${allCookies.idUtente}&idSess=${allCookies.idSessione}`
-        )
-        .then((response) => {
-          return response.data;
-        })
-        .catch((errore) => {
-          console.log(errore);
-          const erroreJSON = errore.toJSON();
-          console.log(erroreJSON);
-          Loading.hide();
-          sessioneStore.IN_ERRORE = true;
-          sessioneStore.errore = {
-            idUser: allCookies.idUtente,
-            idSess: allCookies.idSessione,
-            errore: errore.response.data,
-          };
+      const allCookies = Cookies.getAll();
+
+      if (allCookies.idUtente !== undefined) {
+        Loading.show({
+          message: 'Attendere, prego...',
         });
-      Cookies.set('idUtente', '', { expires: -1 });
-      Cookies.set('idSessione', '', { expires: -1 });
-      Cookies.set('sessione', '', { expires: -1 });
-
-      if (script) {
-        const scriptJSON = await xml2js
-          .parseStringPromise(script, {
-            explicitArray: false,
-            trim: true,
+        const script = await api
+          .get(
+            `/test/script/?idUser=${allCookies.idUtente}&idSess=${allCookies.idSessione}`
+          )
+          .then((response) => {
+            return response.data;
           })
-          .then(function (result) {
-            // nel caso ci sia una sola stazione => va trasformato da object in [object] : Array
-            if (!Array.isArray(result.test.stazioni.stazione)) {
-              result.test.stazioni.stazione = [result.test.stazioni.stazione];
-            }
-            return result;
-          })
-          .catch(function (errore) {
+          .catch((errore) => {
+            console.log(errore);
+            const erroreJSON = errore.toJSON();
+            console.log(erroreJSON);
             Loading.hide();
+            sessioneStore.IN_ERRORE = true;
             sessioneStore.errore = {
               idUser: allCookies.idUtente,
               idSess: allCookies.idSessione,
-              errore,
+              errore: errore.response.data,
             };
           });
-        if (scriptJSON) {
-          let storia_precedente: string[] = [];
-          if ((scriptJSON as Script).test.situazionePrecedente) {
-            sessioneStore.sessioneInterrotta = true;
-            const stazioniPrecedenti: {
-              log_STAZIONI: Ilog_STAZIONI;
-              storia: string[];
-            } = JSON.parse(
-              (scriptJSON as Script).test.situazionePrecedente?.$
-                .risposteDateFinora || ''
-            );
-            // sessioneStore.log_stazioni = stazioniPrecedenti;
-            sessioneStore.log_STAZIONI = stazioniPrecedenti.log_STAZIONI;
-            storia_precedente = stazioniPrecedenti.storia;
-            Object.entries(sessioneStore.log_STAZIONI).forEach(
-              ([id_stazione, stazione]) => {
-                sessioneStore.punteggiStazioni[id_stazione] =
-                  stazione.punteggioStazione;
-                sessioneStore.DOMANDE_GIA_POSTE =
-                  sessioneStore.DOMANDE_GIA_POSTE.concat(
-                    Array.from(
-                      Object.keys(stazione.domandeStato || []).map(
-                        (idDomanda) => parseInt(idDomanda)
-                      )
-                    )
-                  );
+        Cookies.set('idUtente', '', { expires: -1 });
+        Cookies.set('idSessione', '', { expires: -1 });
+        Cookies.set('sessione', '', { expires: -1 });
+
+        if (script) {
+          const scriptJSON = await xml2js
+            .parseStringPromise(script, {
+              explicitArray: false,
+              trim: true,
+            })
+            .then(function (result) {
+              // nel caso ci sia una sola stazione => va trasformato da object in [object] : Array
+              if (!Array.isArray(result.test.stazioni.stazione)) {
+                result.test.stazioni.stazione = [result.test.stazioni.stazione];
               }
-            );
-            // Notify.create({
-            //   message: t('ripresaTest'),
-            //   color: 'negative',
-            //   position: 'bottom',
-            // });
-            sessioneStore.numero_stazione_corrente =
-              Object.entries(sessioneStore.log_STAZIONI).length + 1;
-          } else {
-            sessioneStore.numero_stazione_corrente = 1;
-          }
-          sessioneStore.descrizioneSessione =
-            scriptJSON.test.$.descrizione_sessione;
-          const test = new Test(scriptJSON, script, storia_precedente);
+              return result;
+            })
+            .catch(function (errore) {
+              Loading.hide();
+              sessioneStore.errore = {
+                idUser: allCookies.idUtente,
+                idSess: allCookies.idSessione,
+                errore,
+              };
+            });
+          if (scriptJSON) {
+            let storia_precedente: string[] = [];
+            if ((scriptJSON as Script).test.situazionePrecedente) {
+              sessioneStore.sessioneInterrotta = true;
+              const stazioniPrecedenti: {
+                log_STAZIONI: Ilog_STAZIONI;
+                storia: string[];
+              } = JSON.parse(
+                (scriptJSON as Script).test.situazionePrecedente?.$
+                  .risposteDateFinora || ''
+              );
+              // sessioneStore.log_stazioni = stazioniPrecedenti;
+              sessioneStore.log_STAZIONI = stazioniPrecedenti.log_STAZIONI;
+              storia_precedente = stazioniPrecedenti.storia;
+              Object.entries(sessioneStore.log_STAZIONI).forEach(
+                ([id_stazione, stazione]) => {
+                  sessioneStore.punteggiStazioni[id_stazione] =
+                    stazione.punteggioStazione;
+                  sessioneStore.DOMANDE_GIA_POSTE =
+                    sessioneStore.DOMANDE_GIA_POSTE.concat(
+                      Array.from(
+                        Object.keys(stazione.domandeStato || []).map(
+                          (idDomanda) => parseInt(idDomanda)
+                        )
+                      )
+                    );
+                }
+              );
+              // Notify.create({
+              //   message: t('ripresaTest'),
+              //   color: 'negative',
+              //   position: 'bottom',
+              // });
+              sessioneStore.numero_stazione_corrente =
+                Object.entries(sessioneStore.log_STAZIONI).length + 1;
+            } else {
+              sessioneStore.numero_stazione_corrente = 1;
+            }
+            sessioneStore.descrizioneSessione =
+              scriptJSON.test.$.descrizione_sessione;
+            const test = new Test(scriptJSON, script, storia_precedente);
 
-          sessioneStore.test = test;
-          sessioneStore.lingua = test.LINGUA;
-          sessioneStore.numero_stazioni = (
-            scriptJSON as Script
-          ).test.stazioni.stazione.length;
+            sessioneStore.test = test;
+            sessioneStore.lingua = test.LINGUA;
+            sessioneStore.numero_stazioni = (
+              scriptJSON as Script
+            ).test.stazioni.stazione.length;
 
-          const esitoPositivo =
-            await test.stazione_corrente.richiediDomandeServer();
-          Loading.hide();
-          if (!esitoPositivo) {
-            router.replace('/erroreServer');
-            return;
+            const esitoPositivo =
+              await test.stazione_corrente.richiediDomandeServer();
+            Loading.hide();
+            if (!esitoPositivo) {
+              router.replace('/erroreServer');
+              return;
+            }
           }
         }
       }
-    }
-  } else {
-    if (allCookies.simulazione !== undefined) {
-      sessioneStore.tipoSesssione = 'simulazione';
-      Cookies.set('simulazione', '', { expires: -1 });
-      Loading.show({
-        message: 'Attendere, prego...',
-      });
-      const domandaXML = await api
-        .get('/test/simulazione/domanda', {
-          params: { idDomanda: allCookies.simulazione },
-        })
-        .then((response) => {
-          // const txt = document.createElement('textarea');
-          // txt.innerHTML = response.data;
-          // return txt.value;
-          return response.data;
-        })
-        .catch((errore) => {
-          Loading.hide();
-          sessioneStore.errore = {
-            idDomanda: allCookies.simulazione,
-            errore,
-          };
-        });
-      if (domandaXML) {
-        // const xmlDoc = parseFromString(domandaXML);
-        // const xmlDomande_ = xmlDoc.getElementsByTagName('domanda');
-        // const xmlDomande = xmlDomande_.reduce(
-        //   (a, d) => ({ ...a, [d.getAttribute('id')]: d.innerHTML }),
-        //   {}
-        // );
 
-        const jsonDomanda = await xml2js
-          .parseStringPromise(domandaXML, {
-            explicitArray: false,
-            trim: true,
+      break;
+    case 'simulazione':
+      const match = urlPath.match(/id\=(\d+)/);
+      const idDomanda = match ? match[1] : undefined;
+
+      if (idDomanda !== undefined) {
+        sessioneStore.tipoSesssione = 'simulazione';
+        Loading.show({
+          message: 'Attendere, prego...',
+        });
+        const domandaXML = await api
+          .get('/test/simulazione/domanda', {
+            params: { idDomanda },
           })
-          .then(function (result) {
-            return result;
+          .then((response) => {
+            // const txt = document.createElement('textarea');
+            // txt.innerHTML = response.data;
+            // return txt.value;
+            return response.data;
           })
-          .catch(function (errore) {
+          .catch((errore) => {
             Loading.hide();
             sessioneStore.errore = {
-              idDomanda: allCookies.simulazione,
+              idDomanda,
               errore,
             };
           });
+        if (domandaXML) {
+          // const xmlDoc = parseFromString(domandaXML);
+          // const xmlDomande_ = xmlDoc.getElementsByTagName('domanda');
+          // const xmlDomande = xmlDomande_.reduce(
+          //   (a, d) => ({ ...a, [d.getAttribute('id')]: d.innerHTML }),
+          //   {}
+          // );
 
-        if (jsonDomanda) {
-          const domande = [jsonDomanda];
-          sessioneStore.domande = (domande as Array<object>)
-            .map((value) => {
-              const domande = (value as { sql: string; domanda: object })
-                .domanda;
-              return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
+          const jsonDomanda = await xml2js
+            .parseStringPromise(domandaXML, {
+              explicitArray: false,
+              trim: true,
             })
-            .reduce((accumulator, value) => accumulator.concat(value), []) // flat
-            .map((domanda, index) => {
-              const d = Object.entries(domanda);
-              const tipo = d[1][0];
-              const script = domanda[tipo] as object;
-              return [
-                tipo as string,
-                script as object,
-                d[0][1],
-                index + 1,
-                'XML',
-              ] as [string, object, object, number, string];
+            .then(function (result) {
+              return result;
+            })
+            .catch(function (errore) {
+              Loading.hide();
+              sessioneStore.errore = {
+                idDomanda,
+                errore,
+              };
             });
-          Loading.hide();
+
+          if (jsonDomanda) {
+            const domande = [jsonDomanda];
+            sessioneStore.domande = (domande as Array<object>)
+              .map((value) => {
+                const domande = (value as { sql: string; domanda: object })
+                  .domanda;
+                return Array.isArray(domande) ? domande : [domande]; // quando c'e' una sola domanda non e' un array
+              })
+              .reduce((accumulator, value) => accumulator.concat(value), []) // flat
+              .map((domanda, index) => {
+                const d = Object.entries(domanda);
+                const tipo = d[1][0];
+                const script = domanda[tipo] as object;
+                return [
+                  tipo as string,
+                  script as object,
+                  d[0][1],
+                  index + 1,
+                  'XML',
+                ] as [string, object, object, number, string];
+              });
+            Loading.hide();
+          }
         }
+        break;
       }
-    } else {
-      alert('Richiesta non valida');
-    }
   }
   sessioneStore.counter = 0;
 });
