@@ -3,13 +3,13 @@ import { Cookies } from 'quasar';
 
 import xml2js from 'xml2js';
 import { api } from 'boot/axios';
-import moment from 'moment';
+// import moment from 'moment';
 
 import { Test } from 'stores/Test';
 import { Loading } from 'quasar';
 
 import { useSessioneStore } from 'stores/sessione';
-import { useLogStore } from 'stores/log';
+// import { useLogStore } from 'stores/log';
 import { Script, Ilog_STAZIONI } from 'stores/models';
 
 // import { parseFromString } from 'dom-parser';
@@ -19,28 +19,40 @@ export default boot(async ({ router, urlPath }) => {
   /* { app, router, ... } */
 
   const sessioneStore = useSessioneStore();
-  const log = useLogStore();
+  // const log = useLogStore();
 
-  const testiScritturaLibera: {
-    [signed_user: string]: {
-      [idDomanda: string]: { value?: string; date?: moment.Moment };
-    };
-  } = {};
-  const ieri = moment().add(-1, 'days');
-  Object.entries(log.testiScritturaLibera).forEach(([signed_user, domande]) => {
-    const domandeFiltrate: {
-      [idDomanda: string]: { value?: string; date?: moment.Moment };
-    } = {};
-    Object.entries(domande).forEach(([idDomanda, { value, date }]) => {
-      const date_obj = moment(date);
-      if (date_obj > ieri) domandeFiltrate[idDomanda] = { value, date };
-    });
-    if (domandeFiltrate) testiScritturaLibera[signed_user] = domandeFiltrate;
-  });
-  log.testiScritturaLibera = testiScritturaLibera;
+  // const testiScritturaLibera: {
+  //   [signed_user: string]: {
+  //     [idDomanda: string]: { value?: string; date?: moment.Moment };
+  //   };
+  // } = {};
+  // const ieri = moment().add(-1, 'days');
 
-  console.log(urlPath);
-  console.log(router.currentRoute.value.params);
+  // console.log(
+  //   'log.testiScritturaLibera',
+  //   Object.entries(log.testiScritturaLibera)
+  // );
+
+  // Object.entries(log.testiScritturaLibera).forEach(([signed_user, domande]) => {
+  //   console.log('signed_user', signed_user);
+  //   console.log('domande', domande);
+  //   const domandeFiltrate: {
+  //     [idDomanda: string]: { value?: string; date?: moment.Moment };
+  //   } = {};
+  //   Object.entries(domande).forEach(([idDomanda, { value, date }]) => {
+  //     console.log('idDomanda', idDomanda);
+  //     console.log('value', value);
+  //     console.log('date', date);
+
+  //     const date_obj = moment(date);
+  //     if (date_obj > ieri) {
+  //       domandeFiltrate[idDomanda] = { value, date };
+  //     }
+  //   });
+  //   if (domandeFiltrate) testiScritturaLibera[signed_user] = domandeFiltrate;
+  // });
+  // console.log('testiScritturaLibera', Object.entries(testiScritturaLibera));
+  // log.testiScritturaLibera = testiScritturaLibera;
 
   if (urlPath.startsWith('/clu5-simulazione'))
     sessioneStore.tipoSesssione = 'simulazione';
@@ -162,6 +174,18 @@ export default boot(async ({ router, urlPath }) => {
             }
           }
         }
+      } else {
+        alert('Test non disponibile');
+        // sessioneStore.IN_ERRORE = true;
+        // Cookies.set('idUtente', '', { expires: -1 });
+        // Cookies.set('idSessione', '', { expires: -1 });
+        // Cookies.set('sessione', '', { expires: -1 });
+
+        // sessioneStore.errore = {
+        //   idUser: '',
+        //   idSess: '',
+        //   errore: 'test Non Inizializzato',
+        // };
       }
 
       break;

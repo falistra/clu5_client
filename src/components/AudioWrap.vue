@@ -18,6 +18,19 @@
         </q-tooltip>
       </q-btn>
     </q-toolbar>
+
+    <q-item>
+      <q-item-section side>
+        <q-icon name="volume_down" />
+      </q-item-section>
+      <q-item-section>
+        <q-slider class="q-px-md" v-model="volume" :min="0" :max="1" :step="0.1" @change="volumeChange" />
+      </q-item-section>
+      <q-item-section side>
+        <q-icon name="volume_up" />
+      </q-item-section>
+    </q-item>
+
   </div>
 
   <div v-if="audio && audio.$.url && audio.$.url != 'nessuno' && !fileEsiste" class="self-center">
@@ -72,6 +85,14 @@ const fileEsiste = ref(true);
 
 let ascolti_rimanenti = props.audio.ascolti_rimanenti || 2; // Number.MAX_SAFE_INTEGER
 const play_arrow = computed(() => 'play_arrow') // { return sessione.IN_ASCOLTO ? 'pause' : (props.audio.ascolti_rimanenti === 0) ? 'cancel' : 'play_arrow'; })
+
+const volume = ref(0.5);
+const volumeChange = (volume: number) => {
+  if (myAudio.value) {
+    myAudio.value.volume = volume;
+  }
+};
+
 
 const emit = defineEmits(['update']);
 

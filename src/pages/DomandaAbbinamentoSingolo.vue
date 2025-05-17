@@ -26,10 +26,10 @@
               <div class="col bg-teal-2 zona-ricevente" @dragover.prevent @dragenter.prevent
                 @drop="onDrop($event, item)" @dblclick="annulla(item)">
                 <div class="text-subtitle q-ma-sm item text-justify">
-                  <q-tooltip v-if="item.rispostaData?.label" class="bg-indigo" anchor="top middle" self="bottom middle"
+                  <!-- <q-tooltip v-if="item.rispostaData?.label" class="bg-indigo" anchor="top middle" self="bottom middle"
                     :offset="[5, 5]">
                     <strong>{{ $t('Trascina') }}.{{ $t('Doppio_click') }}</strong>
-                  </q-tooltip>
+                  </q-tooltip> -->
                   <span v-html="item.rispostaData?.label" />
                 </div>
               </div>
@@ -39,13 +39,17 @@
       </div>
       <div class="col-6">
         <q-scroll-area style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
+          <q-badge color="blue" class="text-subtitle2">
+            {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
+          </q-badge>
+
           <q-list dense class="q-mr-lg">
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash">
               <q-item-section side>
                 <div class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)">
-                  <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                  <!-- <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                     <strong>{{ $t('Trascina') }}.{{ $t('Doppio_click') }}</strong>
-                  </q-tooltip>
+                  </q-tooltip> -->
                   <span class="bg-teal-1 q-pa-xs text-weight-medium" v-html="item.label" />
                 </div>
               </q-item-section>

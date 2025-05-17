@@ -40,7 +40,7 @@ import { useSessioneStore } from '../stores/sessione';
 import { useLogStore } from '../stores/log';
 import { T_DomandaScritturaLibera, IDomanda } from './models';
 
-import { computed } from 'vue'; // , computed
+import { computed, onUnmounted } from 'vue'; // , computed
 import PrologoComponent from '../components/PrologoComponent.vue';
 import AudioWrap from '../components/AudioWrap.vue';
 import ImgWrap from '../components/ImgWrap.vue';
@@ -61,19 +61,8 @@ const testo = common_api.sanitizeUnicode(script.testo)
   .replace(/<br>/g, '<br/>')
   .replace(/<\/p><p>/g, '</p><br/><p>')
 
-
 // prova a recuperare dal log
 const user = sessione.test?.ID_USER || 'Simulazione';
-if (!script.rispostaData) {
-  if (user in log.testiScritturaLibera)
-    try {
-      script.rispostaData =
-        log.testiScritturaLibera[user][domanda.id].value || '';
-      console.log('recupero risposta da log rispostaData', script.rispostaData);
-      console.log('recupero risposta da log', log.testiScritturaLibera[user][domanda.id].value);
-    } catch (error) {
-    } { }
-}
 
 if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {
@@ -82,6 +71,18 @@ if (typeof script.risposta2Server === 'undefined') {
     risposte: script.rispostaData || '',
   };
 }
+
+if (user in log.testiScritturaLibera) {
+  // console.log('log.testiScritturaLibera', log.testiScritturaLibera[user]);
+  if (domanda.id in log.testiScritturaLibera[user]) {
+    // console.log('log.testiScritturaLibera[user][domanda.id]', log.testiScritturaLibera[user][domanda.id]);
+    script.rispostaData = log.testiScritturaLibera[user][domanda.id].value || '';
+    script.risposta2Server.risposte = script.rispostaData
+    // console.log('script.risposta2Server', script.risposta2Server.risposte);
+    script.logRisposta = script.rispostaData;
+  }
+}
+
 
 if (typeof script.logRisposta === 'undefined') {
   script.logRisposta = null;
@@ -125,9 +126,23 @@ const setRisposta = () => {
   log.testiScritturaLibera[user][domanda.id].date = moment();
   if (script.risposta2Server) {
     script.risposta2Server.risposte = script.rispostaData;
+    // console.log('script.risposta2Server', script.risposta2Server.risposte);
     script.logRisposta = script.rispostaData;
   }
 };
+
+onUnmounted(() => {
+  // console.log('onUnMounted');
+  // console.log('script.rispostaData', script.rispostaData);
+  // console.log('script.risposta2Server', script.risposta2Server);
+  if (script.risposta2Server) {
+    script.risposta2Server.risposte = script.rispostaData;
+    // console.log('script.risposta2Server', script.risposta2Server);
+    script.logRisposta = script.rispostaData;
+  }
+});
+
+
 
 const set_ascolti = (val: number) => {
   if (script.audio) {

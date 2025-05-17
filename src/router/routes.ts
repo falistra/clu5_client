@@ -28,6 +28,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/FineTestFuori.vue'),
   },
   {
+    path: '/testNonDisponibile',
+    component: () => import('../pages/TestNonDisponibile.vue'),
+  },
+  {
     path: '/erroreServer',
     component: () => import('../layouts/ErrorLayout.vue'),
     children: [
@@ -37,6 +41,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
   {
     path: '/',
     component: () => import('../layouts/MainLayout.vue'),

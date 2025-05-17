@@ -28,7 +28,7 @@ export default {
   manca1minuto: 'one minute left',
   durata: 'Duration',
   Visioni_rimanenti: 'Remaining views',
-  Ascolti_rimanenti: 'Remaining listens',
+  Ascolti_rimanenti: 'Remaining audios',
   In_ascolto: 'Listening',
   In_visione: 'Watching',
   No_Visioni: 'No views left',
@@ -40,4 +40,5 @@ export default {
   'Non risposto': 'Not answered',
   IniziaTest: 'Start',
   dblclick_annulla: 'Double click to cancel',
+  testNonInizializzato: 'Test not available',
 };

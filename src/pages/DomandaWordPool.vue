@@ -25,9 +25,9 @@
                 <div v-for="item in pool.rispostaData" :key="item.$.hash" class="col-auto"
                   @dblclick="annulla(item, pool)">
                   <div class="text-subtitle q-ma-sm item">
-                    <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                    <!-- <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                       <strong>{{ $t('Doppio_click') }}</strong>
-                    </q-tooltip>
+                    </q-tooltip> -->
                     <span class="q-ma-md text-weight-medium" v-html="item.label" />
                   </div>
                 </div>
@@ -39,12 +39,15 @@
       <div class="col-6">
         <q-scroll-area class="q-mr-md" style="height: calc(70vh)" visible :thumb-style="thumbStyle"
           :bar-style="barStyle">
+          <q-badge color="blue" class="text-subtitle2">
+            {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
+          </q-badge>
           <q-list dense class="q-mr-lg">
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash">
               <q-item-section class="q-ma-sm item" draggable="true" @dragstart="startDrag($event, item)" side>
-                <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <!-- <q-tooltip class="bg-indigo" anchor="top middle" self="bottom middle" :offset="[5, 5]">
                   <strong>{{ $t('Trascina') }}</strong>
-                </q-tooltip>
+                </q-tooltip> -->
                 <span class="bg-teal-2 q-pa-xs text-bold" v-html="item.label" />
               </q-item-section>
             </q-item>

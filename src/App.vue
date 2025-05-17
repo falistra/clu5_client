@@ -49,6 +49,7 @@ const $q = useQuasar()
 watch(() => $q.fullscreen.isActive, (val: boolean) => {
   if (!val) {
     if (sessioneStore.tipoSesssione == 'test') {
+      sessioneStore.$reset()
       if (process.env.DEV) {
         router.replace('/fineTestFuori');
       } else {
@@ -100,6 +101,7 @@ const vai = () => {
     }
 
   } else {
+    alert('Fuori servizio');
     router.replace('/erroreServer');
   }
 }

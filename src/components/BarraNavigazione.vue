@@ -56,7 +56,8 @@ import ConfermaChiusura from './ConfermaChiusura.vue';
 import ConfermaChiusuraDefinitiva from './ConfermaChiusuraDefinitiva.vue';
 import { IDomanda } from '../pages/models';
 // import { debounce } from 'quasar';
-import { useQuasar } from 'quasar';
+import { Cookies, useQuasar } from 'quasar';
+
 const $q = useQuasar()
 
 const sessioneStore = useSessioneStore();
@@ -70,15 +71,28 @@ const idDomanda = computed(() => {
   return (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id;
 });
 
-if (sessioneStore.test.script.test.situazionePrecedente)
-  Notify.create({
-    message: t('ripresaTest'),
-    color: 'negative',
-    position: 'bottom',
-    timeout: 3000,
-    closeBtn: 'OK'
-  });
-
+if (sessioneStore.test === null) {
+  // Notify.create({
+  //   message: t('testNonInizializzato'),
+  //   color: 'negative',
+  //   position: 'bottom',
+  //   timeout: 3000,
+  //   closeBtn: 'OK'
+  // });
+  Cookies.set('idUtente', '', { expires: -1 });
+  Cookies.set('idSessione', '', { expires: -1 });
+  Cookies.set('sessione', '', { expires: -1 });
+  router.replace('/testNonDisponibile');
+} else {
+  if (sessioneStore.test.script.test.situazionePrecedente)
+    Notify.create({
+      message: t('ripresaTest'),
+      color: 'negative',
+      position: 'bottom',
+      timeout: 3000,
+      closeBtn: 'OK'
+    });
+}
 
 const stato = computed(() => {
   return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.numero_stazioni} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`

@@ -17,6 +17,17 @@
               $t('Click_Visione') }}
           </q-tooltip>
         </q-btn>
+        <q-item>
+          <q-item-section side>
+            <q-icon name="volume_down" />
+          </q-item-section>
+          <q-item-section>
+            <q-slider class="q-px-md" v-model="volume" :min="0" :max="1" :step="0.1" @change="volumeChange" />
+          </q-item-section>
+          <q-item-section side>
+            <q-icon name="volume_up" />
+          </q-item-section>
+        </q-item>
       </div>
     </div>
   </div>
@@ -78,6 +89,14 @@ const validVideo = computed(
       props.video.$.url == 'nessuno'
     )
 );
+
+const volume = ref(0.5);
+const volumeChange = (volume: number) => {
+  if (myVideo.value) {
+    myVideo.value.volume = volume;
+  }
+};
+
 
 const fileEsiste = ref(true);
 // const play_arrow = ref(sessione.IN_VISIONE ? 'pause' : 'play_arrow');

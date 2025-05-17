@@ -40,4 +40,5 @@ export default {
   'Non risposto': 'Non risposto',
   IniziaTest: 'Inizia',
   dblclick_annulla: 'Doppio click per togliere',
+  testNonInizializzato: 'Test non disponibile',
 };
