@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 // import { Todo, Meta } from './models';
 import { useSessioneStore } from '../stores/sessione';
 import { useRouter } from 'vue-router';
@@ -55,7 +55,8 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
 import ConfermaChiusura from './ConfermaChiusura.vue';
 import ConfermaChiusuraDefinitiva from './ConfermaChiusuraDefinitiva.vue';
 import { IDomanda } from '../pages/models';
-// import { debounce } from 'quasar';
+import { /* debounce, */ throttle } from 'quasar';
+// import { common_api } from '../boot/common-utils'
 import { Cookies, useQuasar } from 'quasar';
 
 const $q = useQuasar()
@@ -128,12 +129,14 @@ watch(
 );
 
 async function gameover() {
-  Notify.create({
-    message: t('tempoScaduto'),
-    color: 'negative',
-    position: 'top',
-  });
-  await consegna(false);
+  if (!sessioneStore.premutoESC) {
+    Notify.create({
+      message: t('tempoScaduto'),
+      color: 'negative',
+      position: 'top',
+    })
+    await consegna(false);
+  }
 }
 
 const quasiTimeout = ref(false);
@@ -155,7 +158,7 @@ function versoLaFine(data: {
   }
 }
 
-function precedente() {
+let precedente = function () {
   sessioneStore.decrement();
   router.replace({
     name: sessioneStore.domande[sessioneStore.counter][0],
@@ -163,13 +166,18 @@ function precedente() {
   });
 }
 
-function successivo() {
+let successivo = function () {
   sessioneStore.increment();
   router.replace({
     name: sessioneStore.domande[sessioneStore.counter][0],
     params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
-  });
+  })
 }
+
+onMounted(() => {
+  successivo = /* debounce */ throttle(successivo, 1000);
+  precedente = /* debounce */ throttle(precedente, 1000);
+});
 
 async function effettuaConsegna() {
   // notUltimaDomanda = true;
@@ -177,43 +185,48 @@ async function effettuaConsegna() {
   Loading.show();
   // le tre chiamate successive devono essere in await in quanto ciascuna modifica lo store
   // che viene presupposto dalle successive
-  await sessioneStore.test.stazione_corrente.richiediPunteggio();
-  await sessioneStore.test.stazione_corrente.passaStazione();
+  try {
+    await sessioneStore.test.stazione_corrente.richiediPunteggio();
+    await sessioneStore.test.stazione_corrente.passaStazione();
 
-  if (sessioneStore.testCompletato) {
-    $q.fullscreen.exit()
-      .then(() => {
-        // success!
-      })
-      .catch(() => {
-        // oh, no!!!
-      })
+    if (sessioneStore.testCompletato) {
+      $q.fullscreen.exit()
+        .then(() => {
+          // success!
+        })
+        .catch(() => {
+          // oh, no!!!
+        })
 
-    if (process.env.DEV) {
-      router.replace('/fineTestFuori');
+      if (process.env.DEV) {
+        router.replace('/fineTestFuori');
+      } else {
+        window.open('/test-GOODBYE.php', '_self')?.focus();
+      }
+      // sessioneStore.$reset()
     } else {
-      window.open('/test-GOODBYE.php', '_self')?.focus();
-    }
-    // sessioneStore.$reset()
-  } else {
-    const esitoPositivo =
-      await sessioneStore.test.stazione_corrente.richiediDomandeServer();
+      const esitoPositivo =
+        await sessioneStore.test.stazione_corrente.richiediDomandeServer();
 
-    if (esitoPositivo) {
-      sessioneStore.counter = 0;
-      router.replace({
-        name: sessioneStore.domande[sessioneStore.counter][0],
-        params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
-      });
-    } else {
-      router.replace('/erroreServer');
+      if (esitoPositivo) {
+        sessioneStore.counter = 0;
+        router.replace({
+          name: sessioneStore.domande[sessioneStore.counter][0],
+          params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
+        });
+      } else {
+        router.replace('/erroreServer');
+      }
     }
+  } catch (error) {
+    console.log('errore', error);
+    router.replace('/erroreServer');
   }
+
   Loading.hide();
 }
 
 // const effettuaConsegna = debounce(effettuaConsegnaZ, 1000);
-
 
 async function consegna(dialog = true) {
   const indiciDomandeSenzaRisposta =

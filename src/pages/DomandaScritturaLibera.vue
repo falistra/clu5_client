@@ -118,16 +118,18 @@ const insertAtCaret = function (
 };
 
 const setRisposta = () => {
+
   if (!(user in log.testiScritturaLibera)) log.testiScritturaLibera[user] = {};
   if (!(domanda.id in log.testiScritturaLibera[user]))
     log.testiScritturaLibera[user][domanda.id] = {};
-  log.testiScritturaLibera[user][domanda.id].value =
-    script.rispostaData as string;
+
+  log.testiScritturaLibera[user][domanda.id].value = script.rispostaData || '';
   log.testiScritturaLibera[user][domanda.id].date = moment();
+
   if (script.risposta2Server) {
-    script.risposta2Server.risposte = script.rispostaData;
+    script.risposta2Server.risposte = script.rispostaData || '';
     // console.log('script.risposta2Server', script.risposta2Server.risposte);
-    script.logRisposta = script.rispostaData;
+    script.logRisposta = script.rispostaData || '';
   }
 };
 
@@ -136,9 +138,9 @@ onUnmounted(() => {
   // console.log('script.rispostaData', script.rispostaData);
   // console.log('script.risposta2Server', script.risposta2Server);
   if (script.risposta2Server) {
-    script.risposta2Server.risposte = script.rispostaData;
+    script.risposta2Server.risposte = script.rispostaData || '';
     // console.log('script.risposta2Server', script.risposta2Server);
-    script.logRisposta = script.rispostaData;
+    script.logRisposta = script.rispostaData || '';
   }
 });
 

@@ -14,6 +14,7 @@ export const useSessioneStore = defineStore('sessione', {
     numero_stazione_corrente: 1,
     numero_stazioni: 0,
     countdown_stazione_corrente: (<number | undefined>0) as number | undefined,
+    premutoESC: false,
     id_stazione_corrente: '',
     test: null as unknown as InstanceType<typeof Test>,
     risposte: <IRisposte>{},

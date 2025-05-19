@@ -34,6 +34,26 @@ const common_api = {
     width: '10px',
     opacity: '0.2',
   },
+
+  throttle: <T extends unknown[]>(
+    callback: (...args: T) => void,
+    delay: number
+  ) => {
+    let isWaiting = false;
+
+    return (...args: T) => {
+      if (isWaiting) {
+        return;
+      }
+
+      callback(...args);
+      isWaiting = true;
+
+      setTimeout(() => {
+        isWaiting = false;
+      }, delay);
+    };
+  },
 };
 
 // "async" is optional;

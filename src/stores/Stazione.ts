@@ -331,6 +331,9 @@ export const Stazione = class {
           {
             // scrittura libera
             const rispostaData = risposte as string;
+            if (!rispostaData) {
+              return 'Non risposto';
+            }
             if (rispostaData.length === 0) {
               return 'Non risposto';
             }
@@ -484,7 +487,12 @@ export const Stazione = class {
         return response.data;
       })
       .catch((errore) => {
-        sessioneStore.errore = errore;
+        sessioneStore.errore = {
+          idUser: this.test.script.test.$.idUser,
+          idSess: this.test.script.test.$.sessionId,
+          errore: errore.response.data,
+        };
+        throw new Error(errore);
       });
 
     sessioneStore.punteggiStazioni[this.script.$.ID] = this.punteggioStazione =

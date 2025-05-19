@@ -48,6 +48,7 @@ const $q = useQuasar()
 
 watch(() => $q.fullscreen.isActive, (val: boolean) => {
   if (!val) {
+    sessioneStore.premutoESC = true;
     if (sessioneStore.tipoSesssione == 'test') {
       sessioneStore.$reset()
       if (process.env.DEV) {

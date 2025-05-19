@@ -104,12 +104,6 @@ const getPunteggio = async () => {
     })
     .catch((errore) => {
       console.log(errore);
-      // $q.notify({
-      //   color: 'negative',
-      //   position: 'top',
-      //   message: 'Loading failed',
-      //   icon: 'report_problem',
-      // });
     });
 };
 </script>

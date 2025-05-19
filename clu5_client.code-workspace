@@ -2,6 +2,9 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "../clu5_server_py3.13"
     }
   ],
   "settings": {
