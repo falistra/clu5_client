@@ -15,6 +15,9 @@
             <video-wrap :video="script.video" @update="set_ascolti_video" />
           </div>
         </div>
+        <q-badge color="blue" class="mt-1 ml-3 text-subtitle2">
+          {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
+        </q-badge>
         <q-scroll-area class="col-auto" style="height: calc(90vh)" visible :thumb-style="thumbStyle"
           :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
@@ -50,9 +53,6 @@
       </div>
       <div class="col-6">
         <q-scroll-area style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
-          <q-badge color="blue" class="text-subtitle2">
-            {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
-          </q-badge>
           <q-list dense>
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash" class="q-my-sm">
               <q-item-section side>

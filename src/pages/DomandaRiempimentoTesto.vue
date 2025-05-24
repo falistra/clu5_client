@@ -123,7 +123,7 @@ const dropZones = () => {
     const [_id, slotIndex] = span.id.split('-')
     span.textContent = script.rispostaData[slotIndex]
       ? script.rispostaData[slotIndex]._
-      : '_'.repeat(dimslots[slotIndex] || 10);
+      : '_'.repeat(Math.max(dimslots[slotIndex] || 10, 10));
 
     if (span.textContent.match(/^(\_+)$/)) {
       // span.classList.remove('tooltip');

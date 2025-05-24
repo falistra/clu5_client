@@ -70,6 +70,7 @@ export default boot(async ({ router, urlPath }) => {
       const allCookies = Cookies.getAll();
 
       if (allCookies.idUtente !== undefined) {
+        sessioneStore.sessioneAttiva = true;
         Loading.show({
           message: 'Attendere, prego...',
         });
@@ -95,8 +96,22 @@ export default boot(async ({ router, urlPath }) => {
         Cookies.set('idUtente', '', { expires: -1 });
         Cookies.set('idSessione', '', { expires: -1 });
         Cookies.set('sessione', '', { expires: -1 });
+        Cookies.remove('idUtente');
+        Cookies.remove('idSessione');
+        Cookies.remove('sessione');
 
         if (script) {
+          const xmlDoc = new DOMParser().parseFromString(script, 'text/xml');
+          const tagsToRemove = xmlDoc.getElementsByTagName(
+            'situazionePrecedente'
+          ) as HTMLCollection;
+          if (tagsToRemove.length > 0) {
+            if (tagsToRemove[0] && tagsToRemove[0].parentNode) {
+              tagsToRemove[0].parentNode.removeChild(tagsToRemove[0]);
+            }
+          }
+          const scriptXML = new XMLSerializer().serializeToString(xmlDoc);
+
           const scriptJSON = await xml2js
             .parseStringPromise(script, {
               explicitArray: false,
@@ -157,7 +172,7 @@ export default boot(async ({ router, urlPath }) => {
             }
             sessioneStore.descrizioneSessione =
               scriptJSON.test.$.descrizione_sessione;
-            const test = new Test(scriptJSON, script, storia_precedente);
+            const test = new Test(scriptJSON, scriptXML, storia_precedente);
 
             sessioneStore.test = test;
             sessioneStore.lingua = test.LINGUA;
@@ -175,6 +190,7 @@ export default boot(async ({ router, urlPath }) => {
           }
         }
       } else {
+        sessioneStore.sessioneAttiva = false;
         alert('Test non disponibile');
         // sessioneStore.IN_ERRORE = true;
         // Cookies.set('idUtente', '', { expires: -1 });
@@ -190,6 +206,7 @@ export default boot(async ({ router, urlPath }) => {
 
       break;
     case 'simulazione':
+      sessioneStore.sessioneAttiva = true;
       const match = urlPath.match(/id\=(\d+)/);
       const idDomanda = match ? match[1] : undefined;
 

@@ -6,6 +6,7 @@ export const useSessioneStore = defineStore('sessione', {
   state: () => ({
     tipoSesssione: 'test' as string,
     descrizioneSessione: '',
+    sessioneAttiva: false,
     counter: 0,
     domande: <[string, unknown, unknown, number, string][]>[],
     IN_ERRORE: false,

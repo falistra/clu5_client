@@ -173,10 +173,10 @@ if (myAudio.value) {
   };
 
   (myAudio.value as HTMLMediaElement).onloadedmetadata = () => {
-    if (myAudio.value) {
-      sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url] = (myAudio.value as HTMLMediaElement).duration;
-    }
-  };
+      if (myAudio.value) {
+        sessione.MEDIA_AUDIO_DURATA[props.audio?.$.url] = (myAudio.value as HTMLMediaElement).duration;
+      }
+  }
 
   (myAudio.value as HTMLMediaElement).ontimeupdate = () => {
     // console.log((myAudio.value as HTMLMediaElement).currentTime)

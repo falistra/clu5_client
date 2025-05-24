@@ -12,6 +12,9 @@
           <video-wrap v-if="script.video" class="col q-my-md q-mx-md" :video="script.video"
             @update="set_ascolti_video" />
         </div>
+        <q-badge color="blue" class="mt-1 ml-3 text-subtitle2">
+          {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
+        </q-badge>
         <q-scroll-area class="col" style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
           <div class="q-pa-sm mr-3">
             <div class="row q-my-xs" v-for="item in script.partiFisse.item" :key="item.$.hash">
@@ -39,9 +42,6 @@
       </div>
       <div class="col-6">
         <q-scroll-area style="height: calc(90vh)" visible :thumb-style="thumbStyle" :bar-style="barStyle">
-          <q-badge color="blue" class="text-subtitle2">
-            {{ $t('Trascina') }}. {{ $t('Doppio_click') }}
-          </q-badge>
 
           <q-list dense class="q-mr-lg">
             <q-item v-for="item in lista_risposte_disponibili" :key="item.$.hash">

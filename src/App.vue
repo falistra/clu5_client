@@ -1,22 +1,24 @@
 <template>
-  <router-view v-if="testIn || sessioneStore.tipoSesssione == 'simulazione'" />
-  <div v-if="!testIn && sessioneStore.test && sessioneStore.tipoSesssione == 'test'"
-    class="window-height window-width row justify-center items-center ">
-    <div class="column  justify-evenly items-center rounded-borders shadow-15 bg-teal-1"
-      style="height: 150px; width: 200px;">
-      <div class="col-2">
-        <q-btn-toggle size="sm" v-model="locale" push toggle-color="primary" :options="localeOptions">
-          <template #en>
-            <span class="q-ml-sm fi fi-gb fis" />
-          </template>
-          <template #it>
-            <span class="q-ml-sm fi fi-it fis" />
-          </template>
-        </q-btn-toggle>
-      </div>
-      <div class="col-7">
-        <q-btn icon="power_settings_new" glossy class="q-ma-md" color="primary" :label="$t('IniziaTest')" size="xl"
-          @click="vai" />
+  <div v-if="sessioneStore.sessioneAttiva">
+    <router-view v-if="testIn || sessioneStore.tipoSesssione == 'simulazione'" />
+    <div v-if="!testIn && sessioneStore.test && sessioneStore.tipoSesssione == 'test'"
+      class="window-height window-width row justify-center items-center ">
+      <div class="column  justify-evenly items-center rounded-borders shadow-15 bg-teal-1"
+        style="height: 150px; width: 200px;">
+        <div class="col-2">
+          <q-btn-toggle size="sm" v-model="locale" push toggle-color="primary" :options="localeOptions">
+            <template #en>
+              <span class="q-ml-sm fi fi-gb fis" />
+            </template>
+            <template #it>
+              <span class="q-ml-sm fi fi-it fis" />
+            </template>
+          </q-btn-toggle>
+        </div>
+        <div class="col-7">
+          <q-btn icon="power_settings_new" glossy class="q-ma-md" color="primary" :label="$t('IniziaTest')" size="xl"
+            @click="vai" />
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +56,8 @@ watch(() => $q.fullscreen.isActive, (val: boolean) => {
       if (process.env.DEV) {
         router.replace('/fineTestFuori');
       } else {
-        window.open('/test-GOODBYE.php', '_self')?.focus();
+        window.location.replace('/test-GOODBYE.php');
+        // window.open('/test-GOODBYE.php', '_self')?.focus();
       }
     }
   }

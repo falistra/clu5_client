@@ -553,8 +553,12 @@ export const Stazione = class {
             .ServerTime()
             .format('HH:mm:SS')} = Valutazione+se : ${espressione}`
         );
-
-        const parse_tree: jsep.Expression = jsep(espressione);
+        let parse_tree: jsep.Expression = {} as jsep.Expression;
+        try {
+          parse_tree = jsep(espressione);
+        } catch (error) {
+          console.log('Error parsing expression:', error);
+        }
         const valore = do_eval(parse_tree);
 
         this.test.STORIA.push(

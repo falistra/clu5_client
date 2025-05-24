@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf" class="shadow-2 rounded-borders">
     <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
-        <q-toolbar-title class="col-6 text-h4">
+        <q-toolbar-title class="col-3 text-h4">
           <div class="row flex-center">
             {{
               sessioneStore.test?.script?.test.studente.$.cognome +
@@ -11,9 +11,11 @@
             }}
           </div>
         </q-toolbar-title>
-        <q-toolbar-title class="col-6 text-subtitle2">
+        <q-toolbar-title class="col-9 text-subtitle1 text-wrap">
           <div class="row flex-center">
-            {{ sessioneStore.descrizioneSessione }}
+            {{ sessioneStore.descrizioneSessione.length > 80 ? sessioneStore.descrizioneSessione.slice(0, 80) + '....'
+              :
+              sessioneStore.descrizioneSessione }}
             <!-- <q-btn
               class="q-ml-lg"
               color="secondary"
@@ -24,7 +26,8 @@
             <!-- <q-select class="q-ml-md" v-model="locale" :options="localeOptions" dense borderless emit-value map-options
               options-dense style="min-width: 150px" /> -->
 
-            <q-btn-toggle v-model="locale" class="q-ml-lg" push toggle-color="primary" :options="localeOptions">
+            <q-btn-toggle floating v-model="locale" class="q-ml-lg" push toggle-color="primary"
+              :options="localeOptions">
               <template #en>
                 <span class="q-ml-sm fi fi-gb fis" />
               </template>
