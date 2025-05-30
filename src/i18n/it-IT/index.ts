@@ -41,4 +41,7 @@ export default {
   IniziaTest: 'Inizia',
   dblclick_annulla: 'Doppio click per togliere',
   testNonInizializzato: 'Test non disponibile',
+  sessioneNonAttiva: 'Sessione di test non attiva',
+  premutoEsc:
+    'Hai premuto il tasto Esc e dunque il test è stato interrotto. Chiama uno dei supervisori d’esame',
 };

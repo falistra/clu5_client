@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="shadow-2 rounded-borders">
+  <q-layout v-if="sessioneStore.sessioneAttiva" view="hHh lpR fFf" class="shadow-2 rounded-borders">
     <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
         <q-toolbar-title class="col-3 text-h4">
@@ -70,6 +70,24 @@
       </div>
     </q-footer>
   </q-layout>
+  <div v-else class="fullscreen row items-center justify-center">
+    <div class="column justify-evenly items-center rounded-borders shadow-15 bg-red-400"
+      style="height: auto; width: auto;">
+      <div class="col-2">
+        <q-btn-toggle size="sm" v-model="locale" push toggle-color="primary" :options="localeOptions">
+          <template #en>
+            <span class="q-ml-sm fi fi-gb fis" />
+          </template>
+          <template #it>
+            <span class="q-ml-sm fi fi-it fis" />
+          </template>
+        </q-btn-toggle>
+      </div>
+      <div class="col-7 text-center q-pa-md font-semibold text-lg">
+        {{ $t('sessioneNonAttiva') }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

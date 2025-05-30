@@ -191,7 +191,7 @@ export default boot(async ({ router, urlPath }) => {
         }
       } else {
         sessioneStore.sessioneAttiva = false;
-        alert('Test non disponibile');
+        // alert('Test non disponibile');
         // sessioneStore.IN_ERRORE = true;
         // Cookies.set('idUtente', '', { expires: -1 });
         // Cookies.set('idSessione', '', { expires: -1 });

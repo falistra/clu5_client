@@ -41,4 +41,7 @@ export default {
   IniziaTest: 'Start',
   dblclick_annulla: 'Double click to cancel',
   testNonInizializzato: 'Test not available',
+  sessioneNonAttiva: 'Test session not active',
+  premutoEsc:
+    'You pressed the Esc key and the test has been interrupted. Please call an invigilator.',
 };

@@ -28,6 +28,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/FineTestFuori.vue'),
   },
   {
+    path: '/esc',
+    component: () => import('../pages/PremutoEsc.vue'),
+  },
+  {
     path: '/testNonDisponibile',
     component: () => import('../pages/TestNonDisponibile.vue'),
   },
@@ -46,6 +50,10 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('../layouts/MainLayout.vue'),
     children: [
+      {
+        path: 'esc',
+        component: () => import('../pages/PremutoEsc.vue'),
+      },
       {
         path: 'domandasceltasingola/:st/:id',
         name: 'domandasceltasingola',

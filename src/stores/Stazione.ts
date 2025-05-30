@@ -547,17 +547,30 @@ export const Stazione = class {
 
         return eval(condizione);
       } else {
-        const espressione = caso.$.se;
+        let espressione = caso.$.se;
+        this.test.STORIA.push(
+          `${this.test
+            .ServerTime()
+            .format('HH:mm:SS')} = Valutazione+se (originale): ${espressione}`
+        );
+
+        espressione = espressione.replace(/(eq|ne|lt|gt|le|ge)(\d)/g, '$1 $2');
         this.test.STORIA.push(
           `${this.test
             .ServerTime()
             .format('HH:mm:SS')} = Valutazione+se : ${espressione}`
         );
         let parse_tree: jsep.Expression = {} as jsep.Expression;
+
         try {
           parse_tree = jsep(espressione);
         } catch (error) {
           console.log('Error parsing expression:', error);
+          this.test.STORIA.push(
+            `${this.test
+              .ServerTime()
+              .format('HH:mm:SS')} = Errore in ${espressione} ${error}`
+          );
         }
         const valore = do_eval(parse_tree);
 

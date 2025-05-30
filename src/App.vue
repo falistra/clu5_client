@@ -22,6 +22,9 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <router-view />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -36,7 +39,7 @@ import { useSessioneStore } from 'stores/sessione';
 // import { useLogStore } from 'stores/log'
 import { useRouter } from 'vue-router';
 import { useQuasar /* , Cookies */ } from 'quasar';
-import { ref, watch } from 'vue';
+import { ref /*, watch */ } from 'vue';
 
 import './css/flag-icons.css';
 import { useI18n } from 'vue-i18n';
@@ -48,20 +51,21 @@ const localeOptions = ref([
 
 const $q = useQuasar()
 
-watch(() => $q.fullscreen.isActive, (val: boolean) => {
-  if (!val) {
-    sessioneStore.premutoESC = true;
-    if (sessioneStore.tipoSesssione == 'test') {
-      sessioneStore.$reset()
-      if (process.env.DEV) {
-        router.replace('/fineTestFuori');
-      } else {
-        window.location.replace('/test-GOODBYE.php');
-        // window.open('/test-GOODBYE.php', '_self')?.focus();
-      }
-    }
-  }
-})
+// watch(() => $q.fullscreen.isActive, (val: boolean) => {
+//   if (!val) {
+//     sessioneStore.premutoESC = true;
+//     if (sessioneStore.tipoSesssione == 'test') {
+//       sessioneStore.$reset()
+//       if (process.env.DEV) {
+//         router.replace('/fineTestFuori');
+//       } else {
+//         router.replace('/fineTestFuori');
+//         // window.location.replace('/test-GOODBYE.php');
+//         // window.open('/test-GOODBYE.php', '_self')?.focus();
+//       }
+//     }
+//   }
+// })
 
 const sessioneStore = useSessioneStore();
 // const log = useLogStore()

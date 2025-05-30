@@ -57,7 +57,7 @@ import ConfermaChiusuraDefinitiva from './ConfermaChiusuraDefinitiva.vue';
 import { IDomanda } from '../pages/models';
 import { /* debounce, */ throttle } from 'quasar';
 // import { common_api } from '../boot/common-utils'
-import { Cookies, useQuasar } from 'quasar';
+import { /* Cookies, */ useQuasar } from 'quasar';
 
 const $q = useQuasar()
 
@@ -72,34 +72,46 @@ const idDomanda = computed(() => {
   return (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id;
 });
 
-if (sessioneStore.test === null) {
-  // Notify.create({
-  //   message: t('testNonInizializzato'),
-  //   color: 'negative',
-  //   position: 'bottom',
-  //   timeout: 3000,
-  //   closeBtn: 'OK'
-  // });
-  Cookies.set('idUtente', '', { expires: -1 });
-  Cookies.set('idSessione', '', { expires: -1 });
-  Cookies.set('sessione', '', { expires: -1 });
-  router.replace('/testNonDisponibile');
-} else {
-  if (sessioneStore.test.script.test.situazionePrecedente)
-    Notify.create({
-      message: t('ripresaTest'),
-      color: 'negative',
-      position: 'bottom',
-      timeout: 3000,
-      closeBtn: 'OK'
-    });
-}
+// if (sessioneStore.test === null) {
+//   Cookies.set('idUtente', '', { expires: -1 });
+//   Cookies.set('idSessione', '', { expires: -1 });
+//   Cookies.set('sessione', '', { expires: -1 });
+//   router.replace('/testNonDisponibile');
+// } else {
+if (sessioneStore.test && sessioneStore.test.script.test.situazionePrecedente)
+  Notify.create({
+    message: t('ripresaTest'),
+    color: 'negative',
+    position: 'bottom',
+    timeout: 3000,
+    closeBtn: 'OK'
+  });
+// }
 
 const stato = computed(() => {
   return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.numero_stazioni} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
 });
 
 const ultimaDomanda = ref(false);
+
+
+watch(() => $q.fullscreen.isActive, (val: boolean) => {
+  if (!val) {
+    sessioneStore.premutoESC = true;
+    if (sessioneStore.tipoSesssione == 'test') {
+      sessioneStore.$reset()
+      if (process.env.DEV) {
+        router.replace('/esc');
+      } else {
+        router.replace('/esc');
+        // window.location.replace('/test-GOODBYE.php');
+        // window.open('/test-GOODBYE.php', '_self')?.focus();
+      }
+    }
+  }
+})
+
+
 
 watch(
   () => sessioneStore.id_stazione_corrente,
