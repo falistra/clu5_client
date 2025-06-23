@@ -554,7 +554,10 @@ export const Stazione = class {
             .format('HH:mm:SS')} = Valutazione+se (originale): ${espressione}`
         );
 
-        espressione = espressione.replace(/(eq|ne|lt|gt|le|ge)(\d)/g, '$1 $2');
+        espressione = espressione.replace(
+          /\s(eq|ne|lt|gt|le|ge)(.)/g,
+          ' $1 $2'
+        );
         this.test.STORIA.push(
           `${this.test
             .ServerTime()
@@ -572,13 +575,15 @@ export const Stazione = class {
               .format('HH:mm:SS')} = Errore in ${espressione} ${error}`
           );
         }
-        const valore = do_eval(parse_tree);
+        // console.log('parse_tree', parse_tree);
+        const valore = do_eval(parse_tree, this.test);
 
         this.test.STORIA.push(
           `${this.test.ServerTime().format('HH:mm:SS')} = Valutazione+se : ${
             valore == 1 ? true : false
           }`
         );
+
         return valore == 1 ? true : false;
       }
     });

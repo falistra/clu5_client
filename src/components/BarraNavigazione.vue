@@ -232,6 +232,12 @@ async function effettuaConsegna() {
     }
   } catch (error) {
     console.log('errore', error);
+    sessioneStore.IN_ERRORE = true;
+    sessioneStore.errore = {
+      idUser: sessioneStore.test.script.test.$.idUser,
+      idSess: sessioneStore.test.script.test.$.sessionId,
+      errore: error,
+    };
     router.replace('/erroreServer');
   }
 

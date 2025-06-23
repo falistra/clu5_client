@@ -2,6 +2,7 @@ import { boot } from 'quasar/wrappers';
 import { Cookies } from 'quasar';
 
 import xml2js from 'xml2js';
+import jsep from 'jsep';
 import { api } from 'boot/axios';
 // import moment from 'moment';
 
@@ -9,7 +10,6 @@ import { Test } from 'stores/Test';
 import { Loading } from 'quasar';
 
 import { useSessioneStore } from 'stores/sessione';
-// import { useLogStore } from 'stores/log';
 import { Script, Ilog_STAZIONI } from 'stores/models';
 
 // import { parseFromString } from 'dom-parser';
@@ -19,40 +19,6 @@ export default boot(async ({ router, urlPath }) => {
   /* { app, router, ... } */
 
   const sessioneStore = useSessioneStore();
-  // const log = useLogStore();
-
-  // const testiScritturaLibera: {
-  //   [signed_user: string]: {
-  //     [idDomanda: string]: { value?: string; date?: moment.Moment };
-  //   };
-  // } = {};
-  // const ieri = moment().add(-1, 'days');
-
-  // console.log(
-  //   'log.testiScritturaLibera',
-  //   Object.entries(log.testiScritturaLibera)
-  // );
-
-  // Object.entries(log.testiScritturaLibera).forEach(([signed_user, domande]) => {
-  //   console.log('signed_user', signed_user);
-  //   console.log('domande', domande);
-  //   const domandeFiltrate: {
-  //     [idDomanda: string]: { value?: string; date?: moment.Moment };
-  //   } = {};
-  //   Object.entries(domande).forEach(([idDomanda, { value, date }]) => {
-  //     console.log('idDomanda', idDomanda);
-  //     console.log('value', value);
-  //     console.log('date', date);
-
-  //     const date_obj = moment(date);
-  //     if (date_obj > ieri) {
-  //       domandeFiltrate[idDomanda] = { value, date };
-  //     }
-  //   });
-  //   if (domandeFiltrate) testiScritturaLibera[signed_user] = domandeFiltrate;
-  // });
-  // console.log('testiScritturaLibera', Object.entries(testiScritturaLibera));
-  // log.testiScritturaLibera = testiScritturaLibera;
 
   if (urlPath.startsWith('/clu5-simulazione'))
     sessioneStore.tipoSesssione = 'simulazione';
@@ -70,7 +36,6 @@ export default boot(async ({ router, urlPath }) => {
       const allCookies = Cookies.getAll();
 
       if (allCookies.idUtente !== undefined) {
-        sessioneStore.sessioneAttiva = true;
         Loading.show({
           message: 'Attendere, prego...',
         });
@@ -133,6 +98,35 @@ export default boot(async ({ router, urlPath }) => {
               };
             });
           if (scriptJSON) {
+            (scriptJSON as Script).test.stazioni.stazione.forEach(
+              (stazione) => {
+                let casi = stazione.caso || [];
+                if (casi && !Array.isArray(casi)) {
+                  casi = [casi]; // Assicura che caso sia sempre un array
+                }
+
+                casi.forEach((caso) => {
+                  const espressione = caso.$.se;
+                  if (espressione) {
+                    try {
+                      jsep(espressione);
+                    } catch (error) {
+                      const errorMessage = `Stazione "${stazione.$.ID}", condizione 'se=' : Errore nel parsing dell'espressione: ${espressione}. ${error}`;
+
+                      sessioneStore.IN_ERRORE = true;
+                      sessioneStore.errore = {
+                        idUser: (scriptJSON as Script).test.$.idUser,
+                        idSess: (scriptJSON as Script).test.$.sessionId,
+                        errore: errorMessage,
+                      };
+                      router.replace('/erroreServer');
+                      return;
+                    }
+                  }
+                });
+              }
+            );
+
             let storia_precedente: string[] = [];
             if ((scriptJSON as Script).test.situazionePrecedente) {
               sessioneStore.sessioneInterrotta = true;
@@ -182,6 +176,7 @@ export default boot(async ({ router, urlPath }) => {
 
             const esitoPositivo =
               await test.stazione_corrente.richiediDomandeServer();
+
             Loading.hide();
             if (!esitoPositivo) {
               router.replace('/erroreServer');
@@ -189,19 +184,9 @@ export default boot(async ({ router, urlPath }) => {
             }
           }
         }
+        sessioneStore.sessioneAttiva = true;
       } else {
         sessioneStore.sessioneAttiva = false;
-        // alert('Test non disponibile');
-        // sessioneStore.IN_ERRORE = true;
-        // Cookies.set('idUtente', '', { expires: -1 });
-        // Cookies.set('idSessione', '', { expires: -1 });
-        // Cookies.set('sessione', '', { expires: -1 });
-
-        // sessioneStore.errore = {
-        //   idUser: '',
-        //   idSess: '',
-        //   errore: 'test Non Inizializzato',
-        // };
       }
 
       break;

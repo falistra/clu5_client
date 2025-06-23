@@ -1,5 +1,6 @@
 import { useSessioneStore } from './sessione';
 import jsep from 'jsep';
+import { Test } from './Test';
 
 jsep.addBinaryOp('gt', 10);
 jsep.addBinaryOp('lt', 11);
@@ -69,27 +70,40 @@ const unops: { [operator: string]: (op1: number) => number } = {
 
 const sessioneStore = useSessioneStore();
 
-export const do_eval = function (node: jsep.Expression): number {
+export const do_eval = function (
+  node: jsep.Expression,
+  test: InstanceType<typeof Test>
+): number {
   //  console.log(node);
   if (node.type === 'BinaryExpression') {
     if (node.left && node.right) {
-      const op1 = do_eval(node.left as jsep.Expression);
-      const op2 = do_eval(node.right as jsep.Expression);
+      const op1 = do_eval(node.left as jsep.Expression, test);
+      const op2 = do_eval(node.right as jsep.Expression, test);
       const result = binops[node.operator as string](op1, op2) as number;
-      //      console.log(result);
+      test.STORIA.push(
+        `${test.ServerTime().format('HH:mm:SS')} ${op1} ${
+          node.operator
+        } ${op2} = ${result}`
+      );
       return result;
     }
   } else if (node.type === 'UnaryExpression') {
     return unops[node.operator as string](
-      do_eval(node.argument as jsep.Expression)
+      do_eval(node.argument as jsep.Expression, test)
     );
   } else if (node.type === 'Literal') {
-    //    console.log(`Literal ${node.value}`);
     return node.value as jsep.baseTypes as number;
   } else if (node.type === 'Identifier') {
-    // console.log(sessioneStore.punteggiStazioni);
-    // console.log(sessioneStore.punteggiStazioni[node.name as string]);
-    return sessioneStore.punteggiStazioni[node.name as string] || 0;
+    const result = sessioneStore.punteggiStazioni[node.name as string] || 0;
+    test.STORIA.push(
+      `${test.ServerTime().format('HH:mm:SS')} ${node.name} = ${result}`
+    );
+    return result;
   }
-  return 0;
+  test.STORIA.push(
+    `${test.ServerTime().format('HH:mm:SS')} nodo ignoto: ${node.type} = ${
+      node.value
+    }`
+  );
+  throw new Error('Valutazione caso se=... fallita');
 };
