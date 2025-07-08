@@ -13,6 +13,7 @@ export const useSessioneStore = defineStore('sessione', {
     errore: {},
     lingua: <string>'2',
     numero_stazione_corrente: 1,
+    raggiuntaUltimaDomanda: false,
     numero_stazioni: 0,
     countdown_stazione_corrente: (<number | undefined>0) as number | undefined,
     premutoESC: false,

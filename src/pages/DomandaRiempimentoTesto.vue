@@ -13,7 +13,7 @@
 
       <q-scroll-area class="q-gutter-md q-mt-md q-mx-md" :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle"
         style="height: calc(47vh)">
-        <div class="my-5 mx-5" v-html="testo_quesito"></div>
+        <div class="my-5 mx-3 mr-5" v-html="testo_quesito"></div>
       </q-scroll-area>
       <!-- </div> -->
 

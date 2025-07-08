@@ -40,7 +40,7 @@
       </q-btn>
     </q-btn-group>
 
-    <q-btn class="q-ml-lg q-mb-sm text-caption" :color="ultimaDomanda ? 'teal-8' : 'teal-2'"
+    <q-btn class="q-ml-lg q-mb-sm text-caption" :color="((ultimaDomanda) && !quasiTimeout) ? 'teal-8' : 'teal-2'"
       :disable="(!ultimaDomanda) || quasiTimeout" :label="t('Consegna')" @click="consegna(true)" />
   </div>
 </template>
@@ -92,8 +92,7 @@ const stato = computed(() => {
   return `${t('Parte')} ${sessioneStore.numero_stazione_corrente} ${t('di')} ${sessioneStore.numero_stazioni} - ${t('Domanda')} ${sessioneStore.counter + 1} ${t('di')} ${sessioneStore.domande.length}`
 });
 
-const ultimaDomanda = ref(false);
-
+const ultimaDomanda = ref((sessioneStore.domande.length == 1) ? true : false);
 
 watch(() => $q.fullscreen.isActive, (val: boolean) => {
   if (!val) {
@@ -111,30 +110,31 @@ watch(() => $q.fullscreen.isActive, (val: boolean) => {
   }
 })
 
-
-
-watch(
-  () => sessioneStore.id_stazione_corrente,
-  () => {
-    if (sessioneStore.domande.length == 1) {
-      ultimaDomanda.value = true;
-    }
-    else {
-      ultimaDomanda.value = false;
-    }
-  },
-  { immediate: true }
-);
-
+// watch(
+//   () => sessioneStore.id_stazione_corrente,
+//   () => {
+//     sessioneStore.raggiuntaUltimaDomanda = false
+//   },
+//   { immediate: true }
+// );
 
 watch(
   () => sessioneStore.counter,
   (newValue) => {
     if (sessioneStore.domande.length == 1) {
       ultimaDomanda.value = true;
+      return
     }
-    if (sessioneStore.domande.length == newValue + 1) {
+    if (sessioneStore.raggiuntaUltimaDomanda) {
       ultimaDomanda.value = true;
+      return
+    }
+    if (sessioneStore.domande.length == (newValue + 1)) {
+      ultimaDomanda.value = true;
+      sessioneStore.raggiuntaUltimaDomanda = true;
+    } else {
+      ultimaDomanda.value = false;
+      // sessioneStore.raggiuntaUltimaDomanda = false;
     }
   },
   { immediate: true }
@@ -192,7 +192,8 @@ onMounted(() => {
 });
 
 async function effettuaConsegna() {
-  // notUltimaDomanda = true;
+  sessioneStore.raggiuntaUltimaDomanda = false;
+  ultimaDomanda.value = false;
   quasiTimeout.value = false;
   Loading.show();
   // le tre chiamate successive devono essere in await in quanto ciascuna modifica lo store
@@ -247,6 +248,7 @@ async function effettuaConsegna() {
 // const effettuaConsegna = debounce(effettuaConsegnaZ, 1000);
 
 async function consegna(dialog = true) {
+  sessioneStore.raggiuntaUltimaDomanda = false;
   const indiciDomandeSenzaRisposta =
     sessioneStore.test.stazione_corrente.checkRisposte();
   if (dialog) {

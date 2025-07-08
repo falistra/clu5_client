@@ -19,7 +19,7 @@ import {
 
 import {
   T_DomandaComprensioneTesto,
-  T_DomandaSceltaMultipla,
+  // T_DomandaSceltaMultipla,
   T_DomandaRiordino,
   T_DomandaAbbinamentoSingolo,
   T_DomandaAbbinamentoMultiplo,
@@ -210,23 +210,22 @@ export const Stazione = class {
             }
           }
           break;
-        case '3':
-          {
-            // scelta multipla
-            const script = scriptDomanda as T_DomandaSceltaMultipla;
-            const risposteDovute = script.risposte.risposta.length;
-            const risposteDate = Object.entries(risposte).length;
-            if (risposteDate === 0) {
-              return 'Non risposto';
-            }
-            if (risposteDovute === risposteDate) {
-              return 'Risposto';
-            }
-            if (risposteDovute > risposteDate) {
-              return 'Parziale';
-            }
+        case '3': {
+          // scelta multipla
+          // const script = scriptDomanda as T_DomandaSceltaMultipla;
+          // const risposteDovute = script.risposte.risposta.length;
+          const risposteDate = Object.entries(risposte).length;
+          if (risposteDate === 0) {
+            return 'Non risposto';
           }
-          break;
+          return 'Risposto';
+          // if (risposteDovute === risposteDate) {
+          //   return 'Risposto';
+          // }
+          // if (risposteDovute > risposteDate) {
+          //   return 'Parziale';
+          // }
+        }
         case '4': {
           // riordino
           const script = scriptDomanda as T_DomandaRiordino;

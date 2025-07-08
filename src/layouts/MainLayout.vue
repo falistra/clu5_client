@@ -2,7 +2,7 @@
   <q-layout v-if="sessioneStore.sessioneAttiva" view="hHh lpR fFf" class="shadow-2 rounded-borders">
     <q-header bordered class="bg-blue-2 text-black" elevated borded style="max-height: 45px">
       <q-toolbar class="row flex-center">
-        <q-toolbar-title class="col-3 text-h4">
+        <q-toolbar-title class="col-4 text-h6">
           <div class="row flex-center">
             {{
               sessioneStore.test?.script?.test.studente.$.cognome +
@@ -11,7 +11,7 @@
             }}
           </div>
         </q-toolbar-title>
-        <q-toolbar-title class="col-9 text-subtitle1 text-wrap">
+        <q-toolbar-title class="col-8 text-subtitle1 text-wrap">
           <div class="row flex-center">
             {{ sessioneStore.descrizioneSessione.length > 80 ? sessioneStore.descrizioneSessione.slice(0, 80) + '....'
               :
