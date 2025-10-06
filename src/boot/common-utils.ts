@@ -1,6 +1,15 @@
 import { boot } from 'quasar/wrappers';
 
 const common_api = {
+  sanitizeTextRT: (testo: string) => {
+    try {
+      const testoZ = testo.replace(/\%u2019/g, '’');
+      return testoZ;
+    } catch {
+      return '';
+    }
+  },
+
   sanitizeUnicode: (testo: string) => {
     try {
       const testoZ = testo

@@ -187,7 +187,7 @@ const dropZones = () => {
               );
               if (script_risposta) script_risposta.disponibile = false;
             }
-            span.textContent = risposta_data;
+            span.textContent = common_api.sanitizeTextRT(risposta_data);
 
           } else {
             // toglie risposta precedente
@@ -224,7 +224,7 @@ const dropZones = () => {
               );
               if (script_risposta) script_risposta.disponibile = false;
             }
-            span.textContent = risposta_data;
+            span.textContent = common_api.sanitizeTextRT(risposta_data);
           }
           const t_ = tippy(span, {
             content: t('dblclick_annulla'),

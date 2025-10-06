@@ -121,11 +121,11 @@ watch(() => $q.fullscreen.isActive, (val: boolean) => {
 watch(
   () => sessioneStore.counter,
   (newValue) => {
-    if (sessioneStore.domande.length == 1) {
+    if (sessioneStore.raggiuntaUltimaDomanda) {
       ultimaDomanda.value = true;
       return
     }
-    if (sessioneStore.raggiuntaUltimaDomanda) {
+    if (sessioneStore.domande.length == 1) {
       ultimaDomanda.value = true;
       return
     }
