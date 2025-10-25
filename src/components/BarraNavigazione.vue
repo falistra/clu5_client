@@ -184,6 +184,13 @@ let successivo = function () {
     name: sessioneStore.domande[sessioneStore.counter][0],
     params: { st: sessioneStore.numero_stazione_corrente, id: sessioneStore.counter },
   })
+  // const idStazioneCorrente = sessioneStore.id_stazione_corrente
+  // console.log('idStazioneCorrente', idStazioneCorrente);
+  // if (sessioneStore.domande[sessioneStore.counter][2] as IDomanda) {
+  //   sessioneStore.log_STAZIONI[idStazioneCorrente].idsDomandePoste?.add(
+  //     (sessioneStore.domande[sessioneStore.counter][2] as IDomanda).id);
+  //   console.log('idsDomandePoste', sessioneStore.log_STAZIONI[idStazioneCorrente].idsDomandePoste);
+  // }
 }
 
 onMounted(() => {

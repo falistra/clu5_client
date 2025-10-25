@@ -50,6 +50,12 @@ export const Stazione = class {
     this.script = scriptStazione;
     // this.ID_STAZIONE_CORRENTE = this.script.$.ID;
     const domande = this.script.insieme_domande.domande;
+    // const idsDomandeServer = (Array.isArray(domande) ? domande : [domande]).map(
+    //   (domanda) => {
+    //     return domanda.$.id?.toString() || '';
+    //   }
+    // );
+    // .filter((id) => id !== '') || [];
 
     const sessioneStore = useSessioneStore();
     sessioneStore.log_stazioni[this.script.$.ID] = {
@@ -58,6 +64,7 @@ export const Stazione = class {
 
     sessioneStore.log_STAZIONI[this.script.$.ID] = {
       inizio: this.test.ServerTime().format('HH:mm:SS'),
+      idsDomandeVisualizzate: [],
     };
 
     this.test.STORIA.push(
@@ -614,6 +621,11 @@ export const Stazione = class {
     const durata = moment
       .duration(fine.diff(sessioneStore.log_stazioni[id_stazione].inizio))
       .asSeconds();
+
+    sessioneStore.log_STAZIONI[id_stazione].idsDomandeVisualizzate =
+      sessioneStore.log_STAZIONI[id_stazione].idsDomandeVisualizzate?.filter(
+        (value, index, array) => array.indexOf(value) === index
+      );
 
     sessioneStore.log_STAZIONI[id_stazione].domande =
       sessioneStore.domande.reduce((Map, D) => {

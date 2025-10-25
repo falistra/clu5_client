@@ -160,6 +160,8 @@ export interface IDomande {
 export interface Ilog_STAZIONI {
   [Key: string]: {
     inizio?: string;
+    idsDomandeServer?: string[];
+    idsDomandeVisualizzate?: string[];
     domandeStato?: { [Key: string]: string };
     domandeOrdine?: { [Key: string]: number };
     domande?: IDomande;

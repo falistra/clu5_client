@@ -70,6 +70,7 @@ const script = sessione.domande[
 
 if (!script.rispostaData) script.rispostaData = {};
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
+sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 if (typeof script.risposta2Server == 'undefined')
   script.risposta2Server = {
