@@ -70,7 +70,8 @@ const script = sessione.domande[
 
 if (!script.rispostaData) script.rispostaData = {};
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 if (typeof script.risposta2Server == 'undefined')
   script.risposta2Server = {
@@ -109,9 +110,10 @@ const dimslots = Object.fromEntries(slots?.map(
 
 // console.log('dimslots', dimslots)
 
-const testo_quesito = ref(common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `)))
+const testo_quesito = ref('')
 
 const dropZones = () => {
+  testo_quesito.value = common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `))
 
   const spans = document.querySelectorAll(`span.slot-RT-${domanda.id}`)
   const tippies: { [Key: string]: Instance } = {};
@@ -266,7 +268,7 @@ const dropZones = () => {
   })
 };
 
-onMounted(dropZones);
+onMounted(setInterval(() => dropZones(), 300));
 
 const startDrag = (evt: DragEvent, item: string) => {
   if (evt.dataTransfer) {

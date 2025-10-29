@@ -55,7 +55,8 @@ const script = sessione.domande[
   sessione.counter
 ][1] as T_DomandaScritturaLibera;
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 const testo = common_api.sanitizeUnicode(script.testo)
   .replace(/<div>\s+<\/div>/g, '<div><br/><\/div>')

@@ -95,8 +95,8 @@ if (script.value.domande.domandasceltasingola) {
 }
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 const testo_comprensione = common_api.sanitizeUnicode(script.value.testo_comprensione)
   .replace(/<div>\s+<\/div>/g, '<div><br/><\/div>')

@@ -75,7 +75,8 @@ const sessione = useSessioneStore();
 const script = sessione.domande[sessione.counter][1] as T_DomandaOutputStudente;
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 if (typeof script.risposta2Server === 'undefined') {
   script.risposta2Server = {

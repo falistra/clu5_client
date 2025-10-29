@@ -65,7 +65,8 @@ const script = ref(
 sanitazeScript(script.value);
 
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 if (typeof script.value.risposta2Server === 'undefined') {
   script.value.risposta2Server = {

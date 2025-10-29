@@ -81,7 +81,8 @@ const script = reactive(
   sessione.domande[sessione.counter][1] as T_DomandaAbbinamentoSingolo
 );
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 if (script.audio) setAudioPams(script.audio);
 if (script.video) setVideoPams(script.video);

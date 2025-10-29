@@ -51,7 +51,8 @@ const script = ref(
   sessione.domande[sessione.counter][1] as T_DomandaSceltaMultipla
 );
 const domanda = sessione.domande[sessione.counter][2] as IDomanda;
-sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
+if (sessione.tipoSesssione === 'test')
+  sessione.log_STAZIONI[sessione.id_stazione_corrente].idsDomandeVisualizzate?.push(domanda.id);
 
 const testo = common_api.sanitizeUnicode(script.value.testo)
   .replace(/<\/ul>/g, '<\/ul><br/>')
