@@ -121,6 +121,8 @@ watch(() => $q.fullscreen.isActive, (val: boolean) => {
 watch(
   () => sessioneStore.counter,
   (newValue) => {
+    if (ultimaDomanda.value === true) return;
+
     if (sessioneStore.raggiuntaUltimaDomanda) {
       ultimaDomanda.value = true;
       return
