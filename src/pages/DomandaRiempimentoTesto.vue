@@ -13,7 +13,9 @@
 
       <q-scroll-area class="q-gutter-md q-mt-md q-mx-md" :visible="true" :thumb-style="thumbStyle" :bar-style="barStyle"
         style="height: calc(47vh)">
-        <div class="my-5 mx-3 mr-5" v-html="testo_quesito"></div>
+        <!-- <div class="my-5 mx-3 mr-5" v-html="testo_quesito"></div> -->
+        <div class="my-5 mx-3 mr-5" id="div_testo_quesito"></div>
+
       </q-scroll-area>
       <!-- </div> -->
 
@@ -110,11 +112,14 @@ const dimslots = Object.fromEntries(slots?.map(
 
 // console.log('dimslots', dimslots)
 
-const testo_quesito = ref('')
+// const testo_quesito = ref('')
 
 const dropZones = () => {
-  testo_quesito.value = common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `))
-
+  // testo_quesito.value = common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `))
+  const div_testo_quesito = common_api.sanitizeUnicode(testo.replace(/(\_+)(\d+)(\_+)/g, ` <SPAN CLASS='drop-zone font-medium text-blue-600 slot-RT-${domanda.id}'  ID='${domanda.id}-$2'></SPAN> `))
+  const el_div_testo_quesito = document.getElementById('div_testo_quesito');
+  if (el_div_testo_quesito)
+    el_div_testo_quesito.innerHTML = div_testo_quesito;
   const spans = document.querySelectorAll(`span.slot-RT-${domanda.id}`)
   const tippies: { [Key: string]: Instance } = {};
 
@@ -268,7 +273,8 @@ const dropZones = () => {
   })
 };
 
-onMounted(setInterval(() => dropZones(), 300));
+// onMounted(setInterval(() => dropZones(), 300));
+onMounted(dropZones);
 
 const startDrag = (evt: DragEvent, item: string) => {
   if (evt.dataTransfer) {
