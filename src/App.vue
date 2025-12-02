@@ -38,7 +38,7 @@ defineOptions({
 import { useSessioneStore } from 'stores/sessione';
 // import { useLogStore } from 'stores/log'
 import { useRouter } from 'vue-router';
-import { useQuasar /* , Cookies */ } from 'quasar';
+// import { useQuasar /* , Cookies */ } from 'quasar';
 import { ref /*, watch */ } from 'vue';
 
 import './css/flag-icons.css';
@@ -49,7 +49,7 @@ const localeOptions = ref([
   { value: 'it-IT', label: 'IT', slot: 'it' },
 ]);
 
-const $q = useQuasar()
+// const $q = useQuasar()
 
 // watch(() => $q.fullscreen.isActive, (val: boolean) => {
 //   if (!val) {
@@ -90,13 +90,13 @@ if (sessioneStore.tipoSesssione == 'simulazione') {
 }
 
 const vai = () => {
-  $q.fullscreen.request()
-    .then(() => {
-      // success!
-    })
-    .catch(err => {
-      console.log(err)
-    })
+  // $q.fullscreen.request()
+  //  .then(() => {
+  //    // success!
+  //  })
+  //  .catch(err => {
+  //    console.log(err)
+  //  })
 
   testIn.value = true;
 

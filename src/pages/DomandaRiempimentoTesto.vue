@@ -148,6 +148,13 @@ const dropZones = () => {
       tippies[span.id] = t_
     }
 
+
+    span.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      if (event.dataTransfer)
+        event.dataTransfer.dropEffect = 'move';
+    })
+
     span.addEventListener('dragenter', (event) => {
       event.preventDefault();
       (event.target as HTMLElement).style.border = 'dotted 2px black';
@@ -163,11 +170,6 @@ const dropZones = () => {
       (event.target as HTMLElement).style.border = 'none';
     })
 
-    span.addEventListener('dragover', (event) => {
-      event.preventDefault();
-      if (event.dataTransfer)
-        event.dataTransfer.dropEffect = 'move';
-    })
 
     span.addEventListener('drop', (event) => {
       event.preventDefault();
